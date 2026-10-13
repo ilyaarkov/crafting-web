@@ -326,7 +326,7 @@ export const Hero: React.FC = () => {
 
               <div className="flex items-center gap-1.5 px-4 py-1 rounded-full bg-black/40 border border-white/10 text-[11px] text-slate-400 font-mono">
                 <Lock className="w-2.5 h-2.5 text-cyan-400" />
-                <span>iliaarkov.com / your-website</span>
+                <span>ilyaarkov.com / your-website</span>
               </div>
 
               <div className="flex items-center gap-1.5 text-[11px] text-slate-500">

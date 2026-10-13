@@ -32,7 +32,7 @@ export const Footer: React.FC = () => {
           {/* Social and Action Links */}
           <div className="flex flex-wrap items-center gap-4 sm:gap-6 text-sm text-slate-300">
             <a
-              href="https://t.me/iliaarkovdotcom"
+              href="https://t.me/ilyaarkovdotcom"
               target="_blank"
               rel="noopener noreferrer"
               className="flex items-center gap-1.5 hover:text-cyan-400 transition-colors"
@@ -42,7 +42,7 @@ export const Footer: React.FC = () => {
             </a>
 
             <a
-              href="mailto:hello@iliaarkov.com"
+              href="mailto:hello@ilyaarkov.com"
               className="flex items-center gap-1.5 hover:text-cyan-400 transition-colors"
             >
               <Mail className="w-4 h-4 text-cyan-400" />

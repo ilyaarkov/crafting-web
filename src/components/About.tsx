@@ -178,7 +178,7 @@ export const About: React.FC = () => {
                           <source srcSet="/images/ilya.webp" type="image/webp" />
                           <img
                             src="/images/ilya.webp"
-                            alt={lang === 'ru' ? 'Илья Арьков — Веб-разработчик' : 'Ilia Arkov — Web Developer'}
+                            alt={lang === 'ru' ? 'Илья Арьков — Веб-разработчик' : 'Ilya Arkov — Web Developer'}
                             onError={() => setImgError(true)}
                             width={176}
                             height={176}
@@ -191,7 +191,7 @@ export const About: React.FC = () => {
                         <div className="w-full h-full flex flex-col items-center justify-center bg-gradient-to-br from-cyan-950/80 via-[#0a0f18] to-slate-900 text-cyan-300 p-4">
                           <UserCheck className="w-14 h-14 text-cyan-400/80 mb-2" />
                           <span className="text-xs font-semibold text-slate-300">
-                            {lang === 'ru' ? 'Илья Арьков' : 'Ilia Arkov'}
+                            {lang === 'ru' ? 'Илья Арьков' : 'Ilya Arkov'}
                           </span>
                         </div>
                       )}
@@ -205,7 +205,7 @@ export const About: React.FC = () => {
                     </div>
 
                     <h3 className="text-xl font-bold text-white mb-0.5">
-                      {lang === 'ru' ? 'Илья Арьков' : 'Ilia Arkov'}
+                      {lang === 'ru' ? 'Илья Арьков' : 'Ilya Arkov'}
                     </h3>
                     <p className="text-xs sm:text-sm font-medium text-cyan-300 mb-3">
                       {lang === 'ru' ? 'Веб-разработчик сайтов' : 'Web Developer'}
@@ -338,7 +338,7 @@ export const About: React.FC = () => {
                     <source srcSet="/images/ilya.webp" type="image/webp" />
                     <img
                       src="/images/ilya.webp"
-                      alt={lang === 'ru' ? 'Илья Арьков – Веб-разработчик' : 'Ilia Arkov – Web Developer'}
+                      alt={lang === 'ru' ? 'Илья Арьков – Веб-разработчик' : 'Ilya Arkov – Web Developer'}
                       onError={() => setImgError(true)}
                       width={160}
                       height={160}
@@ -351,7 +351,7 @@ export const About: React.FC = () => {
                   <div className="w-full h-full flex flex-col items-center justify-center bg-gradient-to-br from-cyan-950/80 via-[#0a0f18] to-slate-900 text-cyan-300 p-4">
                     <UserCheck className="w-14 h-14 text-cyan-400/80 mb-2" />
                     <span className="text-xs font-semibold text-slate-300">
-                      {lang === 'ru' ? 'Илья Арьков' : 'Ilia Arkov'}
+                      {lang === 'ru' ? 'Илья Арьков' : 'Ilya Arkov'}
                     </span>
                   </div>
                 )}
@@ -365,7 +365,7 @@ export const About: React.FC = () => {
               </div>
 
               <h3 className="text-xl font-bold text-white mb-0.5">
-                {lang === 'ru' ? 'Илья Арьков' : 'Ilia Arkov'}
+                {lang === 'ru' ? 'Илья Арьков' : 'Ilya Arkov'}
               </h3>
               <p className="text-xs font-medium text-cyan-300 mb-4">
                 {lang === 'ru' ? 'Веб-разработчик сайтов' : 'Web Developer'}
