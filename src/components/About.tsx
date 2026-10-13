@@ -160,7 +160,7 @@ export const About: React.FC = () => {
                         : 'bg-cyan-500/10 blur-[60px] opacity-40'
                     }`}
                   />
-									
+
                   <div className="w-full flex flex-col items-center mt-2">
                     <div className="relative w-40 h-40 sm:w-44 sm:h-44 rounded-2xl overflow-hidden border-2 border-cyan-400/30 shadow-2xl shadow-cyan-950/50 mb-4 bg-[#090d14] group-hover:border-cyan-400/60 transition-colors">
                       {!imgError ? (
@@ -197,20 +197,6 @@ export const About: React.FC = () => {
                     <h3 className="text-xl font-bold text-white mb-0.5">
                       {lang === 'ru' ? 'Илья Арьков' : 'Ilya Arkov'}
                     </h3>
-                    <p className="text-xs sm:text-sm font-medium text-cyan-300 mb-3">
-                      {lang === 'ru' ? 'Веб-разработчик сайтов' : 'Web Developer'}
-                    </p>
-                  </div>
-
-                  <div className="w-full pt-3 border-t border-white/5 space-y-1.5 text-left">
-                    <div className="flex items-center gap-2 text-xs text-slate-300">
-                      <GraduationCap className="w-4 h-4 text-cyan-400 shrink-0" />
-                      <span>{lang === 'ru' ? 'Профильное высшее IT-образование' : 'University Degree in Computer Science'}</span>
-                    </div>
-                    <div className="flex items-center gap-2 text-xs text-slate-300">
-                      <Sparkles className="w-4 h-4 text-cyan-400 shrink-0" />
-                      <span>{lang === 'ru' ? 'Прямая связь без посредников' : '1-on-1 direct collaboration'}</span>
-                    </div>
                   </div>
                 </div>
               </div>
@@ -349,7 +335,6 @@ export const About: React.FC = () => {
                 <div className="absolute bottom-2.5 left-1/2 -translate-x-1/2 whitespace-nowrap">
                   <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[11px] font-medium bg-black/85 backdrop-blur-md text-emerald-300 border border-emerald-500/30">
                     <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
-                    <span>{lang === 'ru' ? 'Доступен для проектов' : 'Available for projects'}</span>
                   </span>
                 </div>
               </div>
