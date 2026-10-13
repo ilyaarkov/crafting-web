@@ -160,17 +160,7 @@ export const About: React.FC = () => {
                         : 'bg-cyan-500/10 blur-[60px] opacity-40'
                     }`}
                   />
-
-                  {/* Бейдж при появлении */}
-                  {isCentered && (
-                    <div className="absolute top-3 left-1/2 -translate-x-1/2 whitespace-nowrap animate-bounce">
-                      <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[11px] font-black tracking-wider uppercase bg-gradient-to-r from-cyan-400 to-sky-400 text-slate-950 shadow-lg shadow-cyan-500/40">
-                        <Award className="w-3.5 h-3.5" />
-                        <span>{lang === 'ru' ? 'Веб-разработчик' : 'Lead Developer'}</span>
-                      </span>
-                    </div>
-                  )}
-
+									
                   <div className="w-full flex flex-col items-center mt-2">
                     <div className="relative w-40 h-40 sm:w-44 sm:h-44 rounded-2xl overflow-hidden border-2 border-cyan-400/30 shadow-2xl shadow-cyan-950/50 mb-4 bg-[#090d14] group-hover:border-cyan-400/60 transition-colors">
                       {!imgError ? (

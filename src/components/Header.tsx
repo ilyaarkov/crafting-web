@@ -37,11 +37,9 @@ export const Header: React.FC = () => {
 
   const navItems = [
     { label: t.header.nav.about, href: '#about' },
-    { label: t.header.nav.solutions, href: '#solutions' },
     { label: t.header.nav.process, href: '#process' },
     { label: t.header.nav.projects, href: '#projects' },
     { label: t.header.nav.pricing, href: '#pricing' },
-    { label: lang === 'ru' ? 'Гарантии' : 'Guarantees', href: '#guarantees' },
   ];
 
   const handleNavClick = (e: React.MouseEvent<HTMLAnchorElement>, href: string) => {
