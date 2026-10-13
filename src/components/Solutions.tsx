@@ -29,7 +29,7 @@ export const Solutions: React.FC = () => {
 
       <div className="max-w-6xl mx-auto px-4 sm:px-6">
         <div className="max-w-3xl mb-14 sm:mb-16">
-          <div className="inline-flex items-center gap-2 text-xs uppercase tracking-widest text-cyan-400 font-semibold mb-3 px-3 py-1">
+          <div className="inline-flex items-center text-xl uppercase tracking-widest text-cyan-400 font-bold mb-3 px-3 py-1">
             <span>{t.header.nav.solutions}</span>
           </div>
           <h2 className="text-2xl sm:text-4xl font-extrabold text-white tracking-tight leading-tight mb-4 text-balance">
