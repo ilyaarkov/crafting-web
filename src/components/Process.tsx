@@ -1,19 +1,16 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { useLanguage } from '../context/LanguageContext';
-import { Rocket, Compass } from 'lucide-react';
+import { Rocket } from 'lucide-react';
 
 export const Process: React.FC = () => {
   const { t } = useLanguage();
-
   const containerRef = useRef<HTMLDivElement>(null);
   const pathRef = useRef<SVGPathElement>(null);
   const pinRefs = useRef<(HTMLDivElement | null)[]>([]);
-
   const [svgPath, setSvgPath] = useState<string>('');
   const [totalLength, setTotalLength] = useState<number>(0);
   const [snakeProgress, setSnakeProgress] = useState<number>(0);
   const [tipCoord, setTipCoord] = useState<{ x: number; y: number } | null>(null);
-
   const [activeSteps, setActiveSteps] = useState<boolean[]>([
     false,
     false,
@@ -26,10 +23,9 @@ export const Process: React.FC = () => {
 
   const steps = t.process.steps || [];
 
-  const updateRouteGeometry = () => {
+  const updateRouteGeometry = useCallback(() => {
     if (!containerRef.current) return;
     const containerRect = containerRef.current.getBoundingClientRect();
-
     const points: { x: number; y: number }[] = [];
 
     pinRefs.current.forEach((el) => {
@@ -44,24 +40,22 @@ export const Process: React.FC = () => {
 
     if (points.length < 2) return;
 
-    let d = `M ${points[0].x} ${Math.max(0, points[0].y - 40)}`;
+    let d = `M ${points[0].x} ${Math.max(0, points[0].y - 30)}`;
     d += ` L ${points[0].x} ${points[0].y}`;
 
     for (let i = 0; i < points.length - 1; i++) {
       const p1 = points[i];
       const p2 = points[i + 1];
       const deltaY = p2.y - p1.y;
-
       const cp1x = p1.x;
       const cp1y = p1.y + deltaY * 0.55;
       const cp2x = p2.x;
       const cp2y = p1.y + deltaY * 0.45;
-
       d += ` C ${cp1x} ${cp1y}, ${cp2x} ${cp2y}, ${p2.x} ${p2.y}`;
     }
 
     setSvgPath(d);
-  };
+  }, []);
 
   useEffect(() => {
     if (pathRef.current && svgPath) {
@@ -69,6 +63,7 @@ export const Process: React.FC = () => {
         const len = pathRef.current.getTotalLength();
         setTotalLength(len);
       } catch {
+        // Fallback if SVG not rendered
       }
     }
   }, [svgPath]);
@@ -78,7 +73,6 @@ export const Process: React.FC = () => {
 
     const handleScroll = () => {
       if (!containerRef.current) return;
-
       const viewportH = window.innerHeight;
       const triggerY = viewportH * 0.74;
 
@@ -87,16 +81,13 @@ export const Process: React.FC = () => {
         const rect = el.getBoundingClientRect();
         return rect.top <= triggerY;
       });
-
       setActiveSteps(newActive);
 
       const firstPin = pinRefs.current[0];
       const lastPin = pinRefs.current[pinRefs.current.length - 1];
-
       if (firstPin && lastPin) {
         const firstPinRect = firstPin.getBoundingClientRect();
         const lastPinRect = lastPin.getBoundingClientRect();
-
         const startTrigger = firstPinRect.top;
         const endTrigger = lastPinRect.top;
         const range = endTrigger - startTrigger;
@@ -140,32 +131,47 @@ export const Process: React.FC = () => {
       handleScroll();
     }, 150);
 
+    // ResizeObserver для точной подгонки при любых изменениях DOM
+    let resizeObserver: ResizeObserver | null = null;
+    if (containerRef.current && typeof ResizeObserver !== 'undefined') {
+      resizeObserver = new ResizeObserver(() => {
+        updateRouteGeometry();
+        handleScroll();
+      });
+      resizeObserver.observe(containerRef.current);
+    }
+
     return () => {
       window.removeEventListener('scroll', onScroll);
       cancelAnimationFrame(animId);
       clearTimeout(timeout);
+      if (resizeObserver) resizeObserver.disconnect();
     };
-  }, [totalLength]);
+  }, [totalLength, updateRouteGeometry]);
 
   return (
-    <section id="process" className="py-24 lg:py-32 relative overflow-hidden select-none">
+    <section id="process" className="py-14 sm:py-18 lg:py-22 relative overflow-hidden select-none">
+      {/* Мягкие фоновые ореолы */}
       <div className="absolute top-1/4 left-1/4 w-[450px] h-[320px] bg-cyan-500/5 blur-[140px] rounded-full pointer-events-none -z-10" />
       <div className="absolute bottom-1/4 right-1/4 w-[450px] h-[320px] bg-emerald-500/5 blur-[140px] rounded-full pointer-events-none -z-10" />
 
       <div className="max-w-5xl mx-auto px-4 sm:px-6">
-        <div className="max-w-3xl mb-16 sm:mb-24">
-          <div className="text-xs uppercase tracking-widest text-cyan-400 font-semibold mb-3">
+        {/* Заголовок блока: компактный и выразительный */}
+        <div className="max-w-3xl mb-10 sm:mb-14">
+          <div className="text-xs uppercase tracking-widest text-cyan-400 font-semibold mb-2.5">
             <span>{t.process.badge}</span>
           </div>
-          <h2 className="text-2xl sm:text-4xl font-extrabold text-white tracking-tight leading-tight mb-4">
+          <h2 className="text-2xl sm:text-4xl font-extrabold text-white tracking-tight leading-tight mb-3">
             {t.process.title}
           </h2>
-          <p className="text-slate-300 text-base sm:text-lg leading-relaxed">
+          <p className="text-slate-300 text-sm sm:text-base leading-relaxed">
             {t.process.intro}
           </p>
         </div>
 
+        {/* Интерактивная траектория маршрута */}
         <div ref={containerRef} className="relative w-full">
+          {/* SVG линия со световой дорожкой и фильтром свечения */}
           <svg className="absolute inset-0 w-full h-full pointer-events-none overflow-visible">
             <defs>
               <linearGradient id="routeGradient" x1="0%" y1="0%" x2="0%" y2="100%">
@@ -173,7 +179,6 @@ export const Process: React.FC = () => {
                 <stop offset="65%" stopColor="#38bdf8" />
                 <stop offset="100%" stopColor="#34d399" />
               </linearGradient>
-
               <filter id="glowFilter" x="-30%" y="-30%" width="160%" height="160%">
                 <feGaussianBlur stdDeviation="3" result="blur" />
                 <feMerge>
@@ -183,6 +188,7 @@ export const Process: React.FC = () => {
               </filter>
             </defs>
 
+            {/* Пунктирный контур пути */}
             {svgPath && (
               <path
                 d={svgPath}
@@ -193,6 +199,7 @@ export const Process: React.FC = () => {
               />
             )}
 
+            {/* Активная светящаяся линия, заполняющаяся по мере скролла */}
             {svgPath && totalLength > 0 && (
               <path
                 ref={pathRef}
@@ -208,6 +215,7 @@ export const Process: React.FC = () => {
               />
             )}
 
+            {/* Движущаяся светящаяся точка на острие линии */}
             {tipCoord && snakeProgress > 0.01 && (
               <g transform={`translate(${tipCoord.x}, ${tipCoord.y})`}>
                 <circle r="6" fill="#ffffff" filter="url(#glowFilter)" />
@@ -216,7 +224,8 @@ export const Process: React.FC = () => {
             )}
           </svg>
 
-          <div className="space-y-16 sm:space-y-24 lg:space-y-28 relative z-10">
+          {/* Список шагов: компактные отступы (space-y-8 sm:space-y-10 lg:space-y-12) */}
+          <div className="space-y-8 sm:space-y-10 lg:space-y-12 relative z-10">
             {steps.map((step, idx) => {
               const isActive = activeSteps[idx];
               const isFinish = idx === 6;
@@ -226,13 +235,13 @@ export const Process: React.FC = () => {
                 return (
                   <div
                     key={idx}
-                    className="w-full flex flex-col items-center text-center pt-4"
+                    className="w-full flex flex-col items-center text-center pt-2"
                   >
                     <div
                       ref={(el) => {
                         pinRefs.current[idx] = el;
                       }}
-                      className={`w-14 h-14 sm:w-16 sm:h-16 rounded-full flex items-center justify-center mb-5 select-none transition-all duration-500 ${
+                      className={`w-13 h-13 sm:w-15 sm:h-15 rounded-full flex items-center justify-center mb-4 select-none transition-all duration-500 ${
                         isActive
                           ? 'bg-[#081a18] border-2 border-emerald-400 text-emerald-300 shadow-[0_0_30px_rgba(52,211,153,0.65)] scale-105'
                           : 'bg-[#080c14] border border-white/15 text-slate-500 opacity-60'
@@ -246,7 +255,7 @@ export const Process: React.FC = () => {
                     </div>
 
                     <div
-                      className={`text-xs font-mono font-bold uppercase tracking-wider mb-1.5 transition-colors duration-300 ${
+                      className={`text-xs font-mono font-bold uppercase tracking-wider mb-1 transition-colors duration-300 ${
                         isActive ? 'text-emerald-400' : 'text-slate-600'
                       }`}
                     >
@@ -254,7 +263,7 @@ export const Process: React.FC = () => {
                     </div>
 
                     <h3
-                      className={`text-2xl sm:text-3xl lg:text-4xl font-extrabold tracking-tight transition-colors duration-300 ${
+                      className={`text-xl sm:text-2xl lg:text-3xl font-extrabold tracking-tight transition-colors duration-300 ${
                         isActive
                           ? 'text-white drop-shadow-[0_0_15px_rgba(52,211,153,0.4)]'
                           : 'text-slate-500'
@@ -264,7 +273,7 @@ export const Process: React.FC = () => {
                     </h3>
 
                     <p
-                      className={`text-sm sm:text-base leading-relaxed mt-2.5 max-w-lg mx-auto transition-colors duration-300 ${
+                      className={`text-xs sm:text-sm leading-relaxed mt-2 max-w-lg mx-auto transition-colors duration-300 ${
                         isActive ? 'text-slate-200 font-medium' : 'text-slate-600'
                       }`}
                     >
@@ -272,7 +281,7 @@ export const Process: React.FC = () => {
                     </p>
 
                     <div
-                      className={`mt-4.5 inline-flex items-center gap-2 px-4 py-2 rounded-full transition-all duration-300 ${
+                      className={`mt-3.5 inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full transition-all duration-300 ${
                         isActive
                           ? 'bg-emerald-950/80 border border-emerald-400/50 text-emerald-300 shadow-[0_0_20px_rgba(52,211,153,0.3)]'
                           : 'bg-white/5 border border-white/10 text-slate-500 opacity-60'
@@ -289,14 +298,15 @@ export const Process: React.FC = () => {
 
               return (
                 <div key={idx} className="w-full relative">
-                  <div className="flex md:hidden items-start gap-4">
+                  {/* МОБИЛЬНАЯ ВЕРСТКА (< md): Пин слева, текст справа */}
+                  <div className="flex md:hidden items-start gap-3.5">
                     <div
                       ref={(el) => {
                         if (typeof window !== 'undefined' && window.innerWidth < 768) {
                           pinRefs.current[idx] = el;
                         }
                       }}
-                      className={`w-11 h-11 shrink-0 rounded-full flex items-center justify-center font-mono font-bold text-sm select-none transition-all duration-500 ${
+                      className={`w-10 h-10 shrink-0 rounded-full flex items-center justify-center font-mono font-bold text-xs select-none transition-all duration-500 ${
                         isActive
                           ? 'bg-[#09182a] border-2 border-cyan-400 text-cyan-300 shadow-[0_0_25px_rgba(34,211,238,0.7)] scale-105'
                           : 'bg-[#080c14] border border-white/15 text-slate-500 opacity-60'
@@ -307,21 +317,23 @@ export const Process: React.FC = () => {
 
                     <div className="flex-1 min-w-0">
                       <div
-                        className={`text-xs font-mono font-bold uppercase tracking-wider mb-1 transition-colors duration-300 ${
+                        className={`text-[11px] font-mono font-bold uppercase tracking-wider mb-0.5 transition-colors duration-300 ${
                           isActive ? 'text-cyan-400' : 'text-slate-600'
                         }`}
                       >
                         {`${t.process.stagePrefix} ${step.number}`}
                       </div>
+
                       <h3
-                        className={`text-xl font-bold tracking-tight transition-colors duration-300 ${
+                        className={`text-lg font-bold tracking-tight transition-colors duration-300 ${
                           isActive ? 'text-white' : 'text-slate-500'
                         }`}
                       >
                         {step.title}
                       </h3>
+
                       <p
-                        className={`text-sm leading-relaxed mt-1.5 transition-colors duration-300 ${
+                        className={`text-xs leading-relaxed mt-1 transition-colors duration-300 ${
                           isActive ? 'text-slate-300' : 'text-slate-600'
                         }`}
                       >
@@ -330,7 +342,9 @@ export const Process: React.FC = () => {
                     </div>
                   </div>
 
-                  <div className="hidden md:grid md:grid-cols-2 md:gap-12 items-center">
+                  {/* ДЕСКТОП ВЕРСТКА (>= md): Шахматное чередование (влево / вправо) вокруг центральной линии */}
+                  <div className="hidden md:grid md:grid-cols-2 md:gap-10 items-center">
+                    {/* Левая половина */}
                     <div
                       className={`flex items-center justify-end ${
                         isLeftOnDesktop ? 'text-right' : 'opacity-0 pointer-events-none'
@@ -339,21 +353,23 @@ export const Process: React.FC = () => {
                       {isLeftOnDesktop && (
                         <div className="max-w-md pr-4">
                           <div
-                            className={`text-xs font-mono font-bold uppercase tracking-wider mb-1 transition-colors duration-300 ${
+                            className={`text-xs font-mono font-bold uppercase tracking-wider mb-0.5 transition-colors duration-300 ${
                               isActive ? 'text-cyan-400' : 'text-slate-600'
                             }`}
                           >
                             {`${t.process.stagePrefix} ${step.number}`}
                           </div>
                           <h3
-                            className={`text-2xl font-bold tracking-tight transition-colors duration-300 ${
-                              isActive ? 'text-white drop-shadow-[0_0_12px_rgba(34,211,238,0.3)]' : 'text-slate-500'
+                            className={`text-xl font-bold tracking-tight transition-colors duration-300 ${
+                              isActive
+                                ? 'text-white drop-shadow-[0_0_12px_rgba(34,211,238,0.3)]'
+                                : 'text-slate-500'
                             }`}
                           >
                             {step.title}
                           </h3>
                           <p
-                            className={`text-sm lg:text-base leading-relaxed mt-1.5 transition-colors duration-300 ${
+                            className={`text-xs lg:text-sm leading-relaxed mt-1 transition-colors duration-300 ${
                               isActive ? 'text-slate-300' : 'text-slate-600'
                             }`}
                           >
@@ -361,7 +377,6 @@ export const Process: React.FC = () => {
                           </p>
                         </div>
                       )}
-
                       {isLeftOnDesktop && (
                         <div
                           ref={(el) => {
@@ -369,7 +384,7 @@ export const Process: React.FC = () => {
                               pinRefs.current[idx] = el;
                             }
                           }}
-                          className={`w-12 h-12 shrink-0 rounded-full flex items-center justify-center font-mono font-bold text-base select-none transition-all duration-500 ${
+                          className={`w-11 h-11 shrink-0 rounded-full flex items-center justify-center font-mono font-bold text-sm select-none transition-all duration-500 ${
                             isActive
                               ? 'bg-[#09182a] border-2 border-cyan-400 text-cyan-300 shadow-[0_0_25px_rgba(34,211,238,0.7)] scale-105'
                               : 'bg-[#080c14] border border-white/15 text-slate-500 opacity-60'
@@ -380,6 +395,7 @@ export const Process: React.FC = () => {
                       )}
                     </div>
 
+                    {/* Правая половина */}
                     <div
                       className={`flex items-center justify-start ${
                         !isLeftOnDesktop ? 'text-left' : 'opacity-0 pointer-events-none'
@@ -392,7 +408,7 @@ export const Process: React.FC = () => {
                               pinRefs.current[idx] = el;
                             }
                           }}
-                          className={`w-12 h-12 shrink-0 rounded-full flex items-center justify-center font-mono font-bold text-base select-none transition-all duration-500 ${
+                          className={`w-11 h-11 shrink-0 rounded-full flex items-center justify-center font-mono font-bold text-sm select-none transition-all duration-500 ${
                             isActive
                               ? 'bg-[#09182a] border-2 border-cyan-400 text-cyan-300 shadow-[0_0_25px_rgba(34,211,238,0.7)] scale-105'
                               : 'bg-[#080c14] border border-white/15 text-slate-500 opacity-60'
@@ -401,25 +417,26 @@ export const Process: React.FC = () => {
                           {step.number}
                         </div>
                       )}
-
                       {!isLeftOnDesktop && (
                         <div className="max-w-md pl-4">
                           <div
-                            className={`text-xs font-mono font-bold uppercase tracking-wider mb-1 transition-colors duration-300 ${
+                            className={`text-xs font-mono font-bold uppercase tracking-wider mb-0.5 transition-colors duration-300 ${
                               isActive ? 'text-cyan-400' : 'text-slate-600'
                             }`}
                           >
                             {`${t.process.stagePrefix} ${step.number}`}
                           </div>
                           <h3
-                            className={`text-2xl font-bold tracking-tight transition-colors duration-300 ${
-                              isActive ? 'text-white drop-shadow-[0_0_12px_rgba(34,211,238,0.3)]' : 'text-slate-500'
+                            className={`text-xl font-bold tracking-tight transition-colors duration-300 ${
+                              isActive
+                                ? 'text-white drop-shadow-[0_0_12px_rgba(34,211,238,0.3)]'
+                                : 'text-slate-500'
                             }`}
                           >
                             {step.title}
                           </h3>
                           <p
-                            className={`text-sm lg:text-base leading-relaxed mt-1.5 transition-colors duration-300 ${
+                            className={`text-xs lg:text-sm leading-relaxed mt-1 transition-colors duration-300 ${
                               isActive ? 'text-slate-300' : 'text-slate-600'
                             }`}
                           >

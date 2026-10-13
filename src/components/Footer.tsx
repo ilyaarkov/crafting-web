@@ -1,6 +1,6 @@
 import React, { useState, Suspense, lazy } from 'react';
 import { useLanguage } from '../context/LanguageContext';
-import { Send, Mail, Shield, ArrowUp } from 'lucide-react';
+import { Send, Mail, Shield, Code2 } from 'lucide-react';
 
 const PrivacyModal = lazy(() => import('./PrivacyModal').then((m) => ({ default: m.PrivacyModal })));
 
@@ -8,8 +8,11 @@ export const Footer: React.FC = () => {
   const { t } = useLanguage();
   const [privacyOpen, setPrivacyOpen] = useState(false);
 
-  const scrollToTop = () => {
-    window.scrollTo({ top: 0, behavior: 'smooth' });
+  const handleTechStackClick = (e: React.MouseEvent<HTMLAnchorElement>) => {
+    e.preventDefault();
+    window.history.pushState({}, '', '/techstack');
+    window.dispatchEvent(new PopStateEvent('popstate'));
+    window.scrollTo({ top: 0, behavior: 'instant' });
   };
 
   return (
@@ -49,6 +52,16 @@ export const Footer: React.FC = () => {
               <span>{t.footer.email}</span>
             </a>
 
+            {/* Ссылка на отдельную страницу стека технологий /techstack */}
+            <a
+              href="/techstack"
+              onClick={handleTechStackClick}
+              className="flex items-center gap-1.5 text-slate-300 hover:text-cyan-300 transition-colors cursor-pointer group"
+            >
+              <Code2 className="w-4 h-4 text-cyan-400 group-hover:scale-110 transition-transform" />
+              <span>{t.footer.techStack}</span>
+            </a>
+
             <button
               onClick={() => setPrivacyOpen(true)}
               className="flex items-center gap-1.5 hover:text-cyan-400 transition-colors cursor-pointer"
@@ -56,7 +69,6 @@ export const Footer: React.FC = () => {
               <Shield className="w-4 h-4 text-slate-400" />
               <span>{t.footer.privacy}</span>
             </button>
-
           </div>
         </div>
 

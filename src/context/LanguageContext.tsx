@@ -1,6 +1,5 @@
-/* eslint-disable react-refresh/only-export-components */
 import React, { createContext, useContext, useState, useEffect } from 'react';
-import { translations, type Language, type Translations } from '../translations';
+import { translations, Language, Translations } from '../translations';
 
 interface LanguageContextType {
   lang: Language;
@@ -10,43 +9,33 @@ interface LanguageContextType {
 
 const LanguageContext = createContext<LanguageContextType | undefined>(undefined);
 
-const STORAGE_KEY = 'ilya_arkov_lang';
-
 export const LanguageProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [lang, setLangState] = useState<Language>(() => {
-    try {
-      const saved = localStorage.getItem(STORAGE_KEY);
+    if (typeof window !== 'undefined') {
+      const saved = localStorage.getItem('preferred_language');
       if (saved === 'ru' || saved === 'en') {
         return saved;
       }
-      return 'ru';
-    } catch {
-      return 'ru';
     }
+    return 'ru';
   });
 
   const setLang = (newLang: Language) => {
     setLangState(newLang);
-    try {
-      localStorage.setItem(STORAGE_KEY, newLang);
+    if (typeof window !== 'undefined') {
+      localStorage.setItem('preferred_language', newLang);
       document.documentElement.lang = newLang;
-    } catch {
-      // ignore storage errors
     }
   };
 
   useEffect(() => {
-    document.documentElement.lang = lang;
+    if (typeof window !== 'undefined') {
+      document.documentElement.lang = lang;
+    }
   }, [lang]);
 
-  const value = {
-    lang,
-    setLang,
-    t: translations[lang],
-  };
-
   return (
-    <LanguageContext.Provider value={value}>
+    <LanguageContext.Provider value={{ lang, setLang, t: translations[lang] }}>
       {children}
     </LanguageContext.Provider>
   );

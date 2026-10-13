@@ -109,10 +109,14 @@ export const Header: React.FC = () => {
             <a
               href="#contact"
               onClick={(e) => handleNavClick(e, '#contact')}
-              className="hidden sm:inline-flex items-center gap-1.5 px-4 py-2 rounded-full text-xs sm:text-sm font-semibold text-slate-950 bg-gradient-to-r from-cyan-300 via-cyan-400 to-sky-400 hover:from-cyan-200 hover:to-sky-300 shadow-lg shadow-cyan-500/20 hover:shadow-cyan-400/30 transition-all transform hover:-translate-y-0.5 whitespace-nowrap active:translate-y-0"
+              className="relative group overflow-hidden hidden sm:inline-flex items-center justify-center gap-1.5 px-5 py-2.5 rounded-full text-xs sm:text-sm font-bold text-slate-950 bg-cyan-400 transition-colors duration-300 active:scale-[0.98] whitespace-nowrap cursor-pointer"
             >
-              <span>{t.header.cta}</span>
-              <ArrowUpRight className="w-3.5 h-3.5" />
+              {/* Эффект смены цвета слева направо с тем же border-radius */}
+              <span className="absolute inset-0 bg-white rounded-full -translate-x-full group-hover:translate-x-0 transition-transform duration-300 ease-out pointer-events-none" />
+              <span className="relative z-10 flex items-center gap-1.5">
+                <span>{t.header.cta}</span>
+                <ArrowUpRight className="w-3.5 h-3.5 transition-transform duration-200 group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
+              </span>
             </a>
 
             {/* Mobile Hamburger Toggle */}
@@ -145,9 +149,13 @@ export const Header: React.FC = () => {
               <a
                 href="#contact"
                 onClick={(e) => handleNavClick(e, '#contact')}
-                className="w-full py-2.5 px-4 rounded-xl text-center text-sm font-semibold text-slate-950 bg-cyan-400 hover:bg-cyan-300 transition-colors"
+                className="relative group overflow-hidden w-full py-2.5 px-4 rounded-full text-center text-sm font-bold text-slate-950 bg-cyan-400 transition-colors duration-300 active:scale-[0.98]"
               >
-                {t.header.cta}
+                <span className="absolute inset-0 bg-white rounded-full -translate-x-full group-hover:translate-x-0 transition-transform duration-300 ease-out pointer-events-none" />
+                <span className="relative z-10 flex items-center justify-center gap-1.5">
+                  <span>{t.header.cta}</span>
+                  <ArrowUpRight className="w-3.5 h-3.5 transition-transform duration-200 group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
+                </span>
               </a>
             </div>
           </div>

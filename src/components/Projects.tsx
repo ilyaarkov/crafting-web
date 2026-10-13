@@ -1,453 +1,129 @@
-import React, { useState, useEffect, useRef, useCallback, Suspense, lazy } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { useLanguage } from '../context/LanguageContext';
-import type { ProjectData } from './ProjectModal';
-import { SmartImage } from './SmartImage';
-import { ArrowUpRight, Check, Eye } from 'lucide-react';
-
-const ProjectModal = lazy(() => import('./ProjectModal').then((m) => ({ default: m.ProjectModal })));
-
-interface StepState {
-  cardTops: number[];
-}
+import { ArrowRight } from 'lucide-react';
+import { MacBrowserFrame } from './MacBrowserFrame';
+import { PROJECTS_DATA } from '../data/projectsData';
 
 export const Projects: React.FC = () => {
-  const { t } = useLanguage();
-  const [selectedProject, setSelectedProject] = useState<ProjectData | null>(null);
-  const [trackHeight, setTrackHeight] = useState<number>(3000);
-
-  const trackRef = useRef<HTMLDivElement | null>(null);
-  const cardRefs = useRef<(HTMLDivElement | null)[]>([]);
-  const cardHeightsRef = useRef<number[]>([]);
-  const lastWidthRef = useRef<number>(0);
-
-  const cleanImageMap: Record<string, string> = {
-    'specialist-portfolio': '/projects/portfolio.webp',
-    'nonprofit-redesign': '/projects/nonprofit.webp',
-    'wine-coop': '/projects/intuitivo.webp',
-    'driving-center': '/projects/driftet.webp',
-  };
-
-  const projects = t.projects.items || [];
-  const N = projects.length;
-
-  const handleDiscuss = () => {
-    const elem = document.querySelector('#contact');
-    if (elem) {
-      const offsetTop = elem.getBoundingClientRect().top + window.scrollY - 80;
-      window.scrollTo({
-        top: offsetTop,
-        behavior: 'smooth',
-      });
-    }
-  };
-
-  const measureCardHeights = useCallback((): number[] => {
-    if (typeof window === 'undefined' || window.innerWidth < 1024) return [];
-    const heights = cardRefs.current.map((el) => {
-      if (el && el.offsetHeight > 0) {
-        return el.offsetHeight;
-      }
-      return 560;
-    });
-    cardHeightsRef.current = heights;
-    return heights;
-  }, []);
-
-  const computeStepStates = useCallback(
-    (cardHeights: number[], viewportH: number): StepState[] => {
-      if (N === 0) return [];
-
-      const baseTop = 82;
-      const gap = 16;
-      const bottomPadding = 24;
-      const maxBottom = viewportH - bottomPadding;
-
-      const states: StepState[] = [];
-
-      const h0 = cardHeights[0] || 560;
-      const initialTop0 = Math.min(baseTop, maxBottom - h0);
-      const currentTops = [initialTop0];
-      states.push({ cardTops: [...currentTops] });
-
-      for (let i = 1; i < N; i++) {
-        const hi = cardHeights[i] || 560;
-        const candTop = currentTops[i - 1] + gap;
-        const candBottom = candTop + hi;
-
-        if (candBottom <= maxBottom) {
-          currentTops.push(candTop);
-        } else {
-          const diff = candBottom - maxBottom;
-          for (let j = 0; j < i; j++) {
-            currentTops[j] -= diff;
-          }
-          currentTops.push(candTop - diff);
-        }
-        states.push({ cardTops: [...currentTops] });
-      }
-
-      return states;
-    },
-    [N]
-  );
-
-  const updateDesktopPositions = useCallback(() => {
-    if (typeof window === 'undefined' || window.innerWidth < 1024 || !trackRef.current || N === 0) return;
-
-    const trackRect = trackRef.current.getBoundingClientRect();
-    const viewportH = window.innerHeight;
-
-    const distPerCard = Math.round(viewportH * 0.8);
-    const bufferDist = Math.round(viewportH * 0.5);
-    const totalScrollDist = Math.max(0, (N - 1) * distPerCard + bufferDist);
-
-    let heights = cardHeightsRef.current;
-    if (!heights || heights.length !== N || heights.some((h) => h === 0)) {
-      heights = measureCardHeights();
-    }
-
-    const states = computeStepStates(heights, viewportH);
-    if (!states.length) return;
-
-    const scrollOffset = Math.max(0, -trackRect.top);
-    const clampedOffset = Math.min(scrollOffset, totalScrollDist);
-
-    const newY: number[] = new Array(N).fill(0);
-
-    if (N === 1) {
-      newY[0] = states[0].cardTops[0];
-    } else if (clampedOffset <= 0) {
-      newY[0] = states[0].cardTops[0];
-      for (let m = 1; m < N; m++) {
-        newY[m] = viewportH + 40 + (m - 1) * 60;
-      }
-    } else if (clampedOffset >= (N - 1) * distPerCard) {
-      for (let j = 0; j < N; j++) {
-        newY[j] = states[N - 1].cardTops[j];
-      }
-    } else {
-      const currentStep = Math.min(N - 1, Math.floor(clampedOffset / distPerCard) + 1);
-      const start = (currentStep - 1) * distPerCard;
-      const p = Math.max(0, Math.min(1, (clampedOffset - start) / distPerCard));
-
-      for (let j = 0; j < currentStep; j++) {
-        const fromY = states[currentStep - 1].cardTops[j];
-        const toY = states[currentStep].cardTops[j];
-        newY[j] = fromY + p * (toY - fromY);
-      }
-
-      const entryStart = viewportH + 30;
-      const targetTop = states[currentStep].cardTops[currentStep];
-      newY[currentStep] = (1 - p) * entryStart + p * targetTop;
-
-      for (let m = currentStep + 1; m < N; m++) {
-        newY[m] = viewportH + 30 + (m - currentStep) * 60;
-      }
-    }
-
-    for (let i = 0; i < N; i++) {
-      const el = cardRefs.current[i];
-      if (el) {
-        el.style.transform = `translate3d(0, ${Math.round(newY[i])}px, 0)`;
-      }
-    }
-  }, [N, computeStepStates, measureCardHeights]);
+  const { t, lang } = useLanguage();
+  const sectionRef = useRef<HTMLElement>(null);
+  const [isVisible, setIsVisible] = useState(false);
 
   useEffect(() => {
-    lastWidthRef.current = window.innerWidth;
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setIsVisible(true);
+          observer.disconnect();
+        }
+      },
+      { threshold: 0.1 }
+    );
 
-    const setupDesktop = () => {
-      if (window.innerWidth < 1024) return;
-      const viewportH = window.innerHeight;
-      const distPerCard = Math.round(viewportH * 0.8);
-      const bufferDist = Math.round(viewportH * 0.5);
-      const totalScrollDist = Math.max(0, (N - 1) * distPerCard + bufferDist);
-      setTrackHeight(totalScrollDist + viewportH);
-      measureCardHeights();
-      updateDesktopPositions();
-    };
+    if (sectionRef.current) {
+      observer.observe(sectionRef.current);
+    }
 
-    setupDesktop();
+    return () => observer.disconnect();
+  }, []);
 
-    const handleResize = () => {
-      const currentWidth = window.innerWidth;
-      if (currentWidth < 1024) return;
-      if (currentWidth === lastWidthRef.current) {
-        updateDesktopPositions();
-        return;
-      }
-      lastWidthRef.current = currentWidth;
-      setupDesktop();
-    };
+  const projects = (t.projects.items || []).slice(0, 4);
 
-    window.addEventListener('resize', handleResize);
-
-    let rafId: number | null = null;
-    const handleScroll = () => {
-      if (window.innerWidth < 1024) return;
-      if (rafId !== null) return;
-      rafId = requestAnimationFrame(() => {
-        updateDesktopPositions();
-        rafId = null;
-      });
-    };
-
-    window.addEventListener('scroll', handleScroll, { passive: true });
-
-    const timer = setTimeout(() => {
-      if (window.innerWidth >= 1024) {
-        measureCardHeights();
-        updateDesktopPositions();
-      }
-    }, 60);
-
-    return () => {
-      window.removeEventListener('resize', handleResize);
-      window.removeEventListener('scroll', handleScroll);
-      clearTimeout(timer);
-      if (rafId !== null) cancelAnimationFrame(rafId);
-    };
-  }, [N, measureCardHeights, updateDesktopPositions]);
+  const navigateTo = (url: string) => {
+    window.history.pushState({}, '', url);
+    window.dispatchEvent(new PopStateEvent('popstate'));
+    window.scrollTo({ top: 0, behavior: 'instant' });
+  };
 
   return (
-    <section id="projects" className="py-20 lg:py-28 relative">
-      <div className="absolute inset-0 overflow-hidden pointer-events-none -z-10">
-        <div className="absolute top-1/4 left-1/4 w-[500px] h-[350px] bg-cyan-500/5 blur-[140px] rounded-full" />
-        <div className="absolute bottom-1/3 right-1/4 w-[450px] h-[350px] bg-indigo-500/5 blur-[140px] rounded-full" />
-      </div>
+    <section
+      ref={sectionRef}
+      id="projects"
+      className="py-16 sm:py-20 lg:py-24 relative overflow-hidden select-none"
+    >
+      {/* Деликатные фоновые ореолы */}
+      <div className="absolute top-1/4 -right-40 w-96 h-96 bg-cyan-500/10 blur-[150px] rounded-full pointer-events-none -z-10" />
+      <div className="absolute bottom-1/4 -left-40 w-96 h-96 bg-blue-600/10 blur-[150px] rounded-full pointer-events-none -z-10" />
 
-      <div className="max-w-6xl mx-auto px-4 sm:px-6 mb-12 sm:mb-16">
-        <div className="max-w-3xl">
-          <div className="text-xs uppercase tracking-widest text-cyan-400 font-semibold mb-3">
-            {t.projects.preTitle}
+      <div className="max-w-6xl mx-auto px-4 sm:px-6 relative z-10">
+        {/* Шапка блока */}
+        <div className="max-w-3xl mb-12 sm:mb-14">
+          <div className="text-xs uppercase tracking-widest text-cyan-400 font-semibold mb-2.5">
+            <span>{t.projects.preTitle}</span>
           </div>
-          <h2 className="text-2xl sm:text-4xl font-extrabold text-white tracking-tight leading-tight mb-4">
+          <h2 className="text-2xl sm:text-4xl font-extrabold text-white tracking-tight leading-tight">
             {t.projects.title}
           </h2>
-          <p className="text-slate-300 text-base sm:text-lg leading-relaxed">
-            {t.projects.description}
-          </p>
         </div>
-      </div>
 
-      <div className="block lg:hidden max-w-6xl mx-auto px-4 sm:px-6 space-y-6">
-        {projects.map((project, idx) => {
-          const projectImg = cleanImageMap[project.id] || project.image;
-          const stickyTop = 64 + idx * 12;
-          const zIndex = 10 + idx;
+        {/* Сетка проектов 2x2: открытие по клику на фото с интерактивной надписью "ПОСМОТРЕТЬ" */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 lg:gap-12">
+          {projects.map((project, idx) => {
+            const meta = PROJECTS_DATA[project.id];
+            const imageSrc = meta?.previewImage || project.image;
 
-          return (
-            <div
-              key={project.id}
-              style={{
-                top: `${stickyTop}px`,
-                zIndex,
-              }}
-              className="sticky rounded-[24px] bg-[#090d16] border border-white/[0.12] border-t-cyan-400/30 p-5 shadow-[0_-12px_30px_rgba(0,0,0,0.85),0_20px_45px_rgba(0,0,0,0.85)]"
-            >
-              <div className="flex items-center justify-between pb-3 mb-4 border-b border-white/10 text-xs font-mono">
-                <div className="flex items-center gap-2 truncate pr-2">
-                  <span className="w-2.5 h-2.5 rounded-full bg-cyan-400 shrink-0 shadow-sm shadow-cyan-400/50" />
-                  <span className="font-bold text-cyan-300 shrink-0">
-                    0{idx + 1} / 0{projects.length}
-                  </span>
-                  <span className="text-slate-400">•</span>
-                  <span className="text-slate-200 font-semibold truncate">
-                    {project.title}
-                  </span>
-                </div>
-                <span className="text-[11px] px-2.5 py-0.5 rounded-full bg-cyan-950/80 border border-cyan-500/30 text-cyan-300 shrink-0 whitespace-nowrap">
-                  {project.tag}
-                </span>
-              </div>
-
+            return (
               <div
-                className="group/img relative rounded-2xl overflow-hidden border border-white/10 bg-[#060a12] shadow-xl cursor-pointer mb-5"
-                onClick={() => setSelectedProject(project)}
+                key={project.id}
+                style={{
+                  transitionDelay: `${idx * 120}ms`,
+                }}
+                className={`group flex flex-col justify-start transition-all duration-700 ease-out ${
+                  isVisible
+                    ? 'opacity-100 translate-y-0'
+                    : 'opacity-0 translate-y-8'
+                }`}
               >
-                <div className="px-3.5 py-2 bg-[#0e1422] border-b border-white/10 flex items-center justify-between">
-                  <div className="flex items-center gap-1.5">
-                    <span className="w-2 h-2 rounded-full bg-rose-500/80" />
-                    <span className="w-2 h-2 rounded-full bg-amber-500/80" />
-                    <span className="w-2 h-2 rounded-full bg-emerald-500/80" />
-                  </div>
-                  <span className="text-[10px] text-slate-400 font-mono">{t.projects.previewLabel}</span>
-                </div>
-
-                <div className="relative aspect-[16/10] overflow-hidden bg-slate-900">
-                  <SmartImage
-                    src={projectImg}
-                    alt={project.title}
-                    className="w-full h-full object-cover active:scale-102 transition-transform duration-300"
-                    referrerPolicy="no-referrer"
+                {/* Окно браузера в стиле macOS с фото: кликабельно, курсор-указатель, оверлей "ПОСМОТРЕТЬ" */}
+                <div
+                  onClick={() => navigateTo(`/portfolio/${project.id}`)}
+                  className="mb-4 sm:mb-5 rounded-2xl overflow-hidden group-hover:shadow-[0_0_35px_rgba(34,211,238,0.25)] transition-all duration-300 cursor-pointer"
+                  role="button"
+                  tabIndex={0}
+                  onKeyDown={(e) => {
+                    if (e.key === 'Enter' || e.key === ' ') {
+                      navigateTo(`/portfolio/${project.id}`);
+                    }
+                  }}
+                >
+                  <MacBrowserFrame
+                    imageSrc={imageSrc}
+                    imageAlt={project.title}
+                    overlayText={lang === 'ru' ? 'ПОСМОТРЕТЬ' : 'VIEW'}
                   />
-                  <div className="absolute inset-0 bg-gradient-to-t from-[#090d16] via-transparent to-transparent opacity-60" />
-                  <div className="absolute bottom-3 right-3">
-                    <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-semibold bg-cyan-400 text-slate-950 shadow-md">
-                      <Eye className="w-3.5 h-3.5" />
-                      <span>{t.projects.btnViewScreens}</span>
-                    </span>
-                  </div>
                 </div>
-              </div>
 
-              <div>
-                <h3 className="text-lg font-bold text-white mb-2 leading-snug">
+                {/* Заголовок проекта (также кликабелен) */}
+                <h3
+                  onClick={() => navigateTo(`/portfolio/${project.id}`)}
+                  className="text-xl sm:text-2xl font-bold text-white tracking-tight group-hover:text-cyan-300 transition-colors cursor-pointer"
+                >
                   {project.title}
                 </h3>
-                <p className="text-slate-300 text-xs sm:text-sm leading-relaxed mb-4">
+
+                {/* Лаконичное описание проекта */}
+                <p className="text-xs sm:text-sm text-slate-300/90 leading-relaxed mt-2.5">
                   {project.description}
                 </p>
-
-                <div className="space-y-1.5 mb-4 bg-white/[0.02] p-3 rounded-xl border border-white/5">
-                  <div className="text-[10px] font-bold uppercase tracking-wider text-slate-400 mb-1">
-                    {project.whatDoneTitle || t.projects.whatDoneFallback}
-                  </div>
-                  {project.whatDoneList.slice(0, 3).map((feat, fIdx) => (
-                    <div key={fIdx} className="flex items-start gap-2 text-xs text-slate-300">
-                      <Check className="w-3.5 h-3.5 text-cyan-400 shrink-0 mt-0.5" />
-                      <span>{feat}</span>
-                    </div>
-                  ))}
-                </div>
-
-                <button
-                  onClick={() => setSelectedProject(project)}
-                  className="w-full py-3 px-4 rounded-xl text-xs font-bold text-slate-900 bg-gradient-to-r from-cyan-400 to-sky-400 hover:from-cyan-300 hover:to-sky-300 transition-all flex items-center justify-center gap-2 cursor-pointer shadow-md shadow-cyan-500/20 active:scale-[0.99]"
-                >
-                  <span>{project.btnText}</span>
-                  <ArrowUpRight className="w-4 h-4 text-slate-950" />
-                </button>
               </div>
-            </div>
-          );
-        })}
-      </div>
+            );
+          })}
+        </div>
 
-      <div
-        ref={trackRef}
-        className="hidden lg:block relative"
-        style={{ height: `${trackHeight}px` }}
-      >
-        <div className="sticky top-0 h-[100dvh] min-h-screen w-full overflow-visible pointer-events-none">
-          <div className="w-full max-w-6xl mx-auto px-6 relative h-full">
-            {projects.map((project, idx) => {
-              const projectImg = cleanImageMap[project.id] || project.image;
-              const zIndex = 10 + idx;
-              const defaultTop = idx === 0 ? 82 : 1200 + idx * 80;
-
-              return (
-                <div
-                  key={project.id}
-                  ref={(el) => {
-                    cardRefs.current[idx] = el;
-                  }}
-                  style={{
-                    transform: `translate3d(0, ${defaultTop}px, 0)`,
-                    zIndex,
-                  }}
-                  className="absolute inset-x-6 pointer-events-auto rounded-[30px] bg-[#090d16] border border-white/[0.12] border-t-cyan-400/30 p-8 shadow-[0_-18px_40px_rgba(0,0,0,0.88),0_25px_50px_rgba(0,0,0,0.85)] will-change-transform [backface-visibility:hidden]"
-                >
-                  <div className="flex items-center justify-between pb-3 mb-6 border-b border-white/10 text-xs font-mono">
-                    <div className="flex items-center gap-2.5 truncate pr-2">
-                      <span className="w-2.5 h-2.5 rounded-full bg-cyan-400 shrink-0 shadow-sm shadow-cyan-400/50" />
-                      <span className="font-bold text-cyan-300 shrink-0">
-                        0{idx + 1} / 0{projects.length}
-                      </span>
-                      <span className="text-slate-400">•</span>
-                      <span className="text-slate-200 font-semibold truncate">
-                        {project.title}
-                      </span>
-                    </div>
-                    <span className="text-[11px] px-3 py-1 rounded-full bg-cyan-950/80 border border-cyan-500/30 text-cyan-300 shrink-0 whitespace-nowrap">
-                      {project.tag}
-                    </span>
-                  </div>
-
-                  <div className="grid grid-cols-12 gap-8 items-center">
-                    <div className="col-span-7">
-                      <div
-                        className="group/img relative rounded-2xl overflow-hidden border border-white/10 bg-[#060a12] shadow-xl cursor-pointer"
-                        onClick={() => setSelectedProject(project)}
-                      >
-                        <div className="px-3.5 py-2.5 bg-[#0e1422] border-b border-white/10 flex items-center justify-between">
-                          <div className="flex items-center gap-1.5">
-                            <span className="w-2.5 h-2.5 rounded-full bg-rose-500/80" />
-                            <span className="w-2.5 h-2.5 rounded-full bg-amber-500/80" />
-                            <span className="w-2.5 h-2.5 rounded-full bg-emerald-500/80" />
-                          </div>
-                          <span className="text-[10px] text-slate-400 font-mono">{t.projects.previewLabel}</span>
-                        </div>
-
-                        <div className="relative aspect-[16/10] overflow-hidden bg-slate-900">
-                          <SmartImage
-                            src={projectImg}
-                            alt={project.title}
-                            className="w-full h-full object-cover group-hover/img:scale-105 transition-transform duration-500"
-                            referrerPolicy="no-referrer"
-                            onLoad={() => {
-                              measureCardHeights();
-                              updateDesktopPositions();
-                            }}
-                          />
-                          <div className="absolute inset-0 bg-gradient-to-t from-[#090d16] via-transparent to-transparent opacity-60" />
-                          <div className="absolute bottom-3.5 right-3.5 opacity-90 group-hover/img:opacity-100 transition-opacity">
-                            <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-semibold bg-cyan-400 text-slate-950 shadow-lg shadow-cyan-500/20">
-                              <Eye className="w-3.5 h-3.5" />
-                              <span>{t.projects.btnViewScreens}</span>
-                            </span>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-
-                    <div className="col-span-5 flex flex-col justify-between">
-                      <div>
-                        <h3 className="text-2xl font-bold text-white mb-2.5 leading-snug">
-                          {project.title}
-                        </h3>
-                        <p className="text-slate-300 text-sm leading-relaxed mb-5">
-                          {project.description}
-                        </p>
-
-                        <div className="space-y-2 mb-6 bg-white/[0.02] p-3.5 rounded-xl border border-white/5">
-                          <div className="text-[11px] font-bold uppercase tracking-wider text-slate-400 mb-1">
-                            {project.whatDoneTitle || t.projects.whatDoneFallback}
-                          </div>
-                          {project.whatDoneList.slice(0, 3).map((feat, fIdx) => (
-                            <div key={fIdx} className="flex items-start gap-2 text-xs text-slate-300">
-                              <Check className="w-3.5 h-3.5 text-cyan-400 shrink-0 mt-0.5" />
-                              <span>{feat}</span>
-                            </div>
-                          ))}
-                        </div>
-                      </div>
-
-                      <button
-                        onClick={() => setSelectedProject(project)}
-                        className="w-full py-3 px-5 rounded-xl text-sm font-bold text-slate-900 bg-gradient-to-r from-cyan-400 to-sky-400 hover:from-cyan-300 hover:to-sky-300 transition-all flex items-center justify-center gap-2 cursor-pointer shadow-md shadow-cyan-500/20"
-                      >
-                        <span>{project.btnText}</span>
-                        <ArrowUpRight className="w-4 h-4 text-slate-950" />
-                      </button>
-                    </div>
-                  </div>
-                </div>
-              );
-            })}
-          </div>
+        {/* Кнопка "Все проекты" для перехода на полный каталог */}
+        <div className="mt-14 sm:mt-18 flex justify-center">
+          <button
+            onClick={() => navigateTo('/portfolio')}
+            className="group relative inline-flex items-center gap-2.5 px-8 py-3.5 rounded-full border border-cyan-400/50 bg-gradient-to-r from-cyan-950/80 to-blue-950/80 text-sm font-semibold text-white overflow-hidden transition-all duration-300 hover:border-cyan-300 hover:shadow-[0_0_25px_rgba(34,211,238,0.35)] cursor-pointer"
+          >
+            <span className="absolute inset-0 w-full h-full bg-cyan-400 -translate-x-full group-hover:translate-x-0 transition-transform duration-300 ease-out rounded-full pointer-events-none" />
+            <span className="relative z-10 transition-colors duration-300 group-hover:text-slate-950">
+              {t.projects.allProjectsBtn || 'Все проекты'}
+            </span>
+            <ArrowRight className="relative z-10 w-4 h-4 transition-all duration-300 group-hover:text-slate-950 group-hover:translate-x-1" />
+          </button>
         </div>
       </div>
-
-      {selectedProject && (
-        <Suspense fallback={null}>
-          <ProjectModal
-            project={selectedProject}
-            onClose={() => setSelectedProject(null)}
-            onDiscuss={handleDiscuss}
-          />
-        </Suspense>
-      )}
     </section>
   );
 };

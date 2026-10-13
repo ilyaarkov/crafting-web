@@ -15,12 +15,15 @@ export interface Translations {
   };
   hero: {
     title: string;
+    titlePrefix: string;
+    titleHighlight: string;
     description: string;
     subDescription1: string;
     subDescription2: string;
     priceTag: string;
     ctaPrimary: string;
     ctaSecondary: string;
+    tags: string[];
     metrics: {
       days: string;
       daysLabel: string;
@@ -30,13 +33,33 @@ export interface Translations {
       directLabel: string;
     };
   };
-  about: {
+  specialization: {
+    badge: string;
     title: string;
-    p1: string;
-    p2: string;
-    canIncludeTitle: string;
-    canIncludeList: string[];
-    directComm: string;
+    subtitle: string;
+    orderCta: string;
+    scrollAria: string;
+    categories: {
+      title: string;
+      items: {
+        number?: string;
+        title: string;
+        description: string;
+      }[];
+    }[];
+  };
+  about: {
+    badge: string;
+    title: string;
+    subtitle: string;
+    bioParagraph1: string;
+    bioParagraph2: string;
+    bioParagraph3: string;
+    locationRole: string;
+    socials: {
+      name: string;
+      url: string;
+    }[];
     whoIsItForTitle: string;
     whoIsItForList: string[];
     whoIsNotForTitle: string;
@@ -100,6 +123,7 @@ export interface Translations {
     preTitle: string;
     title: string;
     description: string;
+    allProjectsBtn: string;
     btnViewProject: string;
     btnViewScreens: string;
     btnViewConcept: string;
@@ -225,6 +249,7 @@ export interface Translations {
     telegram: string;
     email: string;
     privacy: string;
+    techStack: string;
     copyright: string;
   };
   privacyModal: {
@@ -252,58 +277,126 @@ export const translations: Record<Language, Translations> = {
         solutions: 'Что решает сайт',
         process: 'Как я работаю',
         projects: 'Проекты',
-        pricing: 'Тарифы',
+        pricing: 'Прайсы',
         whyCheaper: 'Почему дешевле',
       },
       cta: 'Обсудить проект',
     },
     hero: {
-      title: 'Сайт, который объясняет ваши услуги за вас',
-      description: 'Соберу в одном месте ваши услуги, цены, примеры работ, ответы на частые вопросы и удобный способ записаться или оставить заявку.',
+      title: 'Превращаю бизнес-задачи в\u00A0цифровые\u00A0решения',
+      titlePrefix: 'Превращаю бизнес-задачи',
+      titleHighlight: 'в\u00A0цифровые\u00A0решения',
+      description: 'Разработка современных сайтов под\u00A0ключ для\u00A0экспертов, мастеров и\u00A0малого бизнеса. Понятная структура, быстрая загрузка и\u00A0прямая связь с\u00A0разработчиком.',
       subDescription1: 'Вместо того чтобы каждый раз отправлять клиенту прайс и повторять одну и ту же информацию, вы сможете просто дать ему одну ссылку.',
       subDescription2: 'Современная разработка, удобная мобильная версия и прямое общение с разработчиком – без агентской наценки.',
       priceTag: 'От 39 000 ₽ · Срок от 5 рабочих дней',
-      ctaPrimary: 'Обсудить мой сайт',
+      ctaPrimary: 'Обсудить проект',
       ctaSecondary: 'Посмотреть проекты',
+      tags: ['WEB DEVELOPMENT', 'LANDING PAGE', 'E-COMMERCE', 'AUTOMATION', 'INTEGRATIONS'],
       metrics: {
         days: 'от 5 дней',
         daysLabel: 'Срок разработки',
         price: 'от 39 000 ₽',
         priceLabel: 'Фиксированная цена',
         direct: '1 на 1',
-        directLabel: 'Без менеджеров',
+        directLabel: 'Без посредников',
       },
     },
-    about: {
-      title: 'Разрабатываю современные сайты для экспертов и малого бизнеса',
-      p1: 'Меня зовут Илья Арьков. Я веб-разработчик с профильным высшим образованием. Создаю сайты для специалистов, небольших компаний, некоммерческих организаций и проектов, которым важно понятно представить себя в интернете.',
-      p2: 'Моя задача – аккуратно собрать предоставленную вами информацию и превратить её в современный, быстрый и удобный сайт.',
-      canIncludeTitle: 'Я могу разместить на нём:',
-      canIncludeList: [
-        'услуги и цены;',
-        'портфолио или каталог;',
-        'информацию о вас или компании;',
-        'ответы на частые вопросы;',
-        'условия работы;',
-        'форму заявки или кнопку записи;',
-        'дополнительные функции для работы с данными.',
+    specialization: {
+      badge: 'Направления работы',
+      title: 'Моя специализация',
+      subtitle: 'Создаю веб-решения под\u00A0конкретные задачи вашего бизнеса: от\u00A0быстрого запуска до\u00A0глубокой автоматизации.',
+      orderCta: 'Заказать решение',
+      scrollAria: 'Перейти к\u00A0специализации',
+      categories: [
+        {
+          title: 'Веб-разработка',
+          items: [
+            {
+              number: '01',
+              title: 'Landing page',
+              description: 'Конверсионные одностраничные сайты для\u00A0презентации услуг, личного бренда или\u00A0ключевого продукта.',
+            },
+            {
+              number: '02',
+              title: 'Корпоративные сайты',
+              description: 'Многостраничные представительские сайты для\u00A0компаний и\u00A0экспертов с\u00A0детальным описанием услуг.',
+            },
+            {
+              number: '03',
+              title: 'Интернет-магазины и\u00A0каталоги',
+              description: 'Удобные витрины товаров с\u00A0фильтрацией, корзиной и\u00A0быстрым оформлением заказа.',
+            },
+            {
+              number: '04',
+              title: 'Доступные MVP-проекты',
+              description: 'Быстрый и\u00A0бюджетный запуск первой рабочей версии сайта для\u00A0проверки бизнес-идей и\u00A0первых заявок.',
+            },
+            {
+              number: '05',
+              title: 'Сайты для\u00A0экспертов и\u00A0мастеров',
+              description: 'Персональные сайты специалистов с\u00A0портфолио, прайс-листом, отзывами и\u00A0прямой связью.',
+            },
+          ],
+        },
+        {
+          title: 'Автоматизация и\u00A0интеграции',
+          items: [
+            {
+              number: '06',
+              title: 'Приём заявок в\u00A0любые каналы',
+              description: 'Моментальная отправка данных из\u00A0форм в\u00A0любые мессенджеры, соцсети, CRM или\u00A0на\u00A0почту.',
+            },
+            {
+              number: '07',
+              title: 'Автоматизация бизнес-процессов',
+              description: 'Связка сайта с\u00A0таблицами, сервисами рассылок и\u00A0базами данных для\u00A0избавления от\u00A0рутины.',
+            },
+            {
+              number: '08',
+              title: 'Подключение онлайн-оплаты',
+              description: 'Интеграция платёжных систем, банковского эквайринга и\u00A0формирования электронных чеков.',
+            },
+            {
+              number: '09',
+              title: 'AI-чатботы и\u00A0ассистенты',
+              description: 'Умные ассистенты для\u00A0консультации клиентов, ответов на\u00A0частые вопросы и\u00A0сбора контактов.',
+            },
+          ],
+        },
       ],
-      directComm: 'Вы общаетесь непосредственно со мной – без менеджеров, долгих согласований и передачи задачи между разными исполнителями.',
+    },
+    about: {
+      badge: 'Обо мне',
+      title: 'Создаю сайты как ремесленник – с\u00A0вниманием к\u00A0каждой детали',
+      subtitle: 'Кто я, мой подход к\u00A0делу и\u00A0почему со\u00A0мной комфортно работать',
+      locationRole: 'Веб-разработчик · Создаю современные цифровые решения для\u00A0людей и\u00A0бизнеса',
+      bioParagraph1: 'Привет! Меня зовут Илья. Я создаю современные, быстрые сайты для\u00A0экспертов и\u00A0малого бизнеса.',
+      bioParagraph2: 'Я индивидуально подхожу к\u00A0каждому клиенту и\u00A0пытаюсь проникнуться в\u00A0его сферу, чтобы предложить лучшее решение. Мне нравится решать поставленные передо\u00A0мной задачи и\u00A0закрывать своим продуктом потребности людей. Люблю точность, выверенность и\u00A0внимание к\u00A0деталям.',
+      bioParagraph3: 'Мечтаю создать продукт, который будет приносить пользу людям, и\u00A0накопить на\u00A0дом на\u00A0берегу моря.',
+      socials: [
+        { name: 'Telegram', url: 'https://t.me/ilyaarkovdotcom' },
+        { name: 'GitHub', url: 'https://github.com/ilyaarkov' },
+        { name: 'Instagram', url: 'https://instagram.com/ilyaarkov' },
+        { name: 'Threads', url: 'https://threads.net/@ilyaarkov' },
+        { name: 'X', url: 'https://x.com/ilyaarkov' },
+        { name: 'LinkedIn', url: 'https://linkedin.com/in/ilyaarkov' },
+      ],
       whoIsItForTitle: 'Кому подойдёт сотрудничество',
       whoIsItForList: [
-        'репетиторам, преподавателям и консультантам;',
-        'фотографам, дизайнерам и другим специалистам;',
-        'тату-, бьюти- и частным мастерам;',
-        'небольшим студиям и мастерским;',
-        'малому бизнесу и некоммерческим организациям;',
-        'владельцам устаревших или неудобных сайтов.',
+        'репетиторам, преподавателям и\u00A0консультантам;',
+        'фотографам, дизайнерам и\u00A0творческим специалистам;',
+        'тату-, бьюти- и\u00A0независимым мастерам;',
+        'небольшим студиям и\u00A0крафтовым мастерским;',
+        'малому бизнесу и\u00A0некоммерческим организациям;',
+        'владельцам устаревших или\u00A0неудобных сайтов.',
       ],
-      whoIsNotForTitle: 'Кому, скорее всего, не подойдёт',
+      whoIsNotForTitle: 'Кому, скорее всего, не\u00A0подойдёт',
       whoIsNotForList: [
-        'крупным компаниям со сложными тендерами и многоэтапными согласованиями;',
-        'проектам, которым требуется полноценное маркетинговое исследование;',
-        'тем, кто ищет шаблонный сайт на конструкторе за один вечер;',
-        'сложным интернет-магазинам и корпоративным системам с десятками интеграций.',
+        'крупным корпорациям с\u00A0бюрократическими тендерами и\u00A0многоэтапными согласованиями;',
+        'проектам, которым требуется многомесячное исследовательское агентство;',
+        'тем, кто ищет шаблонный сайт на\u00A0конструкторе за\u00A0один вечер;',
+        'масштабным enterprise-системам с\u00A0десятками сложных интеграций.',
       ],
     },
     solutions: {
@@ -410,7 +503,7 @@ export const translations: Record<Language, Translations> = {
           id: 'tailwind',
           name: 'Tailwind CSS',
           subtitle: 'Индивидуальный дизайн и адаптивность',
-          description: 'Позволяет создавать чистую адаптивную верстку без раздутого кода — сайт идеально смотрится на смартфонах, планшетах и мониторах.',
+          description: 'Позволяет создавать чистую адаптивную верстку без раздутого кода – сайт идеально смотрится на смартфонах, планшетах и мониторах.',
           tools: [
             {
               id: 'tailwind',
@@ -524,10 +617,11 @@ export const translations: Record<Language, Translations> = {
     projects: {
       preTitle: 'Примеры работы',
       title: 'Сайты, которые я уже разработал',
-      description: 'В портфолио есть коммерческие проекты, переработка существующего сайта и демонстрационные концепции. Для каждого проекта честно указано, в каком формате он создавался.',
+      description: '',
+      allProjectsBtn: 'Все проекты',
       btnViewProject: 'Посмотреть проект',
-      btnViewScreens: 'Посмотреть экраны проекта',
-      btnViewConcept: 'Посмотреть концепцию',
+      btnViewScreens: 'Посмотреть проект',
+      btnViewConcept: 'Посмотреть проект',
       modalClose: 'Закрыть',
       previewLabel: 'preview',
       whatDoneFallback: 'Что сделано:',
@@ -608,7 +702,7 @@ export const translations: Record<Language, Translations> = {
             'адаптивный интерфейс;',
             'серверная часть сайта.',
           ],
-          btnText: 'Посмотреть экраны проекта',
+          btnText: 'Посмотреть проект',
           image: '/projects/intuitivo.webp',
           images: [
             '/projects/intuitivo.webp',
@@ -634,7 +728,7 @@ export const translations: Record<Language, Translations> = {
             'форма записи;',
             'адаптация под мобильные устройства.',
           ],
-          btnText: 'Посмотреть концепцию',
+          btnText: 'Посмотреть проект',
           image: '/projects/driftet.webp',
           images: [
             '/projects/driftet.webp',
@@ -648,10 +742,10 @@ export const translations: Record<Language, Translations> = {
       ],
     },
     pricing: {
-      preTitle: 'Стартовые цены',
+      preTitle: 'Прайсы',
       title: 'Выберите подходящий формат сайта',
-      intro: 'Сейчас я расширяю портфолио, поэтому предлагаю разработку по специальной стоимости для ближайших пяти проектов.',
-      strikethroughNote: 'Зачёркнутая цена – моя планируемая базовая стоимость после завершения этапа формирования портфолио.',
+      intro: '',
+      strikethroughNote: '',
       durationPrefix: 'Срок:',
       includedTitle: 'Входит:',
       plans: [
@@ -662,7 +756,7 @@ export const translations: Record<Language, Translations> = {
           audience: 'Для специалиста, которому нужна аккуратная страница с основной информацией.',
           oldPrice: '55 000 ₽',
           currentPrice: '39 000 ₽',
-          currentPriceSub: 'Стартовая стоимость для портфолио',
+          currentPriceSub: '',
           duration: '5–7 рабочих дней',
           features: [
             'одна страница;',
@@ -688,7 +782,7 @@ export const translations: Record<Language, Translations> = {
           audience: 'Для тех, кому нужно подробно представить услуги, цены, работы и условия, а также сделать обращение клиента более удобным.',
           oldPrice: '95 000 ₽',
           currentPrice: '69 000 ₽',
-          currentPriceSub: 'Стартовая стоимость для портфолио',
+          currentPriceSub: '',
           duration: '8–12 рабочих дней',
           features: [
             'индивидуальная визуальная концепция;',
@@ -716,7 +810,7 @@ export const translations: Record<Language, Translations> = {
           audience: 'Для проектов, которым недостаточно информационной страницы и нужны дополнительные функции для работы с контентом или заявками.',
           oldPrice: '150 000 ₽',
           currentPrice: '99 000 ₽',
-          currentPriceSub: 'Стартовая стоимость для портфолио',
+          currentPriceSub: '',
           duration: 'от 15 рабочих дней',
           features: [
             'до 5 основных страниц;',
@@ -739,7 +833,7 @@ export const translations: Record<Language, Translations> = {
         },
       ],
       extraService: {
-        preTitle: 'ДОПОЛНИТЕЛЬНАЯ УСЛУГА',
+        preTitle: 'РЕДИЗАЙН',
         title: 'Переделка существующего сайта',
         description: 'Если сайт выглядит устаревшим, неудобен на смартфоне или больше не соответствует вашему бизнесу, я могу разработать на основе существующих материалов новую версию.',
         whatCanImproveTitle: 'Что можно улучшить:',
@@ -879,13 +973,14 @@ export const translations: Record<Language, Translations> = {
       telegram: 'Telegram',
       email: 'hello@ilyaarkov.com',
       privacy: 'Политика конфиденциальности',
+      techStack: 'Какие технологии я использую',
       copyright: '© 2026 Илья Арьков',
     },
 		privacyModal: {
 			title: 'Политика конфиденциальности',
 			close: 'Закрыть',
-			p1: 'Настоящая Политика конфиденциальности (далее — Политика) определяет порядок обработки персональных данных, которые сайт Ильи Арькова, расположенный по адресу https://ilyaarkov.com (далее — Сайт), может получать от пользователей (далее — Пользователь) в процессе использования Сайта, в частности при отправке заявки на разработку сайта.',
-			p2: '1. Обрабатываемые персональные данные. В рамках функционала Сайта Пользователь добровольно предоставляет следующие персональные данные: имя и контактные данные (имя пользователя Telegram, номер телефона или адрес электронной почты), а также по желанию — описание проекта и ссылки на ресурсы. Иные данные (в том числе технические: IP‑адрес, сведения о браузере, файлы cookie) могут собираться автоматически только в объёме, необходимом для обеспечения работоспособности Сайта.',
+			p1: 'Настоящая Политика конфиденциальности (далее – Политика) определяет порядок обработки персональных данных, которые сайт Ильи Арькова, расположенный по адресу https://ilyaarkov.com (далее – Сайт), может получать от пользователей (далее – Пользователь) в процессе использования Сайта, в частности при отправке заявки на разработку сайта.',
+			p2: '1. Обрабатываемые персональные данные. В рамках функционала Сайта Пользователь добровольно предоставляет следующие персональные данные: имя и контактные данные (имя пользователя Telegram, номер телефона или адрес электронной почты), а также по желанию – описание проекта и ссылки на ресурсы. Иные данные (в том числе технические: IP‑адрес, сведения о браузере, файлы cookie) могут собираться автоматически только в объёме, необходимом для обеспечения работоспособности Сайта.',
 			p3: '2. Цели обработки. Персональные данные обрабатываются исключительно в целях: (а) связи с Пользователем для обсуждения условий разработки сайта; (б) подготовки коммерческого предложения и согласования деталей проекта; (в) исполнения договорённостей, возникших в результате обращения Пользователя.',
 			p4: '3. Правовые основания обработки. Обработка персональных данных осуществляется на основании согласия Пользователя, выраженного путём заполнения и отправки формы заявки на Сайте, в соответствии с пунктом 1 части 1 статьи 6 и статьёй 9 Федерального закона от 27.07.2006 № 152‑ФЗ «О персональных данных».',
 			p5: '4. Передача данных третьим лицам. Персональные данные Пользователя не передаются и не распространяются среди третьих лиц, за исключением случаев, когда это необходимо для технической доставки сообщения (в частности, передача данных в мессенджер Telegram для отправки уведомления владельцу Сайта через личного бота), при этом такие сервисы выступают исключительно как технические каналы связи и не получают права на самостоятельную обработку данных в своих целях.',
@@ -910,13 +1005,16 @@ export const translations: Record<Language, Translations> = {
       cta: 'Discuss Project',
     },
     hero: {
-      title: 'A website that explains your services for you',
-      description: 'I will bring together your services, prices, work examples, FAQ answers, and a convenient booking or inquiry form in one place.',
+      title: 'Turning business goals into\u00A0digital\u00A0solutions',
+      titlePrefix: 'Turning business goals',
+      titleHighlight: 'into\u00A0digital\u00A0solutions',
+      description: 'End-to-end modern website development for\u00A0experts, creators, and\u00A0small businesses. Clean structure, fast loading, and\u00A0direct collaboration with\u00A0the developer.',
       subDescription1: 'Instead of sending your price list each time and repeating the same information, you can simply share one link with your client.',
       subDescription2: 'Modern web development, responsive mobile design, and direct communication with the developer – without agency markups.',
       priceTag: 'From $420 · Delivery from 5 business days',
-      ctaPrimary: 'Discuss My Website',
+      ctaPrimary: 'Discuss Project',
       ctaSecondary: 'View Projects',
+      tags: ['WEB DEVELOPMENT', 'LANDING PAGE', 'E-COMMERCE', 'AUTOMATION', 'INTEGRATIONS'],
       metrics: {
         days: 'from 5 days',
         daysLabel: 'Delivery time',
@@ -926,36 +1024,101 @@ export const translations: Record<Language, Translations> = {
         directLabel: 'No intermediaries',
       },
     },
-    about: {
-      title: 'Crafting modern websites for experts and small businesses',
-      p1: 'My name is Ilya Arkov. I am a web developer with a specialized university degree in computer science. I build websites for professionals, small companies, non-profit organizations, and projects that need a clear, impactful online presence.',
-      p2: 'My job is to carefully structure the information you provide and turn it into a modern, fast, and user-friendly website.',
-      canIncludeTitle: 'What I can feature on your site:',
-      canIncludeList: [
-        'services and pricing tables;',
-        'portfolio or catalog;',
-        'about you or company story;',
-        'frequently asked questions (FAQ);',
-        'terms and working process;',
-        'lead inquiry form or booking button;',
-        'custom database features and data tools.',
+    specialization: {
+      badge: 'Services & Focus',
+      title: 'My Specialization',
+      subtitle: 'Crafting tailored web solutions for\u00A0your business goals: from\u00A0rapid launches to\u00A0deep process automation.',
+      orderCta: 'Order Solution',
+      scrollAria: 'View specialization',
+      categories: [
+        {
+          title: 'Web Development',
+          items: [
+            {
+              number: '01',
+              title: 'Landing Pages',
+              description: 'High-converting single-page websites to\u00A0showcase services, events, or\u00A0flagship products.',
+            },
+            {
+              number: '02',
+              title: 'Corporate Websites',
+              description: 'Multi-page representation sites for\u00A0companies and\u00A0experts with\u00A0structured service offerings.',
+            },
+            {
+              number: '03',
+              title: 'E-Commerce & Catalogs',
+              description: 'Modern product storefronts with\u00A0filtering, carts, and\u00A0frictionless checkout.',
+            },
+            {
+              number: '04',
+              title: 'Affordable MVP Projects',
+              description: 'Fast and\u00A0cost-effective initial product launches to\u00A0test hypotheses and\u00A0win first clients.',
+            },
+            {
+              number: '05',
+              title: 'Websites for Experts & Craftsmen',
+              description: 'Personal specialist websites featuring portfolios, pricing, reviews, and\u00A0direct booking.',
+            },
+          ],
+        },
+        {
+          title: 'Automation & Integrations',
+          items: [
+            {
+              number: '06',
+              title: 'Multi-Channel Inquiries',
+              description: 'Instant lead forwarding from\u00A0forms to\u00A0messengers, social channels, CRM, or\u00A0email.',
+            },
+            {
+              number: '07',
+              title: 'Business Process Automation',
+              description: 'Connecting websites with\u00A0spreadsheets, notifications, and\u00A0workflows to\u00A0eliminate manual tasks.',
+            },
+            {
+              number: '08',
+              title: 'Online Payment Integration',
+              description: 'Secure payment gateway connections, acquirers, and\u00A0automatic invoice generation.',
+            },
+            {
+              number: '09',
+              title: 'AI Chatbots & Assistants',
+              description: 'Intelligent bots to\u00A0consult clients, answer FAQs from\u00A0a knowledge base, and\u00A0qualify leads.',
+            },
+          ],
+        },
       ],
-      directComm: 'You communicate directly with me – without account managers, long approvals, or tasks getting lost between different subcontractors.',
+    },
+    about: {
+      badge: 'About Me',
+      title: 'Crafting websites as a digital craftsman – with\u00A0attention to\u00A0every detail',
+      subtitle: 'Who I am, my philosophy, and\u00A0why clients enjoy collaborating with\u00A0me',
+      locationRole: 'Web Developer · Crafting modern digital solutions for\u00A0creators and\u00A0businesses',
+      bioParagraph1: 'Hi! My name is Ilya. I build modern, fast websites tailored for experts and small businesses.',
+      bioParagraph2: 'I take a deeply personal approach with every client, immersing myself in their craft to deliver the most effective solution. I genuinely enjoy solving complex challenges and meeting real human needs through thoughtful products. I value precision, balance, and craftsmanship.',
+      bioParagraph3: 'My dream is to build products that bring genuine value to people, and save up for a home by the sea.',
+      socials: [
+        { name: 'Telegram', url: 'https://t.me/ilyaarkovdotcom' },
+        { name: 'GitHub', url: 'https://github.com/ilyaarkov' },
+        { name: 'Instagram', url: 'https://instagram.com/ilyaarkov' },
+        { name: 'Threads', url: 'https://threads.net/@ilyaarkov' },
+        { name: 'X', url: 'https://x.com/ilyaarkov' },
+        { name: 'LinkedIn', url: 'https://linkedin.com/in/ilyaarkov' },
+      ],
       whoIsItForTitle: 'Who this collaboration is for',
       whoIsItForList: [
-        'tutors, teachers, and business consultants;',
-        'photographers, designers, and creative specialists;',
-        'tattoo, beauty, and independent masters;',
-        'boutique studios and craft workshops;',
-        'small businesses and non-profit organizations;',
-        'owners of outdated or clunky websites.',
+        'tutors, teachers, and\u00A0business consultants;',
+        'photographers, designers, and\u00A0creative specialists;',
+        'tattoo, beauty, and\u00A0independent masters;',
+        'boutique studios and\u00A0craft workshops;',
+        'small businesses and\u00A0non-profit organizations;',
+        'owners of\u00A0outdated or\u00A0clunky websites.',
       ],
-      whoIsNotForTitle: 'Who this is probably not suitable for',
+      whoIsNotForTitle: 'Who this is probably not\u00A0suitable for',
       whoIsNotForList: [
-        'large corporations with bureaucratic multi-stage tenders;',
-        'projects requiring full-scale nationwide market research;',
-        'those looking for a generic template website built in one evening;',
-        'massive enterprise e-commerce platforms with dozens of ERP integrations.',
+        'large corporations with\u00A0bureaucratic multi-stage tenders;',
+        'projects requiring months of\u00A0nationwide research;',
+        'those looking for a generic template site built in one evening;',
+        'massive enterprise platforms with\u00A0dozens of\u00A0legacy integrations.',
       ],
     },
     solutions: {
@@ -1062,7 +1225,7 @@ export const translations: Record<Language, Translations> = {
           id: 'tailwind',
           name: 'Tailwind CSS',
           subtitle: 'Custom Design & Fluid Mobile Scaling',
-          description: 'Enables lightweight, custom layout styling without bloated CSS — looks pristine across every screen resolution.',
+          description: 'Enables lightweight, custom layout styling without bloated CSS – looks pristine across every screen resolution.',
           tools: [
             {
               id: 'tailwind',
@@ -1176,10 +1339,11 @@ export const translations: Record<Language, Translations> = {
     projects: {
       preTitle: 'Work Examples',
       title: 'Websites I have developed',
-      description: 'The portfolio includes commercial client projects, an existing website redesign, and interactive concept prototypes. The exact development context is transparently noted for each case.',
+      description: '',
+      allProjectsBtn: 'All Projects',
       btnViewProject: 'View Project',
-      btnViewScreens: 'View Project Screens',
-      btnViewConcept: 'View Concept',
+      btnViewScreens: 'View Project',
+      btnViewConcept: 'View Project',
       modalClose: 'Close',
       previewLabel: 'preview',
       whatDoneFallback: 'Key features:',
@@ -1260,7 +1424,7 @@ export const translations: Record<Language, Translations> = {
             'adaptive mobile layout;',
             'backend server architecture.',
           ],
-          btnText: 'View Project Screens',
+          btnText: 'View Project',
           image: '/projects/intuitivo.webp',
           images: [
             '/projects/intuitivo.webp',
@@ -1286,7 +1450,7 @@ export const translations: Record<Language, Translations> = {
             'interactive booking registration;',
             'mobile optimization.',
           ],
-          btnText: 'View Concept',
+          btnText: 'View Project',
           image: '/projects/driftet.webp',
           images: [
             '/projects/driftet.webp',
@@ -1300,10 +1464,10 @@ export const translations: Record<Language, Translations> = {
       ],
     },
     pricing: {
-      preTitle: 'Starter Rates',
+      preTitle: 'Pricing',
       title: 'Choose the Right Website Format',
-      intro: 'I am currently expanding my commercial portfolio, offering special starter rates for the next 5 projects.',
-      strikethroughNote: 'The strikethrough price indicates my planned baseline rate once the portfolio expansion phase concludes.',
+      intro: '',
+      strikethroughNote: '',
       durationPrefix: 'Timeline:',
       includedTitle: 'Included:',
       plans: [
@@ -1314,7 +1478,7 @@ export const translations: Record<Language, Translations> = {
           audience: 'For specialists who need an elegant, clean single-page site with essential details.',
           oldPrice: '$590',
           currentPrice: '$420',
-          currentPriceSub: 'Starter portfolio rate',
+          currentPriceSub: '',
           duration: '5–7 business days',
           features: [
             'one focused page;',
@@ -1340,7 +1504,7 @@ export const translations: Record<Language, Translations> = {
           audience: 'For businesses needing a detailed showcase of services, pricing, proof, and a streamlined inquiry flow.',
           oldPrice: '$1,020',
           currentPrice: '$740',
-          currentPriceSub: 'Starter portfolio rate',
+          currentPriceSub: '',
           duration: '8–12 business days',
           features: [
             'bespoke visual aesthetic concept;',
@@ -1368,7 +1532,7 @@ export const translations: Record<Language, Translations> = {
           audience: 'For ambitious projects requiring dynamic content management, databases, or high-volume lead pipelines.',
           oldPrice: '$1,600',
           currentPrice: '$1,060',
-          currentPriceSub: 'Starter portfolio rate',
+          currentPriceSub: '',
           duration: 'from 15 business days',
           features: [
             'up to 5 core pages;',
@@ -1391,7 +1555,7 @@ export const translations: Record<Language, Translations> = {
         },
       ],
       extraService: {
-        preTitle: 'ADDITIONAL SERVICE',
+        preTitle: 'REDESIGN',
         title: 'Redesign of Existing Website',
         description: 'If your current site feels dated, performs poorly on phones, or no longer reflects your positioning, I can craft an upgraded version using your current assets.',
         whatCanImproveTitle: 'What we can upgrade:',
@@ -1531,13 +1695,14 @@ export const translations: Record<Language, Translations> = {
       telegram: 'Telegram',
       email: 'hello@ilyaarkov.com',
       privacy: 'Privacy Policy',
+      techStack: 'Technologies I use',
       copyright: '© 2026 Ilya Arkov',
     },
 		privacyModal: {
 			title: 'Privacy Policy',
 			close: 'Close',
-			p1: 'This Privacy Policy (hereinafter — the Policy) defines the procedure for processing personal data that may be collected by Ilya Arkov\'s website located at https://ilyaarkov.com (hereinafter — the Site) from users (hereinafter — the User) during the use of the Site, in particular when submitting a request for website development.',
-			p2: '1. Personal data processed. Within the Site\'s functionality, the User voluntarily provides the following personal data: name and contact details (Telegram username, phone number, or email address), and optionally — a project description and links to resources. Other data (including technical data such as IP address, browser information, cookies) may be collected automatically only to the extent necessary to ensure the Site\'s functionality.',
+			p1: 'This Privacy Policy (hereinafter – the Policy) defines the procedure for processing personal data that may be collected by Ilya Arkov\'s website located at https://ilyaarkov.com (hereinafter – the Site) from users (hereinafter – the User) during the use of the Site, in particular when submitting a request for website development.',
+			p2: '1. Personal data processed. Within the Site\'s functionality, the User voluntarily provides the following personal data: name and contact details (Telegram username, phone number, or email address), and optionally – a project description and links to resources. Other data (including technical data such as IP address, browser information, cookies) may be collected automatically only to the extent necessary to ensure the Site\'s functionality.',
 			p3: '2. Purposes of processing. Personal data is processed exclusively for the following purposes: (a) contacting the User to discuss the terms of website development; (b) preparing a commercial proposal and agreeing on project details; (c) fulfilling arrangements arising from the User\'s inquiry.',
 			p4: '3. Legal basis for processing. Processing of personal data is carried out on the basis of the User\'s consent, expressed by completing and submitting the request form on the Site, in accordance with Part 1 Article 6 and Article 9 of Federal Law No. 152‑FZ dated 27.07.2006 "On Personal Data".',
 			p5: '4. Transfer to third parties. The User\'s personal data is not transferred or disclosed to third parties, except where necessary for technical delivery of the message (in particular, transmission of data to the Telegram messenger to send a notification to the Site owner via a personal bot). In such cases, these services act solely as technical communication channels and do not obtain the right to independently process the data for their own purposes.',
