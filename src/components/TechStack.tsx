@@ -142,8 +142,7 @@ export const TechStack: React.FC = () => {
 
       <div className="max-w-6xl mx-auto px-4 sm:px-6 relative z-10">
         <div className="max-w-3xl mb-12 sm:mb-14 cursor-default select-none">
-          <div className="inline-flex items-center gap-2 text-xs uppercase tracking-widest text-cyan-400 font-semibold mb-3 px-3 py-1 rounded-full bg-cyan-950/60 border border-cyan-500/20 backdrop-blur-md">
-            <Sparkles className="w-3.5 h-3.5" />
+          <div className="text-xs uppercase tracking-widest text-cyan-400 font-semibold mb-3">
             <span>{t.tools.badge}</span>
           </div>
           <h2 className="text-2xl sm:text-4xl font-extrabold text-white tracking-tight leading-tight mb-4 cursor-default select-none">

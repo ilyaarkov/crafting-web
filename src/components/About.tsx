@@ -123,8 +123,7 @@ export const About: React.FC = () => {
           >
             {/* Заголовок секции: строго вверху */}
             <div className="max-w-3xl mb-8">
-              <div className="inline-flex items-center gap-2 text-xs uppercase tracking-widest text-cyan-400 font-semibold mb-2">
-                <Sparkles className="w-3.5 h-3.5" />
+              <div className="text-xs uppercase tracking-widest text-cyan-400 font-semibold mb-3">
                 <span>{t.header.nav.about}</span>
               </div>
               <h2 className="text-2xl sm:text-4xl font-extrabold text-white tracking-tight leading-tight">

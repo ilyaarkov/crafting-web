@@ -28,8 +28,7 @@ export const Pricing: React.FC = () => {
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6">
         <div className="text-center max-w-3xl mx-auto mb-16">
-          <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-cyan-950/70 text-cyan-300 border border-cyan-500/30 mb-3">
-            <Sparkles className="w-3.5 h-3.5 text-cyan-400" />
+          <div className="text-xs uppercase tracking-widest text-cyan-400 font-semibold mb-3">
             <span>{t.pricing.preTitle}</span>
           </div>
           <h2 className="text-3xl sm:text-5xl font-extrabold text-white tracking-tight leading-tight mb-4">
