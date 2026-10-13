@@ -275,45 +275,6 @@ export const Hero: React.FC = () => {
             transformStyle: 'preserve-3d',
           }}
         >
-          {/* Плавающий бейдж: Заявка в Telegram */}
-          <div
-            ref={badgeLeftRef}
-            className="hidden md:flex absolute -top-5 -left-6 z-20 items-center gap-2.5 px-4 py-2 rounded-2xl glass-panel border border-cyan-500/30 bg-[#090e17]/90 shadow-2xl text-xs font-semibold text-white shadow-cyan-950/60"
-            style={{
-              willChange: 'transform',
-            }}
-          >
-            <div className="w-7 h-7 rounded-lg bg-sky-500/20 border border-sky-500/30 flex items-center justify-center text-sky-400">
-              <Send className="w-3.5 h-3.5" />
-            </div>
-            <div className="text-left">
-              <div className="text-[11px] text-cyan-300 font-bold">
-                {lang === 'ru' ? 'Новая заявка!' : 'New Lead!'}
-              </div>
-              <div className="text-[10px] text-slate-400">
-                {lang === 'ru' ? 'Прямо в мессенджер' : 'Direct to the messenger'}
-              </div>
-            </div>
-          </div>
-
-          {/* Плавающий бейдж: Мобильный адаптив */}
-          <div
-            ref={badgeRightRef}
-            className="hidden md:flex absolute -bottom-5 -right-6 z-20 items-center gap-2.5 px-4 py-2 rounded-2xl glass-panel border border-emerald-500/30 bg-[#090e17]/90 shadow-2xl text-xs font-semibold text-white shadow-emerald-950/60"
-            style={{
-              willChange: 'transform',
-            }}
-          >
-            <div className="w-7 h-7 rounded-lg bg-emerald-500/20 border border-emerald-500/30 flex items-center justify-center text-emerald-400">
-              <Smartphone className="w-3.5 h-3.5" />
-            </div>
-            <div className="text-left">
-              <div className="text-[11px] text-emerald-300 font-bold">100% Mobile Ready</div>
-              <div className="text-[10px] text-slate-400">
-                {lang === 'ru' ? 'Быстро на смартфонах' : 'Ultra-fast loading'}
-              </div>
-            </div>
-          </div>
 
           {/* Стеклянное окно веб-интерфейса */}
           <div className="glass-panel rounded-3xl border border-white/15 bg-[#090d15]/95 shadow-2xl overflow-hidden text-left relative group">
@@ -327,11 +288,6 @@ export const Hero: React.FC = () => {
               <div className="flex items-center gap-1.5 px-4 py-1 rounded-full bg-black/40 border border-white/10 text-[11px] text-slate-400 font-mono">
                 <Lock className="w-2.5 h-2.5 text-cyan-400" />
                 <span>ilyaarkov.com / your-website</span>
-              </div>
-
-              <div className="flex items-center gap-1.5 text-[11px] text-slate-500">
-                <Globe className="w-3.5 h-3.5 text-cyan-400" />
-                <span className="hidden sm:inline">Online</span>
               </div>
             </div>
 
