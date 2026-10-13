@@ -74,7 +74,6 @@ export const Header: React.FC = () => {
             href="#"
             className="flex items-center gap-2 group text-base sm:text-lg font-bold tracking-tight text-white hover:text-cyan-400 transition-colors whitespace-nowrap"
           >
-            <span className="w-2 h-2 rounded-full bg-cyan-400 animate-pulse"></span>
             <span>{t.header.name}</span>
           </a>
 
