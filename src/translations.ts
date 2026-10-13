@@ -14,7 +14,6 @@ export interface Translations {
     cta: string;
   };
   hero: {
-    badge: string;
     title: string;
     description: string;
     subDescription1: string;
@@ -259,7 +258,6 @@ export const translations: Record<Language, Translations> = {
       cta: 'Обсудить проект',
     },
     hero: {
-      badge: 'Стартовая стоимость для ближайших 5 проектов',
       title: 'Сайт, который объясняет ваши услуги за вас',
       description: 'Соберу в одном месте ваши услуги, цены, примеры работ, ответы на частые вопросы и удобный способ записаться или оставить заявку.',
       subDescription1: 'Вместо того чтобы каждый раз отправлять клиенту прайс и повторять одну и ту же информацию, вы сможете просто дать ему одну ссылку.',
@@ -912,7 +910,6 @@ export const translations: Record<Language, Translations> = {
       cta: 'Discuss Project',
     },
     hero: {
-      badge: 'Starter price for the next 5 projects',
       title: 'A website that explains your services for you',
       description: 'I will bring together your services, prices, work examples, FAQ answers, and a convenient booking or inquiry form in one place.',
       subDescription1: 'Instead of sending your price list each time and repeating the same information, you can simply share one link with your client.',

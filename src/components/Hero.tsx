@@ -216,12 +216,6 @@ export const Hero: React.FC = () => {
       />
 
       <div className="relative z-10 max-w-6xl mx-auto px-4 sm:px-6 w-full text-center">
-        {/* Статус / Бейдж */}
-        <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full text-xs sm:text-sm font-medium bg-cyan-950/70 text-cyan-300 border border-cyan-500/30 mb-6 backdrop-blur-md shadow-lg shadow-cyan-950/40 hover:border-cyan-400/50 transition-colors">
-          <span className="w-2 h-2 rounded-full bg-cyan-400 animate-pulse" />
-          <span>{t.hero.badge}</span>
-        </div>
-
         {/* Главный заголовок H1 */}
         <h1 className="text-3xl sm:text-5xl lg:text-6xl font-black text-white tracking-tight leading-[1.14] sm:leading-[1.12] mb-5 max-w-4xl mx-auto text-balance">
           {lang === 'ru' ? (
