@@ -377,10 +377,10 @@ export const translations: Record<Language, Translations> = {
       socials: [
         { name: 'Telegram', url: 'https://t.me/ilyaarkovdotcom' },
         { name: 'GitHub', url: 'https://github.com/ilyaarkov' },
-        { name: 'Instagram', url: 'https://instagram.com/ilyaarkov' },
+        { name: 'Instagram', url: 'https://instagram.com/ilyaarkovdotcom?vrfl=eHpjcnZrMDgzNThu&utm_source=qr' },
         { name: 'Threads', url: 'https://threads.net/@ilyaarkov' },
         { name: 'X', url: 'https://x.com/ilyaarkov' },
-        { name: 'LinkedIn', url: 'https://linkedin.com/in/ilyaarkov' },
+        { name: 'LinkedIn', url: 'www.linkedin.com/in/ilyaarkov' },
       ],
       whoIsItForTitle: 'Кому подойдёт сотрудничество',
       whoIsItForList: [
@@ -1099,10 +1099,10 @@ export const translations: Record<Language, Translations> = {
       socials: [
         { name: 'Telegram', url: 'https://t.me/ilyaarkovdotcom' },
         { name: 'GitHub', url: 'https://github.com/ilyaarkov' },
-        { name: 'Instagram', url: 'https://instagram.com/ilyaarkov' },
+        { name: 'Instagram', url: 'https://instagram.com/ilyaarkovdotcom?vrfl=eHpjcnZrMDgzNThu&utm_source=qr' },
         { name: 'Threads', url: 'https://threads.net/@ilyaarkov' },
         { name: 'X', url: 'https://x.com/ilyaarkov' },
-        { name: 'LinkedIn', url: 'https://linkedin.com/in/ilyaarkov' },
+        { name: 'LinkedIn', url: 'www.linkedin.com/in/ilyaarkov' },
       ],
       whoIsItForTitle: 'Who this collaboration is for',
       whoIsItForList: [
