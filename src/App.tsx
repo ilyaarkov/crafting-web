@@ -14,12 +14,14 @@ import { ScrollToTop } from './components/ScrollToTop';
 import { TechStackPage } from './pages/TechStackPage';
 import { PortfolioPage } from './pages/PortfolioPage';
 import { ProjectDetailPage } from './pages/ProjectDetailPage';
+import { ServiceDetailPage } from './pages/ServiceDetailPage';
 
 type RouteState =
   | { type: 'home' }
   | { type: 'techstack' }
   | { type: 'portfolio' }
-  | { type: 'project'; projectId: string };
+  | { type: 'project'; projectId: string }
+  | { type: 'service'; serviceId: string };
 
 function parseRoute(pathname: string): RouteState {
   const p = pathname.toLowerCase().replace(/\/+$/, '') || '/';
@@ -45,6 +47,11 @@ function parseRoute(pathname: string): RouteState {
   const projectMatch = p.match(/^\/project\/([^/]+)/);
   if (projectMatch) {
     return { type: 'project', projectId: projectMatch[1] };
+  }
+
+  const serviceMatch = p.match(/^\/(?:services|service)\/([^/]+)/);
+  if (serviceMatch) {
+    return { type: 'service', serviceId: serviceMatch[1] };
   }
 
   return { type: 'home' };
@@ -82,6 +89,11 @@ export default function App() {
         <PortfolioPage
           onNavigateHome={navigateHome}
           onNavigateProject={navigateProject}
+        />
+      ) : route.type === 'service' ? (
+        <ServiceDetailPage
+          serviceId={route.serviceId}
+          onNavigateHome={navigateHome}
         />
       ) : route.type === 'project' ? (
         <ProjectDetailPage

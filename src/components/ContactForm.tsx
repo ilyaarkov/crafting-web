@@ -76,19 +76,42 @@ export const ContactForm: React.FC = () => {
     }
   };
 
+  const renderContactTitle = (title: string) => {
+    if (title.includes('вам нужен')) {
+      const parts = title.split('вам нужен');
+      return (
+        <span className="block lg:whitespace-nowrap">
+          {parts[0]}
+          <span className="whitespace-nowrap">вам нужен</span>
+          {parts[1]}
+        </span>
+      );
+    }
+    if (title.includes('you need')) {
+      const parts = title.split('you need');
+      return (
+        <span className="block lg:whitespace-nowrap">
+          {parts[0]}
+          <span className="whitespace-nowrap">you need</span>
+          {parts[1]}
+        </span>
+      );
+    }
+    return title;
+  };
+
   return (
     <section id="contact" className="py-20 lg:py-32 relative">
       <div className="absolute top-1/2 right-1/4 w-[500px] h-[400px] bg-cyan-600/10 blur-[130px] rounded-full pointer-events-none -z-10" />
 
       <div className="max-w-5xl mx-auto px-4 sm:px-6">
-        <div className="text-center max-w-3xl mx-auto mb-14">
-          <h2 className="text-3xl sm:text-5xl font-extrabold text-white tracking-tight leading-tight mb-4">
-            {t.contact.title}
+        <div className="text-center max-w-4xl mx-auto mb-12 sm:mb-14">
+          <h2 className="text-2xl sm:text-4xl lg:text-5xl font-extrabold text-white tracking-tight leading-tight mb-4">
+            {renderContactTitle(t.contact.title)}
           </h2>
-          <div className="space-y-2 text-slate-300 text-base sm:text-lg leading-relaxed max-w-2xl mx-auto">
-            <p>{t.contact.description1}</p>
-            <p className="text-cyan-200/90 font-medium">{t.contact.description2}</p>
-          </div>
+          <p className="text-slate-300 text-sm sm:text-base leading-relaxed max-w-2xl mx-auto">
+            {t.contact.description1}
+          </p>
         </div>
 
         <div className="glass-panel rounded-3xl p-6 sm:p-10 border border-white/10 max-w-3xl mx-auto shadow-2xl relative">

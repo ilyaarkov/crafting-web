@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useLanguage } from '../context/LanguageContext';
 import {
   Laptop,
@@ -11,17 +11,60 @@ import {
   CreditCard,
   Bot,
   ArrowRight,
+  Layers,
 } from 'lucide-react';
 
 export const Specialization: React.FC = () => {
-  const { t } = useLanguage();
-  const [hoveredIdx, setHoveredIdx] = useState<string | null>(null);
+  const { t, lang } = useLanguage();
+  const isEn = lang === 'en';
+  const [visibleItems, setVisibleItems] = useState<Record<string, boolean>>({});
+  const itemRefs = useRef<Record<string, HTMLDivElement | null>>({});
 
-  // Иконки для первой колонки: Веб-разработка
+  // Иконки для веб-разработки (5 направлений)
   const webIcons = [Laptop, Building, ShoppingBag, Rocket, Palette];
 
-  // Иконки для второй колонки: Автоматизация и интеграции
+  // Иконки для автоматизации и интеграций (4 направления)
   const autoIcons = [Send, Cpu, CreditCard, Bot];
+
+  const categories = t.specialization.categories;
+
+  // Intersection Observer для анимации появления каждого смыслового блока при скролле
+  useEffect(() => {
+    if (typeof IntersectionObserver === 'undefined') {
+      // Fallback: показать все элементы сразу
+      const allVisible: Record<string, boolean> = {};
+      categories.forEach((cat, cIdx) => {
+        cat.items.forEach((_, iIdx) => {
+          allVisible[`${cIdx}-${iIdx}`] = true;
+        });
+      });
+      setVisibleItems(allVisible);
+      return;
+    }
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            const key = entry.target.getAttribute('data-item-key');
+            if (key) {
+              setVisibleItems((prev) => (prev[key] ? prev : { ...prev, [key]: true }));
+            }
+          }
+        });
+      },
+      {
+        threshold: 0.15,
+        rootMargin: '0px 0px -40px 0px',
+      }
+    );
+
+    Object.values(itemRefs.current).forEach((el) => {
+      if (el) observer.observe(el);
+    });
+
+    return () => observer.disconnect();
+  }, [categories]);
 
   const handleScrollTo = (e: React.MouseEvent<HTMLAnchorElement>, id: string) => {
     e.preventDefault();
@@ -35,17 +78,15 @@ export const Specialization: React.FC = () => {
     }
   };
 
-  const categories = t.specialization.categories;
-
   return (
-    <section id="specialization" className="py-20 lg:py-28 relative overflow-hidden select-none">
-      {/* Декоративные световые ореолы */}
-      <div className="absolute top-1/3 -left-40 w-[500px] h-[500px] bg-cyan-500/10 blur-[150px] rounded-full pointer-events-none -z-10" />
-      <div className="absolute bottom-1/4 -right-40 w-[500px] h-[500px] bg-sky-600/10 blur-[150px] rounded-full pointer-events-none -z-10" />
+    <section id="specialization" className="py-24 lg:py-32 relative overflow-hidden select-none">
+      {/* Мягкие световые ореолы */}
+      <div className="absolute top-1/4 -left-48 w-[600px] h-[600px] bg-cyan-500/8 blur-[180px] rounded-full pointer-events-none -z-10" />
+      <div className="absolute bottom-1/4 -right-48 w-[600px] h-[600px] bg-sky-600/8 blur-[180px] rounded-full pointer-events-none -z-10" />
 
       {/* Тонкая сетка для глубины */}
       <div
-        className="absolute inset-0 opacity-[0.02] pointer-events-none"
+        className="absolute inset-0 opacity-[0.015] pointer-events-none"
         style={{
           backgroundImage: 'radial-gradient(circle at 1px 1px, #ffffff 1px, transparent 0)',
           backgroundSize: '48px 48px',
@@ -53,12 +94,12 @@ export const Specialization: React.FC = () => {
       />
 
       <div className="max-w-6xl mx-auto px-4 sm:px-6 relative z-10">
-        {/* Заголовок секции: "Моя специализация" */}
-        <div className="max-w-3xl mb-14 sm:mb-16">
+        {/* Заголовок секции: только чистый текст без звездочек, фона и рамок */}
+        <div className="max-w-3xl mb-16 sm:mb-20">
           <div className="text-xs uppercase tracking-widest text-cyan-400 font-semibold mb-3">
             <span>{t.specialization.badge}</span>
           </div>
-          <h2 className="text-2xl sm:text-4xl lg:text-5xl font-extrabold text-white tracking-tight leading-tight mb-4 text-balance">
+          <h2 className="text-3xl sm:text-4xl lg:text-5xl font-black text-white tracking-tight leading-tight mb-4 text-balance">
             {t.specialization.title}
           </h2>
           <p className="text-slate-300 text-sm sm:text-base lg:text-lg leading-relaxed text-balance">
@@ -66,82 +107,86 @@ export const Specialization: React.FC = () => {
           </p>
         </div>
 
-        {/* Две основные колонки без синих точек, без бейджей количества и без слоп-текстов */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-10 items-stretch">
+        {/* Два стильных столбца без тяжелых внешних рамок ("бордеры в бордерах" полностью устранены) */}
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-14 xl:gap-16 items-start">
           {categories.map((category, catIdx) => {
-            const isFirstCol = catIdx === 0;
-            const icons = isFirstCol ? webIcons : autoIcons;
+            const isWebCol = catIdx === 0;
+            const icons = isWebCol ? webIcons : autoIcons;
+            const colAccent = isWebCol ? 'cyan' : 'sky';
 
             return (
-              <div
-                key={catIdx}
-                className={`relative rounded-[32px] p-6 sm:p-8 flex flex-col justify-between transition-all duration-300 border ${
-                  isFirstCol
-                    ? 'bg-gradient-to-b from-[#090e18]/90 via-[#070b13]/85 to-[#060910]/90 border-cyan-500/25 shadow-[0_10px_40px_rgba(6,182,212,0.06)]'
-                    : 'bg-gradient-to-b from-[#0a0d1b]/90 via-[#070914]/85 to-[#06080f]/90 border-sky-500/25 shadow-[0_10px_40px_rgba(14,165,233,0.06)]'
-                }`}
-              >
-                {/* Фоновый деликатный акцент в углу колонки */}
-                <div
-                  className={`absolute -top-16 -right-16 w-48 h-48 rounded-full blur-[80px] pointer-events-none -z-10 ${
-                    isFirstCol ? 'bg-cyan-500/15' : 'bg-sky-500/15'
-                  }`}
-                />
-
-                {/* Шапка колонки: только чистый заголовок без синих точек и счетчиков */}
-                <div className="mb-6 pb-4 border-b border-white/5">
-                  <h3 className="text-xl sm:text-2xl font-bold text-white tracking-tight">
+              <div key={catIdx} className="flex flex-col">
+                {/* Шапка колонки: чистый заголовок и деликатная разделительная линия */}
+                <div className="mb-8">
+                  <h3 className="text-2xl sm:text-3xl font-extrabold text-white tracking-tight">
                     {category.title}
                   </h3>
+
+                  {/* Тонкий градиентный акцент вместо тяжелого бордера */}
+                  <div
+                    className={`h-px w-full mt-4 ${
+                      isWebCol
+                        ? 'bg-gradient-to-r from-cyan-500/30 via-white/10 to-transparent'
+                        : 'bg-gradient-to-r from-sky-500/30 via-white/10 to-transparent'
+                    }`}
+                  />
                 </div>
 
-                {/* Список направлений внутри колонки (без цифр 01/02) */}
-                <div className="space-y-3.5 flex-1">
+                {/* Смысловые блоки под заголовком: чистые, без вложенных коробок, с анимацией при скролле и дорогим ховером */}
+                <div className="space-y-4">
                   {category.items.map((item, itemIdx) => {
                     const Icon = icons[itemIdx % icons.length];
-                    const cardKey = `${catIdx}-${itemIdx}`;
-                    const isHovered = hoveredIdx === cardKey;
+                    const itemKey = `${catIdx}-${itemIdx}`;
+                    const isVisible = !!visibleItems[itemKey];
 
                     return (
                       <div
                         key={itemIdx}
-                        onMouseEnter={() => setHoveredIdx(cardKey)}
-                        onMouseLeave={() => setHoveredIdx(null)}
-                        className={`group rounded-2xl p-4 sm:p-4.5 border transition-all duration-200 cursor-default ${
-                          isHovered
-                            ? isFirstCol
-                              ? 'bg-cyan-950/30 border-cyan-400/40 translate-x-1 shadow-md shadow-cyan-950/40'
-                              : 'bg-sky-950/30 border-sky-400/40 translate-x-1 shadow-md shadow-sky-950/40'
-                            : 'bg-white/[0.02] border-white/5 hover:border-white/15'
-                        }`}
+                        ref={(el) => {
+                          itemRefs.current[itemKey] = el;
+                        }}
+                        data-item-key={itemKey}
+                        style={{
+                          transitionDelay: `${itemIdx * 80}ms`,
+                        }}
+                        className={`group relative rounded-2xl p-5 sm:p-6 border transition-all duration-500 ease-out cursor-default ${
+                          isVisible
+                            ? 'opacity-100 translate-y-0'
+                            : 'opacity-0 translate-y-6 pointer-events-none'
+                        } bg-gradient-to-r from-white/[0.025] to-transparent border-white/[0.06] hover:border-white/20 hover:bg-white/[0.04]`}
                       >
-                        <div className="flex items-start gap-3.5">
-                          {/* Аккуратная мини-иконка */}
+                        {/* Тонкий акцентный световой индикатор слева при наведении */}
+                        <div
+                          className={`absolute left-0 top-1/2 -translate-y-1/2 w-[3px] h-0 group-hover:h-8 rounded-r transition-all duration-300 ease-out ${
+                            isWebCol ? 'bg-cyan-400' : 'bg-sky-400'
+                          }`}
+                        />
+
+                        <div className="flex items-start gap-4">
+                          {/* Аккуратная иконка с деликатным изменением контраста */}
                           <div
-                            className={`w-9 h-9 rounded-xl flex items-center justify-center shrink-0 transition-colors ${
-                              isHovered
-                                ? isFirstCol
-                                  ? 'bg-cyan-400/20 text-cyan-300 border border-cyan-400/40'
-                                  : 'bg-sky-400/20 text-sky-300 border border-sky-400/40'
-                                : 'bg-white/5 text-slate-300 border border-white/10 group-hover:text-white'
+                            className={`w-11 h-11 rounded-xl flex items-center justify-center shrink-0 border transition-all duration-300 ${
+                              isWebCol
+                                ? 'bg-white/[0.03] text-slate-300 border-white/10 group-hover:bg-cyan-500/10 group-hover:text-cyan-300 group-hover:border-cyan-500/30 group-hover:shadow-[0_0_15px_rgba(6,182,212,0.15)]'
+                                : 'bg-white/[0.03] text-slate-300 border-white/10 group-hover:bg-sky-500/10 group-hover:text-sky-300 group-hover:border-sky-500/30 group-hover:shadow-[0_0_15px_rgba(14,165,233,0.15)]'
                             }`}
                           >
-                            <Icon className="w-4 h-4" />
+                            <Icon className="w-5 h-5 transition-transform duration-300 group-hover:scale-105" />
                           </div>
 
                           <div className="flex-1 min-w-0">
-                            <h4
-                              className={`text-sm sm:text-base font-bold mb-1 transition-colors leading-snug ${
-                                isHovered
-                                  ? isFirstCol
-                                    ? 'text-cyan-200'
-                                    : 'text-sky-200'
-                                  : 'text-white'
-                              }`}
-                            >
-                              {item.title}
-                            </h4>
-                            <p className="text-xs sm:text-[13px] text-slate-400 leading-relaxed">
+                            <div className="flex items-center justify-between gap-2 mb-1.5">
+                              <h4
+                                className={`text-base sm:text-lg font-bold text-white transition-colors duration-200 leading-snug ${
+                                  isWebCol
+                                    ? 'group-hover:text-cyan-200'
+                                    : 'group-hover:text-sky-200'
+                                }`}
+                              >
+                                {item.title}
+                              </h4>
+                            </div>
+                            <p className="text-xs sm:text-sm text-slate-400 leading-relaxed group-hover:text-slate-300 transition-colors duration-200">
                               {item.description}
                             </p>
                           </div>
@@ -150,24 +195,33 @@ export const Specialization: React.FC = () => {
                     );
                   })}
                 </div>
-
-                {/* Низ колонки: кнопка призыва к действию без слоп-подписей */}
-                <div className="mt-6 pt-5 border-t border-white/5 flex items-center justify-end">
-                  <a
-                    href="#contact"
-                    onClick={(e) => handleScrollTo(e, '#contact')}
-                    className="relative group/btn overflow-hidden px-4.5 py-2 rounded-full text-xs sm:text-sm font-semibold text-cyan-300 bg-cyan-950/50 border border-cyan-500/30 hover:border-cyan-400 transition-all active:scale-[0.98] flex items-center gap-1.5 cursor-pointer"
-                  >
-                    <span className="absolute inset-0 bg-cyan-400 rounded-full -translate-x-full group-hover/btn:translate-x-0 transition-transform duration-300 ease-out pointer-events-none" />
-                    <span className="relative z-10 flex items-center gap-1.5 transition-colors duration-300 group-hover/btn:text-slate-950 font-bold">
-                      <span>{t.specialization.orderCta}</span>
-                      <ArrowRight className="w-3.5 h-3.5 transition-transform duration-200 group-hover/btn:translate-x-0.5" />
-                    </span>
-                  </a>
-                </div>
               </div>
             );
           })}
+        </div>
+
+        {/* Элегантная нижняя строка с приглашением обсудить задачу под ключ */}
+        <div className="mt-16 sm:mt-20 pt-8 border-t border-white/10 flex flex-col sm:flex-row items-center justify-between gap-4">
+          <div className="flex items-center gap-3 text-xs sm:text-sm text-slate-400">
+            <Layers className="w-4 h-4 text-cyan-400" />
+            <span>
+              {isEn
+                ? 'Need a tailored custom solution or a combination of multiple formats?'
+                : 'Нужно индивидуальное решение или комбинация нескольких направлений?'}
+            </span>
+          </div>
+
+          <a
+            href="#contact"
+            onClick={(e) => handleScrollTo(e, '#contact')}
+            className="relative group/btn overflow-hidden inline-flex items-center justify-center gap-2 px-6 py-2.5 sm:px-7 sm:py-3 rounded-full text-xs sm:text-sm font-semibold cursor-pointer transition-all duration-300 bg-white/10 text-white border border-white/15 hover:border-cyan-400/60 hover:shadow-[0_0_22px_rgba(6,182,212,0.25)]"
+          >
+            <span className="absolute inset-0 bg-white rounded-full -translate-x-full group-hover/btn:translate-x-0 transition-transform duration-300 ease-out pointer-events-none" />
+            <span className="relative z-10 flex items-center gap-2 transition-colors duration-300 group-hover/btn:text-slate-950 font-semibold">
+              <span>{t.specialization.orderCta}</span>
+              <ArrowRight className="w-4 h-4 transition-transform duration-200 group-hover/btn:translate-x-1" />
+            </span>
+          </a>
         </div>
       </div>
     </section>

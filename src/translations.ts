@@ -212,7 +212,7 @@ export interface Translations {
   contact: {
     title: string;
     description1: string;
-    description2: string;
+    description2?: string;
     btnSubmitProject: string;
     disclaimer: string;
     form: {
@@ -380,7 +380,7 @@ export const translations: Record<Language, Translations> = {
         { name: 'Instagram', url: 'https://instagram.com/ilyaarkovdotcom?vrfl=eHpjcnZrMDgzNThu&utm_source=qr' },
         { name: 'Threads', url: 'https://threads.net/@ilyaarkov' },
         { name: 'X', url: 'https://x.com/ilyaarkov' },
-        { name: 'LinkedIn', url: 'www.linkedin.com/in/ilyaarkov' },
+        { name: 'LinkedIn', url: 'https://www.linkedin.com/in/ilyaarkov' },
       ],
       whoIsItForTitle: 'Кому подойдёт сотрудничество',
       whoIsItForList: [
@@ -932,7 +932,7 @@ export const translations: Record<Language, Translations> = {
     contact: {
       title: 'Расскажите, какой сайт вам нужен',
       description1: 'Для предварительной оценки пришлите ссылку на ваши социальные сети или существующий сайт и коротко опишите задачу.',
-      description2: 'Я посмотрю материалы, задам несколько вопросов и предложу подходящий формат работы.',
+      description2: '',
       btnSubmitProject: 'Отправить описание проекта',
       disclaimer: 'Предварительное обсуждение бесплатно и ни к чему вас не обязывает.',
       form: {
@@ -1098,7 +1098,7 @@ export const translations: Record<Language, Translations> = {
         { name: 'Instagram', url: 'https://instagram.com/ilyaarkovdotcom?vrfl=eHpjcnZrMDgzNThu&utm_source=qr' },
         { name: 'Threads', url: 'https://threads.net/@ilyaarkov' },
         { name: 'X', url: 'https://x.com/ilyaarkov' },
-        { name: 'LinkedIn', url: 'www.linkedin.com/in/ilyaarkov' },
+        { name: 'LinkedIn', url: 'https://www.linkedin.com/in/ilyaarkov' },
       ],
       whoIsItForTitle: 'Who this collaboration is for',
       whoIsItForList: [
@@ -1650,7 +1650,7 @@ export const translations: Record<Language, Translations> = {
     contact: {
       title: 'Tell me what website you need',
       description1: 'For an initial assessment, send a link to your current social media or existing site and briefly describe your vision.',
-      description2: 'I will review your materials, ask a few clarifying questions, and recommend the best collaboration approach.',
+      description2: '',
       btnSubmitProject: 'Submit Project Details',
       disclaimer: 'The preliminary consultation is free and carries no obligation.',
       form: {
