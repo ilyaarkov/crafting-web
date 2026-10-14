@@ -161,7 +161,7 @@ export const Hero: React.FC = () => {
 
             {/* Текст «Разработка современных...»: центр текста ровно на 50% между 50dvh и верхней кнопкой */}
             <div className="absolute top-1/2 left-0 right-0 -translate-y-1/2 px-4 text-center">
-              <p className="text-xs sm:text-sm text-slate-300 leading-relaxed max-w-sm mx-auto text-balance font-normal">
+              <p className="text-sm sm:text-base text-slate-300 leading-relaxed max-w-sm mx-auto text-balance font-normal">
                 {t.hero.description}
               </p>
             </div>
