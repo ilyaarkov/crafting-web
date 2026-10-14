@@ -51,6 +51,40 @@
   }
 }
 
+/* Анимация пульсации надписи "ПОСМОТРЕТЬ" на сенсорных экранах раз в 5 секунд на 0.5 сек */
+@keyframes touchPreviewPulse {
+  0%, 88%, 100% {
+    opacity: 0;
+  }
+  92%, 96% {
+    opacity: 1;
+  }
+}
+
+/* Базовое состояние: оверлей всегда скрыт по умолчанию */
+.project-preview-overlay {
+  opacity: 0;
+}
+
+/* На ПК с мышью: плавное появление при наведении */
+@media (hover: hover) {
+  .project-preview-overlay {
+    opacity: 0;
+    transition: opacity 0.25s ease-out;
+  }
+  .group:hover .project-preview-overlay {
+    opacity: 1;
+  }
+}
+
+/* На чисто сенсорных экранах (без мыши): деликатное появление раз в 5 сек */
+@media (hover: none) and (pointer: coarse) {
+  .project-preview-overlay {
+    opacity: 0;
+    animation: touchPreviewPulse 5s infinite ease-in-out;
+  }
+}
+
 /* Custom scrollbar */
 ::-webkit-scrollbar {
   width: 7px;

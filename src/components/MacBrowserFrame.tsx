@@ -39,8 +39,8 @@ export const MacBrowserFrame: React.FC<MacBrowserFrameProps> = ({
         <div className="absolute inset-0 bg-gradient-to-t from-[#060a12]/30 via-transparent to-transparent pointer-events-none" />
 
         {overlayText && (
-          <div className="project-preview-overlay absolute inset-0 flex items-center justify-center bg-black/40 backdrop-blur-[1.5px] pointer-events-none select-none z-20">
-            <span className="px-5 py-2.5 rounded-full border border-white/25 bg-black/50 text-xs sm:text-sm font-bold tracking-[0.22em] text-white/90 shadow-lg uppercase backdrop-blur-md">
+          <div className="project-preview-overlay absolute inset-0 flex items-center justify-center bg-black/20 opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none select-none z-20">
+            <span className="text-xs sm:text-sm font-semibold tracking-[0.28em] text-white/50 uppercase">
               {overlayText}
             </span>
           </div>
