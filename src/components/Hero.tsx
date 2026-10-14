@@ -128,7 +128,7 @@ export const Hero: React.FC = () => {
           {/* Зона между средней линией (50dvh) и верхней кнопкой */}
           <div className="flex-1 w-full relative">
             {/* Бегущая строка: ровно посередине между низом заголовка (0) и верхом описания */}
-            <div className="absolute top-0 left-0 right-0 bottom-1/2 flex items-center justify-center pointer-events-none overflow-hidden">
+            <div className="absolute top-0 left-0 right-0 bottom-3/5 flex items-center justify-center pointer-events-none overflow-hidden">
               <div className="w-screen overflow-hidden py-1">
                 <div className="animate-hero-marquee flex items-center whitespace-nowrap">
                   <div className="flex items-center shrink-0">
