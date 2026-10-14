@@ -47,7 +47,7 @@ export const Solutions: React.FC = () => {
             return (
               <div
                 key={idx}
-                className="group relative rounded-3xl border border-white/10 bg-[#090d16]/85 backdrop-blur-xl p-6 sm:p-7 flex flex-col justify-between hover:border-cyan-400/40 hover:shadow-[0_0_30px_-5px_rgba(34,211,238,0.15)] transition-all duration-300 overflow-hidden cursor-default select-none"
+                className="group relative rounded-3xl border border-white/10 bg-[#090d16]/85 backdrop-blur-xl p-6 sm:p-7 flex flex-col justify-between hover:border-cyan-400/40 hover:shadow-[0_0_30px_-5px_rgba(34,211,238,0.15)] transition-all duration-300 overflow-hidden"
               >
                 <div className="absolute -top-12 -right-12 w-28 h-28 bg-cyan-500/10 blur-2xl rounded-full group-hover:bg-cyan-400/20 transition-all duration-500 pointer-events-none" />
 

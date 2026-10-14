@@ -150,7 +150,7 @@ export const Process: React.FC = () => {
   }, [totalLength, updateRouteGeometry]);
 
   return (
-    <section id="process" className="py-14 sm:py-18 lg:py-22 relative overflow-hidden select-none">
+    <section id="process" className="py-14 sm:py-18 lg:py-22 relative overflow-hidden">
       {/* Мягкие фоновые ореолы */}
       <div className="absolute top-1/4 left-1/4 w-[450px] h-[320px] bg-cyan-500/5 blur-[140px] rounded-full pointer-events-none -z-10" />
       <div className="absolute bottom-1/4 right-1/4 w-[450px] h-[320px] bg-emerald-500/5 blur-[140px] rounded-full pointer-events-none -z-10" />
@@ -254,14 +254,6 @@ export const Process: React.FC = () => {
                       />
                     </div>
 
-                    <div
-                      className={`text-xs font-mono font-bold uppercase tracking-wider mb-1 transition-colors duration-300 ${
-                        isActive ? 'text-emerald-400' : 'text-slate-600'
-                      }`}
-                    >
-                      {`${t.process.stagePrefix} ${step.number}`}
-                    </div>
-
                     <h3
                       className={`text-xl sm:text-2xl lg:text-3xl font-extrabold tracking-tight transition-colors duration-300 ${
                         isActive
@@ -316,14 +308,6 @@ export const Process: React.FC = () => {
                     </div>
 
                     <div className="flex-1 min-w-0">
-                      <div
-                        className={`text-[11px] font-mono font-bold uppercase tracking-wider mb-0.5 transition-colors duration-300 ${
-                          isActive ? 'text-cyan-400' : 'text-slate-600'
-                        }`}
-                      >
-                        {`${t.process.stagePrefix} ${step.number}`}
-                      </div>
-
                       <h3
                         className={`text-lg font-bold tracking-tight transition-colors duration-300 ${
                           isActive ? 'text-white' : 'text-slate-500'
@@ -352,13 +336,6 @@ export const Process: React.FC = () => {
                     >
                       {isLeftOnDesktop && (
                         <div className="max-w-md pr-4">
-                          <div
-                            className={`text-xs font-mono font-bold uppercase tracking-wider mb-0.5 transition-colors duration-300 ${
-                              isActive ? 'text-cyan-400' : 'text-slate-600'
-                            }`}
-                          >
-                            {`${t.process.stagePrefix} ${step.number}`}
-                          </div>
                           <h3
                             className={`text-xl font-bold tracking-tight transition-colors duration-300 ${
                               isActive
@@ -419,13 +396,6 @@ export const Process: React.FC = () => {
                       )}
                       {!isLeftOnDesktop && (
                         <div className="max-w-md pl-4">
-                          <div
-                            className={`text-xs font-mono font-bold uppercase tracking-wider mb-0.5 transition-colors duration-300 ${
-                              isActive ? 'text-cyan-400' : 'text-slate-600'
-                            }`}
-                          >
-                            {`${t.process.stagePrefix} ${step.number}`}
-                          </div>
                           <h3
                             className={`text-xl font-bold tracking-tight transition-colors duration-300 ${
                               isActive

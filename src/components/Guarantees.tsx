@@ -31,7 +31,7 @@ export const Guarantees: React.FC = () => {
             return (
               <div
                 key={idx}
-                className="group relative rounded-2xl border border-white/10 bg-[#080d17]/85 backdrop-blur-xl p-5 sm:p-6 flex flex-col justify-between hover:border-cyan-400/40 hover:shadow-[0_0_25px_-5px_rgba(34,211,238,0.15)] transition-all duration-300 cursor-default select-none overflow-hidden"
+                className="group relative rounded-2xl border border-white/10 bg-[#080d17]/85 backdrop-blur-xl p-5 sm:p-6 flex flex-col justify-between hover:border-cyan-400/40 hover:shadow-[0_0_25px_-5px_rgba(34,211,238,0.15)] transition-all duration-300 overflow-hidden"
               >
                 <div className="absolute -top-10 -right-10 w-24 h-24 bg-cyan-500/10 blur-xl rounded-full group-hover:bg-cyan-400/20 transition-all duration-500 pointer-events-none" />
 

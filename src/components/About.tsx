@@ -5,6 +5,8 @@ import { UserCheck } from 'lucide-react';
 export const About: React.FC = () => {
   const { t, lang } = useLanguage();
   const [imgError, setImgError] = useState(false);
+
+  // Кастомные SVG иконки соцсетей для точного визуального соответствия брендам
   const socialIcons: Record<string, {
     icon: React.ReactNode;
     hoverClasses: string;
@@ -60,7 +62,7 @@ export const About: React.FC = () => {
   };
 
   return (
-    <section id="about" className="py-20 lg:py-28 relative overflow-hidden select-none">
+    <section id="about" className="py-20 lg:py-28 relative overflow-hidden">
       <style>{`
         @keyframes morphDarkMatter {
           0%, 100% {

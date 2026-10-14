@@ -105,8 +105,10 @@ export interface Translations {
     badge: string;
     title: string;
     intro: string;
+    stagePrefix: string;
     finishBadge: string;
     steps: {
+      number: string;
       title: string;
       description: string;
     }[];
@@ -566,33 +568,41 @@ export const translations: Record<Language, Translations> = {
       badge: 'Маршрут от и до',
       title: 'От первой переписки до готового сайта',
       intro: 'Каждый этап прозрачен: от первого сообщения до передачи доступов и запуска сайта.',
+      stagePrefix: '',
       finishBadge: 'Финиш • Сайт в сети и готов к работе!',
       steps: [
         {
+          number: '01',
           title: 'Знакомство',
           description: 'Вы рассказываете о своей работе, будущем сайте и функциях, которые вам нужны.',
         },
         {
+          number: '02',
           title: 'Материалы',
           description: 'Вы присылаете тексты, фотографии, цены, примеры работ и другую имеющуюся информацию.',
         },
         {
+          number: '03',
           title: 'Структура и стоимость',
           description: 'Я предлагаю состав страниц и блоков, после чего мы фиксируем объём работы, срок и цену.',
         },
         {
+          number: '04',
           title: 'Разработка',
           description: 'Я собираю дизайн, мобильную версию и необходимые функции сайта.',
         },
         {
+          number: '05',
           title: 'Демонстрация',
           description: 'Вы получаете тестовую ссылку и можете посмотреть сайт до его публикации.',
         },
         {
+          number: '06',
           title: 'Правки',
           description: 'Я вношу изменения в рамках выбранного тарифа и согласованного состава работ.',
         },
         {
+          number: '07',
           title: 'Запуск',
           description: 'Подключаю домен, проверяю сайт и передаю вам исходный код и доступы.',
         },
@@ -606,7 +616,7 @@ export const translations: Record<Language, Translations> = {
     },
     projects: {
       preTitle: 'Примеры работы',
-      title: 'Сайты, которые я уже разработал',
+      title: 'Мои проекты',
       description: '',
       allProjectsBtn: 'Все проекты',
       btnViewProject: 'Посмотреть проект',
@@ -1276,33 +1286,41 @@ export const translations: Record<Language, Translations> = {
       badge: 'Project Roadmap',
       title: 'From initial message to a launched website',
       intro: 'Clear milestones from the very first greeting to custom domain launch and keys handoff.',
+      stagePrefix: '',
       finishBadge: 'Finish • Site is live and operational!',
       steps: [
         {
+          number: '01',
           title: 'Introduction',
           description: 'You share details about your business, desired website goals, and needed features.',
         },
         {
+          number: '02',
           title: 'Content & Materials',
           description: 'You send texts, photos, pricing, work samples, and any initial branding assets.',
         },
         {
+          number: '03',
           title: 'Structure & Cost',
           description: 'I outline page architecture and sections, and we lock in the scope, delivery timeline, and price.',
         },
         {
+          number: '04',
           title: 'Development',
           description: 'I build the visual design, responsive mobile version, and all interactive features.',
         },
         {
+          number: '05',
           title: 'Preview & Demo',
           description: 'You receive a private staging link to inspect and test the site before going live.',
         },
         {
+          number: '06',
           title: 'Revisions',
           description: 'I polish and apply revisions within the agreed scope and selected package.',
         },
         {
+          number: '07',
           title: 'Launch',
           description: 'I connect your domain, run final security checks, and hand over source code & access keys.',
         },
@@ -1316,7 +1334,7 @@ export const translations: Record<Language, Translations> = {
     },
     projects: {
       preTitle: 'Work Examples',
-      title: 'Websites I have developed',
+      title: 'My projects',
       description: '',
       allProjectsBtn: 'All Projects',
       btnViewProject: 'View Project',

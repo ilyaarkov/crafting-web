@@ -107,7 +107,7 @@ export const Specialization: React.FC = () => {
   };
 
   return (
-    <section id="specialization" className="py-20 lg:py-32 relative overflow-hidden select-none">
+    <section id="specialization" className="py-20 lg:py-32 relative overflow-hidden">
       {/* Мягкие световые ореолы */}
       <div className="absolute top-1/4 -left-48 w-[600px] h-[600px] bg-cyan-500/8 blur-[180px] rounded-full pointer-events-none -z-10" />
       <div className="absolute bottom-1/4 -right-48 w-[600px] h-[600px] bg-sky-600/8 blur-[180px] rounded-full pointer-events-none -z-10" />

@@ -141,14 +141,14 @@ export const TechStack: React.FC = () => {
       </div>
 
       <div className="max-w-6xl mx-auto px-4 sm:px-6 relative z-10">
-        <div className="max-w-3xl mb-12 sm:mb-14 cursor-default select-none">
+        <div className="max-w-3xl mb-12 sm:mb-14">
           <div className="text-xs uppercase tracking-widest text-cyan-400 font-semibold mb-3">
             <span>{t.tools.badge}</span>
           </div>
-          <h2 className="text-2xl sm:text-4xl font-extrabold text-white tracking-tight leading-tight mb-4 cursor-default select-none">
+          <h2 className="text-2xl sm:text-4xl font-extrabold text-white tracking-tight leading-tight mb-4">
             {t.tools.title}
           </h2>
-          <p className="text-slate-300 text-base sm:text-lg leading-relaxed cursor-default select-none">
+          <p className="text-slate-300 text-base sm:text-lg leading-relaxed">
             {t.tools.intro}
           </p>
         </div>
@@ -157,7 +157,7 @@ export const TechStack: React.FC = () => {
           {t.tools.items.map((card) => (
             <div
               key={card.id}
-              className="group relative p-6 sm:p-7 rounded-2xl border border-white/10 bg-[#070b13]/85 backdrop-blur-xl flex flex-col justify-start hover:border-cyan-400/40 hover:shadow-[0_0_30px_-5px_rgba(34,211,238,0.18)] transition-all duration-300 overflow-hidden cursor-default select-none"
+              className="group relative p-6 sm:p-7 rounded-2xl border border-white/10 bg-[#070b13]/85 backdrop-blur-xl flex flex-col justify-start hover:border-cyan-400/40 hover:shadow-[0_0_30px_-5px_rgba(34,211,238,0.18)] transition-all duration-300 overflow-hidden"
             >
               <div className="absolute inset-0 rounded-2xl overflow-hidden pointer-events-none -z-10">
                 <div
@@ -218,24 +218,24 @@ export const TechStack: React.FC = () => {
                 </span>
               </div>
 
-              <h3 className="text-lg font-bold text-white tracking-tight group-hover:text-cyan-200 transition-colors cursor-default select-none pointer-events-none">
+              <h3 className="text-lg font-bold text-white tracking-tight group-hover:text-cyan-200 transition-colors">
                 {card.name}
               </h3>
 
-              <div className="text-[13px] font-semibold text-slate-200 mt-1 leading-snug cursor-default select-none pointer-events-none">
+              <div className="text-[13px] font-semibold text-slate-200 mt-1 leading-snug">
                 {card.subtitle}
               </div>
 
-              <p className="text-xs sm:text-[13px] text-slate-400 mt-2.5 leading-relaxed cursor-default select-none pointer-events-none">
+              <p className="text-xs sm:text-[13px] text-slate-400 mt-2.5 leading-relaxed">
                 {card.description}
               </p>
             </div>
           ))}
         </div>
 
-        <div className="mt-10 glass-panel p-5 sm:p-6 rounded-2xl border border-cyan-500/20 bg-cyan-950/20 flex items-center gap-3.5 text-cyan-200 text-sm sm:text-base font-medium cursor-default select-none">
+        <div className="mt-10 glass-panel p-5 sm:p-6 rounded-2xl border border-cyan-500/20 bg-cyan-950/20 flex items-center gap-3.5 text-cyan-200 text-sm sm:text-base font-medium">
           <CheckCircle className="w-5 h-5 text-cyan-400 shrink-0" />
-          <span className="cursor-default select-none">{t.tools.signature}</span>
+          <span>{t.tools.signature}</span>
         </div>
       </div>
     </section>
