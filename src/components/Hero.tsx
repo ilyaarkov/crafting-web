@@ -106,7 +106,7 @@ export const Hero: React.FC = () => {
 
       <div className="flex lg:hidden flex-col h-full w-full relative z-10">
         <div className="h-[50dvh] flex flex-col justify-end items-center px-4 pb-3 text-center">
-          <h1 className="text-[3xl] sm:text-3xl font-black tracking-tight leading-[1.14] max-w-md mx-auto">
+          <h1 className="text-[32px] sm:text-3xl font-black tracking-tight leading-[1.14] max-w-md mx-auto">
             <span className="block text-white mb-0.5">
               {t.hero.titlePrefix}
             </span>
