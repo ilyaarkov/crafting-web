@@ -193,7 +193,7 @@ export interface Translations {
     title: string;
     description: string;
     items: {
-      badge: string;
+      badge?: string;
       title: string;
       description: string;
     }[];
@@ -887,24 +887,20 @@ export const translations: Record<Language, Translations> = {
       description: 'Прозрачные условия без агентской наценки, срывов сроков и передачи проекта третьим лицам.',
       items: [
         {
-          badge: 'Без посредников',
-          title: 'Напрямую с разработчиком',
-          description: 'Вы общаетесь напрямую со мной – без испорченного телефона, менеджеров и бюрократии. Любые вопросы и правки внедряются оперативно.',
+          title: 'Гарантия возврата средств',
+          description: 'Поэтапная работа с прозрачными контрольными точками. Если на начальных этапах разработки вас не устроит концепт или подход – возвращаю предоплату за невыполненную часть. Вы ничем не рискуете на старте.',
         },
         {
-          badge: 'Точно в срок',
-          title: 'Быстрый запуск за 5–12 дней',
-          description: 'Чёткий согласованный план и готовый рабочий сайт в сети точно в оговорённый срок, без затягивания на месяцы.',
+          title: 'Официальный договор',
+          description: 'Работаем официально: фиксируем условия, сроки, этапы и ответственность сторон. По запросу бесплатно вышлю типовой договор для ознакомления перед началом сотрудничества.',
         },
         {
-          badge: 'Без скрытых доплат',
-          title: '100% фиксированная цена',
-          description: 'Состав работ и стоимость утверждаются до старта и не меняются. Никаких платных правок или растущих смет.',
+          title: 'Фиксированная стоимость',
+          description: 'Состав работ и стоимость утверждаются до старта и не меняются в процессе. Никаких непредвиденных доплат, скрытых расходов или растущих смет.',
         },
         {
-          badge: 'Гарантия и помощь',
           title: 'Поддержка после запуска',
-          description: 'Бесплатное техническое сопровождение после релиза. Я остаюсь на связи, помогаю с настройками и отвечаю на вопросы.',
+          description: 'Бесплатное техническое сопровождение после сдачи проекта. Я остаюсь на связи, оперативно помогаю с настройками и отвечаю на любые вопросы.',
         },
       ],
     },
@@ -1609,24 +1605,20 @@ export const translations: Record<Language, Translations> = {
       description: 'Transparent workflow without agency markups, missed deadlines, or outsourcing.',
       items: [
         {
-          badge: 'No Middlemen',
-          title: 'Direct with Developer',
-          description: 'Direct communication with the engineer building your site. No agency telephone game – instant clarity on every detail.',
+          title: 'Money-Back Guarantee',
+          description: 'Milestone-based workflow with clear checkpoints. If you are not satisfied with the concept at early stages, unworked prepayment is refunded. Zero financial risk at kickoff.',
         },
         {
-          badge: 'Strict Deadlines',
-          title: 'Fast 5–12 Day Launch',
-          description: 'A clear agreed roadmap and a live production site on schedule, without dragging projects out for months.',
+          title: 'Formal Contract',
+          description: 'Transparent legal agreement fixing deliverables, milestones, timelines, and commitments. A free draft copy is available on request before project kickoff.',
         },
         {
-          badge: 'Zero Hidden Fees',
-          title: '100% Fixed Quote',
-          description: 'The scope of work and final price are locked in prior to kickoff. No surprise invoices or scope-creep price hikes.',
+          title: 'Fixed Price Guarantee',
+          description: 'The scope of work and quote are finalized prior to kickoff and stay unchanged. No surprise fees, hidden extras, or runaway estimates.',
         },
         {
-          badge: 'Free Warranty',
-          title: 'Post-Launch Care',
-          description: 'Complimentary technical warranty after release. I stay available to help with configurations and questions.',
+          title: 'Post-Launch Support',
+          description: 'Complimentary technical support and warranty after delivery. I stay reachable to help with configurations and answers to any questions.',
         },
       ],
     },

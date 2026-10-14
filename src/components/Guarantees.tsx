@@ -1,8 +1,8 @@
 import React from 'react';
 import { useLanguage } from '../context/LanguageContext';
-import { UserCheck, Clock, ShieldCheck, Headphones, Sparkles } from 'lucide-react';
+import { ShieldCheck, FileText, Lock, Headphones } from 'lucide-react';
 
-const icons = [UserCheck, Clock, ShieldCheck, Headphones];
+const icons = [ShieldCheck, FileText, Lock, Headphones];
 
 export const Guarantees: React.FC = () => {
   const { t } = useLanguage();
@@ -27,7 +27,7 @@ export const Guarantees: React.FC = () => {
 
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
           {t.guarantees.items.map((item, idx) => {
-            const Icon = icons[idx] || UserCheck;
+            const Icon = icons[idx] || ShieldCheck;
             return (
               <div
                 key={idx}
@@ -36,16 +36,11 @@ export const Guarantees: React.FC = () => {
                 <div className="absolute -top-10 -right-10 w-24 h-24 bg-cyan-500/10 blur-xl rounded-full group-hover:bg-cyan-400/20 transition-all duration-500 pointer-events-none" />
 
                 <div>
-                  <div className="flex items-center justify-between gap-2 mb-4">
-                    <div className="w-10 h-10 rounded-xl bg-cyan-500/10 border border-cyan-500/20 flex items-center justify-center text-cyan-400 group-hover:text-cyan-300 group-hover:scale-105 group-hover:border-cyan-400/40 transition-all shadow-sm">
-                      <Icon className="w-5 h-5" />
-                    </div>
-                    <span className="text-[10px] font-semibold px-2 py-0.5 rounded-full bg-cyan-950/70 border border-cyan-500/30 text-cyan-300">
-                      {item.badge}
-                    </span>
+                  <div className="w-10 h-10 rounded-xl bg-cyan-500/10 border border-cyan-500/20 flex items-center justify-center text-cyan-400 group-hover:text-cyan-300 group-hover:scale-105 group-hover:border-cyan-400/40 transition-all shadow-sm mb-4">
+                    <Icon className="w-5 h-5" />
                   </div>
 
-                  <h3 className="text-base sm:text-lg font-bold text-white mb-2 group-hover:text-cyan-200 transition-colors leading-snug">
+                  <h3 className="text-base sm:text-lg font-bold text-white mb-2.5 group-hover:text-cyan-200 transition-colors leading-snug">
                     {item.title}
                   </h3>
 
