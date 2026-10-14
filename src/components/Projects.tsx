@@ -68,7 +68,7 @@ export const Projects: React.FC = () => {
                 style={{
                   transitionDelay: `${idx * 120}ms`,
                 }}
-                className={`group flex flex-col justify-start transition-all duration-700 ease-out ${
+                className={`group flex flex-col justify-start transition-all duration-700 ease-out pb-8 md:pb-0 border-b border-white/10 md:border-b-0 last:border-b-0 last:pb-0 ${
                   isVisible
                     ? 'opacity-100 translate-y-0'
                     : 'opacity-0 translate-y-8'

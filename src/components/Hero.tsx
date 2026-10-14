@@ -20,6 +20,9 @@ export const Hero: React.FC = () => {
     }
   };
 
+  // Повторяем список тегов для гарантированного непрерывного бесшовного цикла бегущей строки
+  const tickerList = [...t.hero.tags, ...t.hero.tags];
+
   return (
     <section className="relative overflow-hidden select-none min-h-[100dvh] flex flex-col justify-between">
       <style>{`
@@ -44,6 +47,21 @@ export const Hero: React.FC = () => {
         }
         .orbit-ring-2 {
           animation: orbitRotateReverse 36s linear infinite;
+        }
+
+        @keyframes heroMarquee {
+          0% {
+            transform: translate3d(0, 0, 0);
+          }
+          100% {
+            transform: translate3d(-50%, 0, 0);
+          }
+        }
+        .animate-hero-marquee {
+          display: flex;
+          width: max-content;
+          animation: heroMarquee 24s linear infinite;
+          will-change: transform;
         }
       `}</style>
 
@@ -88,17 +106,17 @@ export const Hero: React.FC = () => {
       </div>
 
       {/* ========================================================= */}
-      {/* 1. ПОЛНОЭКРАННЫЙ КОНТЕНТ (строго помещается в 100vh на всех экранах) */}
+      {/* 1. ПОЛНОЭКРАННЫЙ КОНТЕНТ */}
       {/* ========================================================= */}
-      <div className="relative flex-1 flex flex-col justify-between pt-16 sm:pt-20 pb-3 sm:pb-6 max-w-6xl mx-auto px-4 sm:px-6 z-10 w-full text-center">
-        {/* Компактный спейсер */}
-        <div className="h-0.5 sm:h-2" />
+      <div className="relative flex-1 flex flex-col justify-between pt-16 sm:pt-20 lg:pt-24 pb-4 sm:pb-6 max-w-6xl mx-auto px-4 sm:px-6 z-10 w-full text-center">
+        {/* Верхний спейсер */}
+        <div className="h-1 sm:h-2" />
 
-        {/* Центр экрана: Заголовок с переносом после 'задачи', теги, подзаголовок, кнопки */}
-        <div className="my-auto py-1 sm:py-3">
-          {/* Главный заголовок H1: перенос после 'задачи' на отдельную строку отдельным цветом */}
-          <h1 className="text-2xl sm:text-4xl md:text-5xl lg:text-6xl font-black tracking-tight leading-[1.12] sm:leading-[1.10] mb-3 sm:mb-4 max-w-4xl mx-auto">
-            <span className="block text-white mb-1">
+        {/* ЦЕНТР ЭКРАНА */}
+        <div className="my-auto py-2 sm:py-4 flex flex-col items-center justify-center">
+          {/* Главный заголовок H1: по середине */}
+          <h1 className="text-2xl sm:text-4xl md:text-5xl lg:text-6xl font-black tracking-tight leading-[1.18] sm:leading-[1.10] mb-3.5 sm:mb-5 max-w-4xl mx-auto">
+            <span className="block text-white mb-1.5">
               {t.hero.titlePrefix}
             </span>
             <span className="block text-transparent bg-clip-text bg-gradient-to-r from-cyan-300 via-sky-300 to-blue-300">
@@ -106,8 +124,10 @@ export const Hero: React.FC = () => {
             </span>
           </h1>
 
-          {/* Строка специализаций */}
-          <div className="flex flex-wrap items-center justify-center gap-x-2 sm:gap-x-3 gap-y-1 text-[10px] sm:text-xs font-mono font-medium text-slate-400 uppercase tracking-widest mb-3 sm:mb-5 max-w-2xl mx-auto">
+          {/* ---------------------------------------------------- */}
+          {/* ПК: Строка специализаций (статичные теги) */}
+          {/* ---------------------------------------------------- */}
+          <div className="hidden lg:flex flex-wrap items-center justify-center gap-x-3 gap-y-1.5 text-xs font-mono font-medium text-slate-400 uppercase tracking-widest mb-6 max-w-2xl mx-auto">
             {t.hero.tags.map((tag, idx) => (
               <React.Fragment key={idx}>
                 {idx > 0 && <span className="text-cyan-400 font-bold select-none">&bull;</span>}
@@ -116,31 +136,61 @@ export const Hero: React.FC = () => {
             ))}
           </div>
 
-          {/* Лаконичное описание */}
-          <p className="text-xs sm:text-sm md:text-base lg:text-lg text-slate-300 leading-relaxed max-w-2xl mx-auto mb-4 sm:mb-6 text-balance font-normal">
+          {/* ---------------------------------------------------- */}
+          {/* МОБИЛКИ И ПЛАНШЕТЫ: Бесконечная бегущая строка от края до края экрана */}
+          {/* ---------------------------------------------------- */}
+          <div className="w-screen relative left-1/2 -translate-x-1/2 overflow-hidden py-1.5 sm:py-2 my-2 sm:my-3 lg:hidden pointer-events-none select-none">
+            <div className="animate-hero-marquee flex items-center whitespace-nowrap">
+              {/* Первый набор */}
+              <div className="flex items-center shrink-0">
+                {tickerList.map((tag, idx) => (
+                  <span key={`ticker-a-${idx}`} className="inline-flex items-center">
+                    <span className="text-[11px] sm:text-xs font-mono font-medium text-slate-300 uppercase tracking-widest px-2.5 sm:px-3">
+                      {tag}
+                    </span>
+                    <span className="text-cyan-400 font-bold select-none text-[10px]">&bull;</span>
+                  </span>
+                ))}
+              </div>
+              {/* Второй набор для бесшовной бесконечной петли */}
+              <div className="flex items-center shrink-0" aria-hidden="true">
+                {tickerList.map((tag, idx) => (
+                  <span key={`ticker-b-${idx}`} className="inline-flex items-center">
+                    <span className="text-[11px] sm:text-xs font-mono font-medium text-slate-300 uppercase tracking-widest px-2.5 sm:px-3">
+                      {tag}
+                    </span>
+                    <span className="text-cyan-400 font-bold select-none text-[10px]">&bull;</span>
+                  </span>
+                ))}
+              </div>
+            </div>
+          </div>
+
+          {/* Описание: на ПК и на мобилках (на мобилках расположено сразу под бегущей строкой) */}
+          <p className="text-xs sm:text-sm md:text-base lg:text-lg text-slate-300 leading-relaxed max-w-2xl mx-auto mb-5 sm:mb-7 text-balance font-normal px-3">
             {t.hero.description}
           </p>
 
-          {/* Кнопки призыва к действию (с одинаковым hover эффектом смены цвета слева направо) */}
-          <div className="flex flex-col sm:flex-row items-center justify-center gap-2.5 sm:gap-4 mb-3 sm:mb-5">
+          {/* Кнопки призыва к действию (единый блок для мобилок, планшетов и ПК) */}
+          <div className="flex flex-col sm:flex-row items-center justify-center gap-3 sm:gap-4 max-w-xs sm:max-w-none mx-auto w-full">
             {/* Главная кнопка: эффект смены цвета слева направо */}
             <a
               href="#contact"
               onClick={(e) => handleScrollTo(e, '#contact')}
-              className="relative group overflow-hidden w-full sm:w-auto px-6 py-2.5 sm:px-8 sm:py-3.5 rounded-full font-bold text-slate-950 bg-cyan-400 transition-colors duration-300 active:scale-[0.98] text-xs sm:text-sm md:text-base flex items-center justify-center gap-2 cursor-pointer"
+              className="relative group overflow-hidden w-full sm:w-auto px-7 sm:px-8 py-3.5 rounded-full font-bold text-slate-950 bg-cyan-400 transition-colors duration-300 active:scale-[0.98] text-xs sm:text-sm md:text-base flex items-center justify-center gap-2 cursor-pointer shadow-lg shadow-cyan-400/20"
             >
               <span className="absolute inset-0 bg-white rounded-full -translate-x-full group-hover:translate-x-0 transition-transform duration-300 ease-out pointer-events-none" />
               <span className="relative z-10 flex items-center gap-2">
                 <span>{t.hero.ctaPrimary}</span>
-                <ArrowRight className="w-4 h-4 transition-transform duration-200 group-hover:translate-x-1" />
+                <ArrowRight className="w-3.5 h-3.5 sm:w-4 sm:h-4 transition-transform duration-200 group-hover:translate-x-1" />
               </span>
             </a>
 
-            {/* Второстепенная кнопка: точно такой же hover со сдвигом слева направо */}
+            {/* Второстепенная кнопка: эффект смены цвета слева направо */}
             <a
               href="#projects"
               onClick={(e) => handleScrollTo(e, '#projects')}
-              className="relative group overflow-hidden w-full sm:w-auto px-6 py-2.5 sm:px-8 sm:py-3.5 rounded-full font-semibold text-slate-200 transition-colors duration-300 active:scale-[0.98] text-xs sm:text-sm md:text-base flex items-center justify-center gap-2 cursor-pointer bg-white/5 border border-white/10 hover:border-white/30"
+              className="relative group overflow-hidden w-full sm:w-auto px-7 sm:px-8 py-3.5 rounded-full font-semibold text-slate-200 transition-colors duration-300 active:scale-[0.98] text-xs sm:text-sm md:text-base flex items-center justify-center gap-2 cursor-pointer bg-white/5 border border-white/10 hover:border-white/30"
             >
               <span className="absolute inset-0 bg-white rounded-full -translate-x-full group-hover:translate-x-0 transition-transform duration-300 ease-out pointer-events-none" />
               <span className="relative z-10 transition-colors duration-300 group-hover:text-slate-950 font-semibold">
@@ -150,33 +200,37 @@ export const Hero: React.FC = () => {
           </div>
         </div>
 
-        {/* Низ 100vh экрана: метрики и стрелочка вниз */}
+        {/* ========================================================= */}
+        {/* НИЗ 100vh ЭКРАНА */}
+        {/* ========================================================= */}
         <div className="mt-auto">
-          {/* Метрики */}
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-2 sm:gap-4 max-w-3xl mx-auto text-left mb-2 sm:mb-4">
-            <div className="p-2.5 sm:p-3.5 rounded-2xl bg-white/[0.04] backdrop-blur-sm border border-white/10 hover:border-cyan-400/30 transition-colors">
-              <div className="text-white font-extrabold text-xs sm:text-sm md:text-base tracking-tight mb-0.5">
+          {/* ---------------------------------------------------- */}
+          {/* ПК: Метрики (на мобилках и планшетах полностью скрыты, отображаются только на ПК) */}
+          {/* ---------------------------------------------------- */}
+          <div className="hidden lg:grid grid-cols-3 gap-4 max-w-3xl mx-auto text-center mb-5">
+            <div className="p-3.5 rounded-2xl bg-white/[0.04] backdrop-blur-sm border border-white/10 hover:border-cyan-400/30 transition-colors flex flex-col items-center justify-center text-center">
+              <div className="text-white font-extrabold text-sm md:text-base tracking-tight mb-0.5">
                 {t.hero.metrics.days}
               </div>
-              <div className="text-[10px] sm:text-xs text-slate-400">
+              <div className="text-xs text-slate-400">
                 {t.hero.metrics.daysLabel}
               </div>
             </div>
 
-            <div className="p-2.5 sm:p-3.5 rounded-2xl bg-white/[0.04] backdrop-blur-sm border border-white/10 hover:border-cyan-400/30 transition-colors">
-              <div className="text-white font-extrabold text-xs sm:text-sm md:text-base tracking-tight mb-0.5">
+            <div className="p-3.5 rounded-2xl bg-white/[0.04] backdrop-blur-sm border border-white/10 hover:border-cyan-400/30 transition-colors flex flex-col items-center justify-center text-center">
+              <div className="text-white font-extrabold text-sm md:text-base tracking-tight mb-0.5">
                 {t.hero.metrics.price}
               </div>
-              <div className="text-[10px] sm:text-xs text-slate-400">
+              <div className="text-xs text-slate-400">
                 {t.hero.metrics.priceLabel}
               </div>
             </div>
 
-            <div className="p-2.5 sm:p-3.5 rounded-2xl bg-white/[0.04] backdrop-blur-sm border border-white/10 hover:border-cyan-400/30 transition-colors">
-              <div className="text-white font-extrabold text-xs sm:text-sm md:text-base tracking-tight mb-0.5">
+            <div className="p-3.5 rounded-2xl bg-white/[0.04] backdrop-blur-sm border border-white/10 hover:border-cyan-400/30 transition-colors flex flex-col items-center justify-center text-center">
+              <div className="text-white font-extrabold text-sm md:text-base tracking-tight mb-0.5">
                 {t.hero.metrics.direct}
               </div>
-              <div className="text-[10px] sm:text-xs text-slate-400">
+              <div className="text-xs text-slate-400">
                 {t.hero.metrics.directLabel}
               </div>
             </div>

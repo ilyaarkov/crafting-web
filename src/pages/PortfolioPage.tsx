@@ -171,7 +171,7 @@ export const PortfolioPage: React.FC<PortfolioPageProps> = ({
               return (
                 <div
                   key={project.id}
-                  className="group flex flex-col justify-start transition-all duration-300"
+                  className="group flex flex-col justify-start transition-all duration-300 pb-8 md:pb-0 border-b border-white/10 md:border-b-0 last:border-b-0 last:pb-0"
                 >
                   {/* Окно браузера в стиле macOS с фото: кликабельно, курсор-указатель, оверлей "ПОСМОТРЕТЬ" */}
                   <div
