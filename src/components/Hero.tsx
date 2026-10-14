@@ -104,14 +104,7 @@ export const Hero: React.FC = () => {
         </div>
       </div>
 
-      {/* ========================================================= */}
-      {/* МОБИЛЬНАЯ ВЕРСИЯ (< lg): СТРОГАЯ МАТЕМАТИЧЕСКАЯ ГЕОМЕТРИЯ */}
-      {/* 1) Заголовок упирается низом в середину экрана (50dvh) */}
-      {/* 2) Текст «Разработка...» ровно посередине между 50dvh и верхней кнопкой */}
-      {/* 3) Бегущая строка ровно посередине между низом заголовка и верхом описания */}
-      {/* ========================================================= */}
       <div className="flex lg:hidden flex-col h-full w-full relative z-10">
-        {/* Верхняя половина (0 - 50dvh): Заголовок упирается низом в 50dvh */}
         <div className="h-[50dvh] flex flex-col justify-end items-center px-4 pb-1 text-center">
           <h1 className="text-[25px] sm:text-3xl font-black tracking-tight leading-[1.14] max-w-md mx-auto">
             <span className="block text-white mb-0.5">
@@ -123,11 +116,11 @@ export const Hero: React.FC = () => {
           </h1>
         </div>
 
-        {/* Нижняя половина (50dvh - 100dvh) */}
+        {/* Нижняя половина */}
         <div className="h-[50dvh] flex flex-col justify-between items-center w-full relative">
           {/* Зона между средней линией (50dvh) и верхней кнопкой */}
           <div className="flex-1 w-full relative">
-            {/* Бегущая строка: ровно посередине между низом заголовка (0) и верхом описания */}
+            {/* Бегущая строка */}
             <div className="absolute top-0 left-0 right-0 bottom-3/5 flex items-center justify-center pointer-events-none overflow-hidden">
               <div className="w-screen overflow-hidden py-1">
                 <div className="animate-hero-marquee flex items-center whitespace-nowrap">
@@ -161,7 +154,7 @@ export const Hero: React.FC = () => {
 
             {/* Текст «Разработка современных...»: центр текста ровно на 50% между 50dvh и верхней кнопкой */}
             <div className="absolute top-1/2 left-0 right-0 -translate-y-1/2 px-4 text-center">
-              <p className="text-sm sm:text-base text-slate-300 leading-relaxed max-w-sm mx-auto text-balance font-normal">
+              <p className="text-base sm:text-lg text-slate-300 leading-relaxed max-w-sm mx-auto text-balance font-normal">
                 {t.hero.description}
               </p>
             </div>
