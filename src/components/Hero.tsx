@@ -207,7 +207,7 @@ export const Hero: React.FC = () => {
       {/* ========================================================= */}
       {/* ДЕСКТОП ВЕРСИЯ (>= lg): ИДЕАЛЬНЫЙ БАЛАНС И ОДНА СТРОКА ТЕГОВ */}
       {/* ========================================================= */}
-      <div className="hidden lg:flex flex-col justify-between pt-20 pb-4 max-w-6xl mx-auto px-6 z-10 w-full text-center h-full">
+      <div className="hidden lg:flex flex-col justify-between pt-30 pb-4 max-w-6xl mx-auto px-6 z-10 w-full text-center h-full">
         {/* Верхний спейсер */}
         <div className="shrink-0 h-1" />
 
