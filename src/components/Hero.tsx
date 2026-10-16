@@ -34,6 +34,14 @@ export const Hero: React.FC = () => {
             transform: translate3d(-50%, 0, 0);
           }
         }
+        @keyframes earthSlowSpin {
+          from {
+            transform: rotate(0deg);
+          }
+          to {
+            transform: rotate(360deg);
+          }
+        }
         .marquee-track {
           display: flex;
           width: max-content;
@@ -41,6 +49,17 @@ export const Hero: React.FC = () => {
           will-change: transform;
           -webkit-backface-visibility: hidden;
           backface-visibility: hidden;
+        }
+        .earth-rotate {
+          animation: earthSlowSpin 140s linear infinite;
+          will-change: transform;
+          -webkit-backface-visibility: hidden;
+          backface-visibility: hidden;
+        }
+        @media (prefers-reduced-motion: reduce) {
+          .earth-rotate {
+            animation: none;
+          }
         }
       `}</style>
 
@@ -65,10 +84,30 @@ export const Hero: React.FC = () => {
         {/* Световой ореол горизонта */}
         <div className="absolute top-[20vh] sm:top-[24vh] left-1/2 -translate-x-1/2 w-[85vw] sm:w-[900px] h-[200px] sm:h-[350px] bg-cyan-400/20 blur-[35px] sm:blur-[100px] rounded-full pointer-events-none" />
 
-        {/* ВИДИМЫЙ КУПОЛ ПЛАНЕТЫ С НЕОНОВЫМ СВЕЧЕНИЕМ КРОМКИ */}
-        <div className="absolute top-[24vh] sm:top-[28vh] left-1/2 -translate-x-1/2 w-[125vw] max-w-[550px] sm:w-[160vw] sm:min-w-[1200px] sm:max-w-[3000px] h-[400px] sm:h-[1050px] rounded-[100%] bg-gradient-to-b from-[#0e2c56] via-[#07162b] to-[#06080c] border-t-2 border-cyan-400/90 shadow-[0_-8px_30px_rgba(34,211,238,0.5)] sm:shadow-[0_-15px_80px_rgba(34,211,238,0.65),0_0_140px_rgba(56,189,248,0.35)]">
-          <div className="absolute -top-6 sm:-top-12 left-1/2 -translate-x-1/2 w-[80%] h-14 sm:h-28 bg-cyan-400/30 blur-[20px] sm:blur-[45px] rounded-full pointer-events-none" />
-          <div className="absolute -top-3 sm:-top-6 left-1/2 -translate-x-1/2 w-[60%] h-8 sm:h-16 bg-sky-300/40 blur-[15px] sm:blur-[25px] rounded-full pointer-events-none" />
+        {/* КРУГЛЫЙ КУПОЛ ЗЕМЛИ ИЗ КОСМОСА С ПЛАВНЫМ ВРАЩЕНИЕМ (ОДИНАКОВЫЙ ИДЕАЛЬНЫЙ ПОЛУКРУГ НА ВСЕХ ЭКРАНАХ) */}
+        <div className="absolute top-[24vh] sm:top-[28vh] left-1/2 -translate-x-1/2 w-[220vw] min-w-[950px] max-w-[2600px] aspect-square rounded-full pointer-events-none select-none z-0">
+          {/* Световые ореолы кромки горизонта (Apple Maps стиль) */}
+          <div className="absolute -top-8 sm:-top-14 left-1/2 -translate-x-1/2 w-[70%] h-16 sm:h-28 bg-cyan-400/35 blur-[25px] sm:blur-[45px] rounded-full pointer-events-none" />
+          <div className="absolute -top-3 sm:-top-6 left-1/2 -translate-x-1/2 w-[50%] h-8 sm:h-14 bg-sky-300/45 blur-[12px] sm:blur-[22px] rounded-full pointer-events-none" />
+
+          {/* Идеально круглая сфера с медленно вращающейся текстурой фотореалистичной Земли */}
+          <div className="relative w-full h-full rounded-full overflow-hidden border-t-2 border-cyan-400/90 shadow-[0_-12px_60px_rgba(34,211,238,0.55),0_0_120px_rgba(56,189,248,0.25)] bg-[#040812]">
+            <picture>
+              <source srcSet="/images/earth.png" type="image/webp" />
+              <img
+                src="/images/earth.png"
+                alt="Earth"
+                className="w-full h-full object-cover rounded-full will-change-transform earth-rotate"
+                loading="eager"
+                fetchPriority="high"
+                decoding="async"
+              />
+            </picture>
+
+            {/* Мягкое космическое затенение к нижней части планеты для бесшовного слияния с #06080c */}
+            <div className="absolute inset-0 rounded-full bg-gradient-to-b from-transparent via-[#06080c]/55 to-[#06080c] pointer-events-none" />
+            <div className="absolute inset-0 rounded-full [background:radial-gradient(circle_at_50%_0%,transparent_55%,#06080c_90%)] pointer-events-none" />
+          </div>
         </div>
       </div>
 

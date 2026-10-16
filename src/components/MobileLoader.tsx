@@ -42,6 +42,7 @@ export const MobileLoader: React.FC = () => {
 
     // Preload critical images non-blockingly
     const criticalImages = [
+      '/images/earth.png',
       '/images/before-chaos.webp',
       '/images/ilya.webp',
       '/projects/portfolio.webp',
