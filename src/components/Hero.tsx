@@ -60,6 +60,25 @@ export const Hero: React.FC = () => {
           transform: rotateX(-24deg);
           transform-origin: center top;
         }
+        @media (hover: none) and (pointer: coarse) {
+          .hero-description-panel {
+            position: relative;
+            isolation: isolate;
+            border-radius: 1rem;
+          }
+          .hero-description-panel::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            z-index: -1;
+            border-radius: inherit;
+            background: rgba(6, 8, 12, 0.48);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            mask-image: radial-gradient(ellipse at center, #000 48%, transparent 100%);
+            pointer-events: none;
+          }
+        }
         @media (prefers-reduced-motion: reduce) {
           .earth-rotate {
             animation: none;
@@ -170,7 +189,7 @@ export const Hero: React.FC = () => {
 
             {/* 2. Центральный слот: Описание (ровно посередине между 50dvh и кнопками) */}
             <div className="shrink-0 px-4 text-center max-w-sm mx-auto my-auto">
-              <p className="p-4 text-sm sm:text-[15px] md:text-base text-slate-300 leading-relaxed text-balance font-normal bg-[#06080c]/65 backdrop-blur-md shadow-[0_0_32px_24px_rgba(6,8,12,0.65)]">
+              <p className="hero-description-panel p-4 text-sm sm:text-[15px] md:text-base text-slate-300 leading-relaxed text-balance font-bold">
                 {t.hero.description}
               </p>
             </div>
@@ -255,7 +274,7 @@ export const Hero: React.FC = () => {
             ))}
           </div>
 
-          <p className="p-4 text-base lg:text-lg text-slate-300 leading-relaxed max-w-2xl mx-auto text-balance font-normal mt-2 bg-[#06080c]/65 backdrop-blur-md shadow-[0_0_32px_24px_rgba(6,8,12,0.65)]">
+          <p className="p-4 text-base lg:text-lg text-slate-300 leading-relaxed max-w-2xl mx-auto text-balance font-bold mt-2">
             {t.hero.description}
           </p>
         </div>
