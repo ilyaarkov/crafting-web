@@ -71,7 +71,6 @@ export const PortfolioPage: React.FC<PortfolioPageProps> = ({
             onClick={onNavigateHome}
             className="flex items-center gap-2 group cursor-pointer text-left"
           >
-            <span className="w-2.5 h-2.5 rounded-full bg-cyan-400 shadow-[0_0_10px_#22d3ee] transition-transform group-hover:scale-125" />
             <span className="text-lg sm:text-xl font-bold tracking-tight text-white group-hover:text-cyan-300 transition-colors">
               {t.footer.name}
             </span>
