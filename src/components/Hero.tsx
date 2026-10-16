@@ -82,10 +82,10 @@ export const Hero: React.FC = () => {
         />
 
         {/* Световой ореол горизонта */}
-        <div className="absolute top-[20vh] sm:top-[24vh] left-1/2 -translate-x-1/2 w-[85vw] sm:w-[900px] h-[200px] sm:h-[350px] bg-cyan-400/20 blur-[35px] sm:blur-[100px] rounded-full pointer-events-none" />
+        <div className="absolute top-[50vh] left-1/2 -translate-x-1/2 w-[85vw] sm:w-[900px] h-[200px] sm:h-[350px] bg-cyan-400/20 blur-[35px] sm:blur-[100px] rounded-full pointer-events-none" />
 
         {/* КРУГЛЫЙ КУПОЛ ЗЕМЛИ ИЗ КОСМОСА С ПЛАВНЫМ ВРАЩЕНИЕМ (ОДИНАКОВЫЙ ИДЕАЛЬНЫЙ ПОЛУКРУГ НА ВСЕХ ЭКРАНАХ) */}
-        <div className="absolute top-[24vh] sm:top-[28vh] left-1/2 -translate-x-1/2 w-[220vw] min-w-[950px] max-w-[2600px] aspect-square rounded-full pointer-events-none select-none z-0">
+        <div className="absolute top-[62vh] left-1/2 -translate-x-1/2 w-[220vw] min-w-[950px] max-w-[2600px] aspect-square rounded-full pointer-events-none select-none z-0">
           {/* Световые ореолы кромки горизонта (Apple Maps стиль) */}
           <div className="absolute -top-8 sm:-top-14 left-1/2 -translate-x-1/2 w-[70%] h-16 sm:h-28 bg-cyan-400/35 blur-[25px] sm:blur-[45px] rounded-full pointer-events-none" />
           <div className="absolute -top-3 sm:-top-6 left-1/2 -translate-x-1/2 w-[50%] h-8 sm:h-14 bg-sky-300/45 blur-[12px] sm:blur-[22px] rounded-full pointer-events-none" />
@@ -97,13 +97,14 @@ export const Hero: React.FC = () => {
               <img
                 src="/images/earth.png"
                 alt="Earth"
-                className="w-full h-full object-cover rounded-full will-change-transform earth-rotate scale-[1.1]"
+                className="w-full h-full object-cover object-center rounded-full will-change-transform earth-rotate scale-[1.2]"
                 loading="eager"
                 fetchPriority="high"
                 decoding="async"
               />
             </picture>
 
+            <div className="absolute inset-0 rounded-full bg-black/50 pointer-events-none" />
             {/* Мягкое космическое затенение к нижней части планеты для бесшовного слияния с #06080c */}
             <div className="absolute inset-0 rounded-full bg-gradient-to-b from-transparent via-[#06080c]/55 to-[#06080c] pointer-events-none" />
             <div className="absolute inset-0 rounded-full [background:radial-gradient(circle_at_50%_0%,transparent_55%,#06080c_90%)] pointer-events-none" />
