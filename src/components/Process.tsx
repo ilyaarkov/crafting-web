@@ -54,7 +54,7 @@ export const Process: React.FC = () => {
       d += ` C ${cp1x} ${cp1y}, ${cp2x} ${cp2y}, ${p2.x} ${p2.y}`;
     }
 
-    setSvgPath(d);
+    setSvgPath((prev) => (prev === d ? prev : d));
   }, []);
 
   useEffect(() => {
@@ -63,17 +63,24 @@ export const Process: React.FC = () => {
         const len = pathRef.current.getTotalLength();
         setTotalLength(len);
       } catch {
-        // Fallback if SVG not rendered
+        // Fallback
       }
     }
   }, [svgPath]);
 
   useEffect(() => {
-    let animId: number;
+    let isTicking = false;
 
     const handleScroll = () => {
       if (!containerRef.current) return;
+      const containerRect = containerRef.current.getBoundingClientRect();
       const viewportH = window.innerHeight;
+
+      // Skip heavy calculations if section is far offscreen
+      if (containerRect.bottom < -200 || containerRect.top > viewportH + 200) {
+        return;
+      }
+
       const triggerY = viewportH * 0.74;
 
       const newActive = pinRefs.current.map((el) => {
@@ -81,7 +88,17 @@ export const Process: React.FC = () => {
         const rect = el.getBoundingClientRect();
         return rect.top <= triggerY;
       });
-      setActiveSteps(newActive);
+
+      setActiveSteps((prev) => {
+        let changed = false;
+        for (let i = 0; i < newActive.length; i++) {
+          if (prev[i] !== newActive[i]) {
+            changed = true;
+            break;
+          }
+        }
+        return changed ? newActive : prev;
+      });
 
       const firstPin = pinRefs.current[0];
       const lastPin = pinRefs.current[pinRefs.current.length - 1];
@@ -95,7 +112,8 @@ export const Process: React.FC = () => {
         if (range > 0) {
           const rawProgress = (triggerY - startTrigger) / range;
           const clamped = Math.max(0, Math.min(1, rawProgress));
-          setSnakeProgress(clamped);
+
+          setSnakeProgress((prev) => (Math.abs(prev - clamped) > 0.005 ? clamped : prev));
 
           if (pathRef.current && totalLength > 0) {
             try {
@@ -115,37 +133,38 @@ export const Process: React.FC = () => {
     };
 
     const onScroll = () => {
-      cancelAnimationFrame(animId);
-      animId = requestAnimationFrame(handleScroll);
+      if (!isTicking) {
+        isTicking = true;
+        requestAnimationFrame(() => {
+          handleScroll();
+          isTicking = false;
+        });
+      }
+    };
+
+    let resizeTimer: ReturnType<typeof setTimeout>;
+    const onResize = () => {
+      clearTimeout(resizeTimer);
+      resizeTimer = setTimeout(() => {
+        updateRouteGeometry();
+        handleScroll();
+      }, 150);
     };
 
     window.addEventListener('scroll', onScroll, { passive: true });
-    window.addEventListener('resize', () => {
-      updateRouteGeometry();
-      onScroll();
-    });
+    window.addEventListener('resize', onResize, { passive: true });
 
-    updateRouteGeometry();
-    const timeout = setTimeout(() => {
+    // Initial calculation after short render tick
+    const initTimer = setTimeout(() => {
       updateRouteGeometry();
       handleScroll();
-    }, 150);
-
-    // ResizeObserver для точной подгонки при любых изменениях DOM
-    let resizeObserver: ResizeObserver | null = null;
-    if (containerRef.current && typeof ResizeObserver !== 'undefined') {
-      resizeObserver = new ResizeObserver(() => {
-        updateRouteGeometry();
-        handleScroll();
-      });
-      resizeObserver.observe(containerRef.current);
-    }
+    }, 100);
 
     return () => {
       window.removeEventListener('scroll', onScroll);
-      cancelAnimationFrame(animId);
-      clearTimeout(timeout);
-      if (resizeObserver) resizeObserver.disconnect();
+      window.removeEventListener('resize', onResize);
+      clearTimeout(initTimer);
+      clearTimeout(resizeTimer);
     };
   }, [totalLength, updateRouteGeometry]);
 

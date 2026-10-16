@@ -49,9 +49,9 @@ export const Hero: React.FC = () => {
       {/* ========================================================= */}
       <div className="absolute inset-0 w-full h-full overflow-hidden pointer-events-none z-0">
         {/* Фоновые мягкие туманности глубокого космоса */}
-        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[1100px] h-[520px] bg-gradient-to-b from-sky-400/25 via-cyan-500/20 to-transparent blur-[110px] rounded-full" />
-        <div className="absolute top-1/4 left-1/4 w-[550px] h-[450px] bg-blue-600/20 blur-[120px] rounded-full" />
-        <div className="absolute top-1/3 right-1/4 w-[550px] h-[450px] bg-cyan-600/20 blur-[120px] rounded-full" />
+        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[90vw] sm:w-[1100px] h-[260px] sm:h-[520px] bg-gradient-to-b from-sky-400/20 via-cyan-500/15 to-transparent blur-[40px] sm:blur-[110px] rounded-full" />
+        <div className="hidden sm:block absolute top-1/4 left-1/4 w-[550px] h-[450px] bg-blue-600/20 blur-[120px] rounded-full" />
+        <div className="hidden sm:block absolute top-1/3 right-1/4 w-[550px] h-[450px] bg-cyan-600/20 blur-[120px] rounded-full" />
 
         {/* Звездная глубина космоса */}
         <div
@@ -63,12 +63,12 @@ export const Hero: React.FC = () => {
         />
 
         {/* Световой ореол горизонта */}
-        <div className="absolute top-[20vh] sm:top-[24vh] left-1/2 -translate-x-1/2 w-[900px] h-[350px] bg-cyan-400/20 blur-[100px] rounded-full pointer-events-none" />
+        <div className="absolute top-[20vh] sm:top-[24vh] left-1/2 -translate-x-1/2 w-[85vw] sm:w-[900px] h-[200px] sm:h-[350px] bg-cyan-400/20 blur-[35px] sm:blur-[100px] rounded-full pointer-events-none" />
 
         {/* ВИДИМЫЙ КУПОЛ ПЛАНЕТЫ С НЕОНОВЫМ СВЕЧЕНИЕМ КРОМКИ */}
-        <div className="absolute top-[24vh] sm:top-[28vh] left-1/2 -translate-x-1/2 w-[160vw] min-w-[1200px] max-w-[3000px] h-[850px] sm:h-[1050px] rounded-[100%] bg-gradient-to-b from-[#0e2c56] via-[#07162b] to-[#06080c] border-t-2 border-cyan-400/90 shadow-[0_-15px_80px_rgba(34,211,238,0.65),0_0_140px_rgba(56,189,248,0.35)]">
-          <div className="absolute -top-12 left-1/2 -translate-x-1/2 w-[80%] h-28 bg-cyan-400/35 blur-[45px] rounded-full pointer-events-none" />
-          <div className="absolute -top-6 left-1/2 -translate-x-1/2 w-[60%] h-16 bg-sky-300/45 blur-[25px] rounded-full pointer-events-none" />
+        <div className="absolute top-[24vh] sm:top-[28vh] left-1/2 -translate-x-1/2 w-[125vw] max-w-[550px] sm:w-[160vw] sm:min-w-[1200px] sm:max-w-[3000px] h-[400px] sm:h-[1050px] rounded-[100%] bg-gradient-to-b from-[#0e2c56] via-[#07162b] to-[#06080c] border-t-2 border-cyan-400/90 shadow-[0_-8px_30px_rgba(34,211,238,0.5)] sm:shadow-[0_-15px_80px_rgba(34,211,238,0.65),0_0_140px_rgba(56,189,248,0.35)]">
+          <div className="absolute -top-6 sm:-top-12 left-1/2 -translate-x-1/2 w-[80%] h-14 sm:h-28 bg-cyan-400/30 blur-[20px] sm:blur-[45px] rounded-full pointer-events-none" />
+          <div className="absolute -top-3 sm:-top-6 left-1/2 -translate-x-1/2 w-[60%] h-8 sm:h-16 bg-sky-300/40 blur-[15px] sm:blur-[25px] rounded-full pointer-events-none" />
         </div>
       </div>
 

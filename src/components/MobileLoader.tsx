@@ -17,8 +17,8 @@ export const MobileLoader: React.FC = () => {
   const [isDone, setIsDone] = useState<boolean>(false);
   const [isVisible, setIsVisible] = useState<boolean>(true);
 
-  const assetsLoadedRef = useRef<boolean>(false);
   const startTimeRef = useRef<number>(Date.now());
+  const assetsReadyRef = useRef<boolean>(false);
 
   useEffect(() => {
     if (typeof window === 'undefined') return;
@@ -36,16 +36,11 @@ export const MobileLoader: React.FC = () => {
     setIsMobile(true);
     startTimeRef.current = Date.now();
 
-    // 1. Lock scroll on mobile while loading
+    // Prevent body scroll during loading cleanly without touching touchAction
     const originalBodyOverflow = document.body.style.overflow;
-    const originalHtmlOverflow = document.documentElement.style.overflow;
-    const originalTouchAction = document.body.style.touchAction;
-
     document.body.style.overflow = 'hidden';
-    document.documentElement.style.overflow = 'hidden';
-    document.body.style.touchAction = 'none';
 
-    // 2. Real preloading & GPU bitmap decoding of every single image across the website
+    // Preload critical images non-blockingly
     const criticalImages = [
       '/images/before-chaos.webp',
       '/images/ilya.webp',
@@ -55,157 +50,61 @@ export const MobileLoader: React.FC = () => {
       '/projects/driftet.webp',
     ];
 
-    const preloadAndDecode = (src: string): Promise<void> => {
-      return new Promise<void>((resolve) => {
-        const img = new Image();
-        img.src = src;
-
-        const handleSuccess = () => {
-          if ('decode' in img) {
-            img
-              .decode()
-              .catch(() => {})
-              .finally(() => resolve());
-          } else {
-            resolve();
-          }
-        };
-
-        if (img.complete && img.naturalWidth > 0) {
-          handleSuccess();
-        } else {
-          img.onload = handleSuccess;
-          img.onerror = () => resolve();
-        }
-      });
+    let loadedCount = 0;
+    const onImgDone = () => {
+      loadedCount++;
+      if (loadedCount >= criticalImages.length) {
+        assetsReadyRef.current = true;
+      }
     };
 
-    // 3. Document fonts readiness
-    const fontsPromise =
-      document.fonts && document.fonts.ready
-        ? document.fonts.ready
-        : Promise.resolve();
-
-    // 4. Window load event
-    const windowLoadPromise = new Promise<void>((resolve) => {
-      if (document.readyState === 'complete') {
-        resolve();
+    criticalImages.forEach((src) => {
+      const img = new Image();
+      img.src = src;
+      if (img.complete && img.naturalWidth > 0) {
+        onImgDone();
       } else {
-        const onLoad = () => {
-          window.removeEventListener('load', onLoad);
-          resolve();
-        };
-        window.addEventListener('load', onLoad);
+        img.onload = onImgDone;
+        img.onerror = onImgDone;
       }
     });
 
-    // 5. Artificial pre-rendering & DOM warm-up of ALL sections
-    const warmUpAllSections = () => {
-      const sectionSelectors = [
-        '#hero',
-        '#about',
-        '#specialization',
-        '#process',
-        '#projects',
-        '#pricing',
-        '#guarantees',
-        '#contact',
-      ];
+    if (document.fonts && document.fonts.ready) {
+      document.fonts.ready.catch(() => {});
+    }
 
-      sectionSelectors.forEach((sel) => {
-        const el = document.querySelector(sel);
-        if (el) {
-          // Force layout & geometry calculation
-          const _rect = el.getBoundingClientRect();
-          const _h = (el as HTMLElement).offsetHeight;
-          const _s = (el as HTMLElement).scrollHeight;
-          void _rect;
-          void _h;
-          void _s;
-        }
-      });
-
-      // Force recalculation of body and trigger simulated layout events
-      void document.body.offsetHeight;
-      window.dispatchEvent(new Event('resize'));
-      window.dispatchEvent(new Event('scroll'));
-
-      // Decode any DOM images
-      const domImgs = Array.from(document.querySelectorAll('img'));
-      domImgs.forEach((img) => {
-        if ('decode' in img && img.complete) {
-          img.decode().catch(() => {});
-        }
-      });
-    };
-
-    // Parallel execution of all actual assets + warm-up
-    Promise.all([
-      fontsPromise,
-      windowLoadPromise,
-      ...criticalImages.map(preloadAndDecode),
-    ]).then(() => {
-      // Warm up and pre-render sections
-      warmUpAllSections();
-      // Double requestAnimationFrame to ensure browser commits styles to screen buffer
-      requestAnimationFrame(() => {
-        requestAnimationFrame(() => {
-          warmUpAllSections();
-          assetsLoadedRef.current = true;
-        });
-      });
-    });
-
-    // 6. Deliberate, smooth progress animation (~2.2s total)
-    // Ensures user gets a real, satisfying progress experience and all sections are 100% ready
-    const TARGET_MIN_DURATION = 2100; // ms
+    // Smooth, consistent ~1.7s progress animation
+    const TARGET_DURATION = 1700; // ms
 
     const timer = setInterval(() => {
       const elapsed = Date.now() - startTimeRef.current;
-      const timeRatio = Math.min(1, elapsed / TARGET_MIN_DURATION);
+      const ratio = Math.min(1, elapsed / TARGET_DURATION);
 
       setProgress((prev) => {
         let next = prev;
 
-        if (timeRatio < 0.25) {
-          // Stage 1: 0% -> 25% (Initialization)
-          next = Math.round(timeRatio * 100);
-        } else if (timeRatio < 0.55) {
-          // Stage 2: 25% -> 55% (Assets & Fonts)
-          next = Math.round(25 + ((timeRatio - 0.25) / 0.3) * 30);
-        } else if (timeRatio < 0.85) {
-          // Stage 3: 55% -> 85% (Section pre-render)
-          next = Math.round(55 + ((timeRatio - 0.55) / 0.3) * 30);
-        } else if (timeRatio < 1) {
-          // Stage 4: 85% -> 98% (Warm-up & finalize)
-          next = Math.round(85 + ((timeRatio - 0.85) / 0.15) * 13);
+        if (ratio < 0.3) {
+          next = Math.round(ratio * 90);
+        } else if (ratio < 0.7) {
+          next = Math.round(27 + ((ratio - 0.3) / 0.4) * 45);
+        } else if (ratio < 1) {
+          next = Math.round(72 + ((ratio - 0.7) / 0.3) * 26);
         } else {
-          // Reached duration target, now check if assets are also loaded
-          if (assetsLoadedRef.current || elapsed > 3500) {
-            next = 100;
-          } else {
-            next = 98; // hold briefly until assets confirm
-          }
+          next = 100;
         }
 
         if (next >= 100) {
           clearInterval(timer);
 
-          // Force one final layout & event pass
-          warmUpAllSections();
+          // Restore native body scrolling immediately
+          document.body.style.overflow = originalBodyOverflow;
 
           setTimeout(() => {
             setIsDone(true);
             setTimeout(() => {
               setIsVisible(false);
-              document.body.style.overflow = originalBodyOverflow;
-              document.documentElement.style.overflow = originalHtmlOverflow;
-              document.body.style.touchAction = originalTouchAction;
-              // Trigger final scroll & resize event once visible
-              window.dispatchEvent(new Event('resize'));
-              window.dispatchEvent(new Event('scroll'));
-            }, 500);
-          }, 300);
+            }, 400);
+          }, 250);
 
           return 100;
         }
@@ -217,8 +116,6 @@ export const MobileLoader: React.FC = () => {
     return () => {
       clearInterval(timer);
       document.body.style.overflow = originalBodyOverflow;
-      document.documentElement.style.overflow = originalHtmlOverflow;
-      document.body.style.touchAction = originalTouchAction;
     };
   }, []);
 
@@ -227,14 +124,12 @@ export const MobileLoader: React.FC = () => {
   }
 
   const getStatusText = () => {
-    if (progress < 25) {
+    if (progress < 30) {
       return isEn ? 'Initializing components...' : 'Инициализация компонентов...';
-    } else if (progress < 55) {
+    } else if (progress < 70) {
       return isEn ? 'Loading graphics & fonts...' : 'Загрузка графики и шрифтов...';
-    } else if (progress < 85) {
-      return isEn ? 'Rendering all sections...' : 'Рендеринг всех блоков...';
     } else if (progress < 100) {
-      return isEn ? 'Finalizing render...' : 'Подготовка к плавному скроллу...';
+      return isEn ? 'Finalizing render...' : 'Подготовка интерфейса...';
     } else {
       return isEn ? 'Ready' : 'Готово к работе';
     }
@@ -245,8 +140,9 @@ export const MobileLoader: React.FC = () => {
       role="dialog"
       aria-modal="true"
       aria-label={isEn ? 'Loading page' : 'Загрузка страницы'}
-      className={`fixed inset-0 z-[99999] bg-[#06080c] flex flex-col justify-between items-center px-6 py-10 sm:py-12 select-none transition-all duration-500 ease-out ${
-        isDone ? 'opacity-0 scale-[1.01] pointer-events-none' : 'opacity-100 scale-100'
+      onTouchMove={(e) => e.stopPropagation()}
+      className={`fixed inset-0 z-[99999] bg-[#06080c] flex flex-col justify-between items-center px-6 py-10 sm:py-12 select-none touch-none overscroll-none transition-opacity duration-400 ease-out ${
+        isDone ? 'opacity-0 pointer-events-none' : 'opacity-100'
       }`}
     >
       {/* Top spacer */}
@@ -300,7 +196,7 @@ export const MobileLoader: React.FC = () => {
             className="w-11 h-11 rounded-full flex items-center justify-center bg-white/[0.04] border border-white/10 text-slate-300 hover:text-[#E4405F] hover:border-[#E4405F]/60 hover:bg-[#E4405F]/15 hover:shadow-[0_0_20px_rgba(228,64,95,0.3)] transition-all duration-300 active:scale-95 cursor-pointer"
           >
             <svg className="w-5 h-5 fill-current" viewBox="0 0 24 24">
-              <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z" />
+              <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.441-1.44z" />
             </svg>
           </a>
 
