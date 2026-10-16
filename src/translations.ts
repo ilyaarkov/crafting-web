@@ -153,7 +153,6 @@ export interface Translations {
     title: string;
     intro: string;
     followUp: string;
-    durationPrefix: string;
     audienceTitle: string;
     resultTitle: string;
     includedTitle: string;
@@ -748,7 +747,6 @@ export const translations: Record<Language, Translations> = {
       title: 'Выберите тариф',
       intro: 'Помогаю экспертам и небольшим компаниям понятно представить свои услуги, подготовить сайт к продвижению в поиске и упростить путь клиента до обращения.',
       followUp: 'Сам разбираюсь в задаче, разрабатываю сайт и остаюсь на связи после запуска – для обновлений, новых страниц и дальнейшего развития.',
-      durationPrefix: 'Срок:',
       audienceTitle: 'Для кого',
       resultTitle: 'Результат',
       includedTitle: 'Включает',
@@ -767,7 +765,7 @@ export const translations: Record<Language, Translations> = {
             '30 дней поддержки и сопровождения после запуска.',
           ],
           currentPrice: '39 000 ₽',
-          duration: '5–7 рабочих дней',
+          duration: 'от 5 дней',
           btnText: 'Обсудить сайт-визитку',
         },
         {
@@ -784,7 +782,7 @@ export const translations: Record<Language, Translations> = {
             '30 дней поддержки и сопровождения после запуска.',
           ],
           currentPrice: '69 000 ₽',
-          duration: '8–12 рабочих дней',
+          duration: 'от 8 дней',
           btnText: 'Обсудить сайт',
         },
         {
@@ -803,7 +801,7 @@ export const translations: Record<Language, Translations> = {
             '60 дней поддержки и сопровождения после запуска.',
           ],
           currentPrice: '99 000 ₽',
-          duration: 'от 15 рабочих дней',
+          duration: 'от 15 дней',
           disclaimer: 'Оплаты, личные кабинеты и сложные интеграции рассчитываются отдельно.',
           btnText: 'Обсудить проект',
         },
@@ -1434,7 +1432,6 @@ export const translations: Record<Language, Translations> = {
       title: 'Choose a plan',
       intro: 'I help experts and small businesses present their services clearly, prepare their website for search promotion, and make it easier for customers to get in touch.',
       followUp: 'I learn about your goals, build the website, and stay in touch after launch—for updates, new pages, and continued growth.',
-      durationPrefix: 'Timeline:',
       audienceTitle: 'Who it’s for',
       resultTitle: 'Result',
       includedTitle: 'Includes',
@@ -1453,7 +1450,7 @@ export const translations: Record<Language, Translations> = {
             '30 days of post-launch support and maintenance.',
           ],
           currentPrice: '$420',
-          duration: '5–7 business days',
+          duration: 'from 5 days',
           btnText: 'Discuss a business card site',
         },
         {
@@ -1470,7 +1467,7 @@ export const translations: Record<Language, Translations> = {
             '30 days of post-launch support and maintenance.',
           ],
           currentPrice: '$740',
-          duration: '8–12 business days',
+          duration: 'from 8 days',
           btnText: 'Discuss the website',
         },
         {
@@ -1489,7 +1486,7 @@ export const translations: Record<Language, Translations> = {
             '60 days of post-launch support and maintenance.',
           ],
           currentPrice: '$1,060',
-          duration: 'from 15 business days',
+          duration: 'from 15 days',
           disclaimer: 'Online payments, customer accounts, and complex integrations are quoted separately.',
           btnText: 'Discuss your project',
         },

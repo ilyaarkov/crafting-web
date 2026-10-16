@@ -65,7 +65,7 @@ export const Pricing: React.FC = () => {
                     </span>
                   </div>
                   <div className="text-xs text-cyan-300/80 font-medium mt-2">
-                    {t.pricing.durationPrefix} {plan.duration}
+                    {plan.duration}
                   </div>
                 </div>
 
