@@ -1,35 +1,50 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useLanguage } from '../context/LanguageContext';
 import { Menu, X, ArrowUpRight, Globe } from 'lucide-react';
 
 export const Header: React.FC = () => {
   const { lang, setLang, t } = useLanguage();
   const [isVisible, setIsVisible] = useState(true);
-  const [lastScrollY, setLastScrollY] = useState(0);
+  const [hasTouchScreen, setHasTouchScreen] = useState(() =>
+    typeof navigator !== 'undefined' && navigator.maxTouchPoints > 0
+  );
+  const lastScrollY = useRef(0);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [hasScrolled, setHasScrolled] = useState(false);
+
+  useEffect(() => {
+    const updateTouchCapability = () => {
+      setHasTouchScreen(navigator.maxTouchPoints > 0);
+    };
+
+    updateTouchCapability();
+    window.addEventListener('pointerdown', updateTouchCapability, { once: true, passive: true });
+    return () => window.removeEventListener('pointerdown', updateTouchCapability);
+  }, []);
 
   useEffect(() => {
     const handleScroll = () => {
       const currentScrollY = window.scrollY;
 
-      // Detect if user has scrolled past top
       setHasScrolled(currentScrollY > 20);
 
-      // Hide on scroll down, show on scroll up
-      if (currentScrollY > lastScrollY && currentScrollY > 80) {
-        setIsVisible(false);
-        setMobileMenuOpen(false);
-      } else {
+      if (hasTouchScreen) {
         setIsVisible(true);
+      } else {
+        if (currentScrollY > lastScrollY.current && currentScrollY > 80) {
+          setIsVisible(false);
+          setMobileMenuOpen(false);
+        } else {
+          setIsVisible(true);
+        }
       }
 
-      setLastScrollY(currentScrollY);
+      lastScrollY.current = currentScrollY;
     };
 
     window.addEventListener('scroll', handleScroll, { passive: true });
     return () => window.removeEventListener('scroll', handleScroll);
-  }, [lastScrollY]);
+  }, [hasTouchScreen]);
 
   const toggleLanguage = () => {
     setLang(lang === 'ru' ? 'en' : 'ru');
