@@ -20,36 +20,13 @@ export const Hero: React.FC = () => {
     }
   };
 
-  // Повторяем список тегов для гарантированного непрерывного бесшовного цикла бегущей строки
-  const tickerList = [...t.hero.tags, ...t.hero.tags];
+  // Повторяем список тегов для 100% бесшовного бесконечного цикла бегущей строки
+  const marqueeBlock = [...t.hero.tags, ...t.hero.tags, ...t.hero.tags];
 
   return (
     <section className="relative overflow-hidden isolate h-[100dvh] max-h-[100dvh] flex flex-col justify-between bg-[#06080c]">
       <style>{`
-        @keyframes orbitRotate {
-          from {
-            transform: rotateX(70deg) rotateZ(0deg);
-          }
-          to {
-            transform: rotateX(70deg) rotateZ(360deg);
-          }
-        }
-        @keyframes orbitRotateReverse {
-          from {
-            transform: rotateX(68deg) rotateZ(360deg);
-          }
-          to {
-            transform: rotateX(68deg) rotateZ(0deg);
-          }
-        }
-        .orbit-ring-1 {
-          animation: orbitRotate 48s linear infinite;
-        }
-        .orbit-ring-2 {
-          animation: orbitRotateReverse 36s linear infinite;
-        }
-
-        @keyframes heroMarquee {
+        @keyframes continuousMarquee {
           0% {
             transform: translate3d(0, 0, 0);
           }
@@ -57,16 +34,18 @@ export const Hero: React.FC = () => {
             transform: translate3d(-50%, 0, 0);
           }
         }
-        .animate-hero-marquee {
+        .marquee-track {
           display: flex;
           width: max-content;
-          animation: heroMarquee 24s linear infinite;
+          animation: continuousMarquee 26s linear infinite;
           will-change: transform;
+          -webkit-backface-visibility: hidden;
+          backface-visibility: hidden;
         }
       `}</style>
 
       {/* ========================================================= */}
-      {/* ФОН 100vh ЭКРАНА: Живой космический горизонт планеты с атмосферой и орбитами */}
+      {/* ФОН 100vh ЭКРАНА: Величественный горизонт планеты и космическое свечение */}
       {/* ========================================================= */}
       <div className="absolute inset-0 w-full h-full overflow-hidden pointer-events-none z-0">
         {/* Фоновые мягкие туманности глубокого космоса */}
@@ -83,19 +62,8 @@ export const Hero: React.FC = () => {
           }}
         />
 
-        {/* Вращающаяся орбита 1 */}
-        <div className="absolute top-8 sm:top-12 md:top-16 left-1/2 -translate-x-1/2 w-[min(960px,94vw)] h-[min(600px,62vh)] pointer-events-none [perspective:1200px]">
-          <div className="orbit-ring-1 w-full h-full rounded-full border border-cyan-400/35 relative shadow-[0_0_15px_rgba(34,211,238,0.2)]">
-            <span className="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1/2 w-3 h-3 rounded-full bg-cyan-300 shadow-[0_0_20px_#22d3ee,0_0_35px_#22d3ee]" />
-          </div>
-        </div>
-
-        {/* Вращающаяся орбита 2 */}
-        <div className="absolute top-14 sm:top-18 md:top-24 left-1/2 -translate-x-1/2 w-[min(740px,78vw)] h-[min(460px,50vh)] pointer-events-none [perspective:1200px]">
-          <div className="orbit-ring-2 w-full h-full rounded-full border border-white/20 relative shadow-[0_0_15px_rgba(255,255,255,0.15)]">
-            <span className="absolute bottom-0 left-1/2 -translate-x-1/2 translate-y-1/2 w-2 h-2 rounded-full bg-white shadow-[0_0_15px_#ffffff,0_0_25px_#38bdf8]" />
-          </div>
-        </div>
+        {/* Световой ореол горизонта */}
+        <div className="absolute top-[20vh] sm:top-[24vh] left-1/2 -translate-x-1/2 w-[900px] h-[350px] bg-cyan-400/20 blur-[100px] rounded-full pointer-events-none" />
 
         {/* ВИДИМЫЙ КУПОЛ ПЛАНЕТЫ С НЕОНОВЫМ СВЕЧЕНИЕМ КРОМКИ */}
         <div className="absolute top-[24vh] sm:top-[28vh] left-1/2 -translate-x-1/2 w-[160vw] min-w-[1200px] max-w-[3000px] h-[850px] sm:h-[1050px] rounded-[100%] bg-gradient-to-b from-[#0e2c56] via-[#07162b] to-[#06080c] border-t-2 border-cyan-400/90 shadow-[0_-15px_80px_rgba(34,211,238,0.65),0_0_140px_rgba(56,189,248,0.35)]">
@@ -109,7 +77,6 @@ export const Hero: React.FC = () => {
       {/* 1) Заголовок упирается низом точно в середину экрана (50dvh) */}
       {/* 2) Текст «Разработка...» ровно посередине между 50dvh и верхней кнопкой */}
       {/* 3) Бегущая строка ровно посередине между низом заголовка и верхом описания */}
-      {/* Вся структура в естественном flex-потоке: элементы физически НЕ могут наехать друг на друга */}
       {/* ========================================================= */}
       <div className="flex lg:hidden flex-col h-full w-full relative z-10">
         {/* Верхняя половина (0 - 50dvh): Заголовок упирается низом точно в середину экрана */}
@@ -128,12 +95,12 @@ export const Hero: React.FC = () => {
         <div className="h-[50dvh] min-h-0 flex flex-col justify-between items-center w-full relative">
           {/* Пространство между 50dvh и верхней кнопкой в естественном flex-потоке */}
           <div className="flex-1 w-full flex flex-col justify-between items-center min-h-0 py-1">
-            {/* 1. Верхний слот: Бегущая строка (ровно посередине между 50dvh и описанием) */}
-            <div className="flex-1 w-full flex items-center justify-center min-h-[30px] overflow-hidden pointer-events-none">
-              <div className="w-screen overflow-hidden py-0.5 sm:py-1">
-                <div className="animate-hero-marquee flex items-center whitespace-nowrap">
+            {/* 1. Верхний слот: Бегущая строка (непрерывный бесшовный цикл без прерываний) */}
+            <div className="flex-1 w-full flex items-center min-h-[30px] overflow-hidden pointer-events-none">
+              <div className="w-full overflow-hidden py-0.5 sm:py-1">
+                <div className="marquee-track flex whitespace-nowrap">
                   <div className="flex items-center shrink-0">
-                    {tickerList.map((tag, idx) => (
+                    {marqueeBlock.map((tag, idx) => (
                       <span key={`mob-ticker-a-${idx}`} className="inline-flex items-center">
                         <span className="text-[11px] sm:text-xs font-['JetBrains_Mono',monospace] font-semibold text-slate-200 uppercase tracking-wider px-2">
                           {tag}
@@ -145,7 +112,7 @@ export const Hero: React.FC = () => {
                     ))}
                   </div>
                   <div className="flex items-center shrink-0" aria-hidden="true">
-                    {tickerList.map((tag, idx) => (
+                    {marqueeBlock.map((tag, idx) => (
                       <span key={`mob-ticker-b-${idx}`} className="inline-flex items-center">
                         <span className="text-[11px] sm:text-xs font-['JetBrains_Mono',monospace] font-semibold text-slate-200 uppercase tracking-wider px-2">
                           {tag}
