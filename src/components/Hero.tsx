@@ -93,7 +93,7 @@ export const Hero: React.FC = () => {
           {/* Идеально круглая сфера с медленно вращающейся текстурой фотореалистичной Земли */}
           <div className="relative w-full h-full rounded-full overflow-hidden border-t-2 border-cyan-400/90 shadow-[0_-12px_60px_rgba(34,211,238,0.55),0_0_120px_rgba(56,189,248,0.25)] bg-[#040812]">
             <picture>
-              <source srcSet="/images/earth.png" type="image/webp" />
+              <source srcSet="/images/earth.png" type="image/png" />
               <img
                 src="/images/earth.png"
                 alt="Earth"
