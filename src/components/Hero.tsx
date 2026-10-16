@@ -24,7 +24,7 @@ export const Hero: React.FC = () => {
   const tickerList = [...t.hero.tags, ...t.hero.tags];
 
   return (
-    <section className="relative overflow-hidden h-[100dvh] max-h-[100dvh] flex flex-col justify-between">
+    <section className="relative overflow-hidden isolate h-[100dvh] max-h-[100dvh] flex flex-col justify-between bg-[#06080c]">
       <style>{`
         @keyframes orbitRotate {
           from {
@@ -68,45 +68,53 @@ export const Hero: React.FC = () => {
       {/* ========================================================= */}
       {/* ФОН 100vh ЭКРАНА: Живой космический горизонт планеты с атмосферой и орбитами */}
       {/* ========================================================= */}
-      <div className="absolute inset-0 w-full h-full overflow-hidden pointer-events-none -z-10">
+      <div className="absolute inset-0 w-full h-full overflow-hidden pointer-events-none z-0">
         {/* Фоновые мягкие туманности глубокого космоса */}
-        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[1100px] h-[500px] bg-gradient-to-b from-sky-500/20 via-cyan-500/15 to-transparent blur-[120px] rounded-full" />
-        <div className="absolute top-1/4 left-1/4 w-[500px] h-[400px] bg-blue-600/15 blur-[130px] rounded-full" />
-        <div className="absolute top-1/3 right-1/4 w-[500px] h-[400px] bg-cyan-600/15 blur-[130px] rounded-full" />
+        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[1100px] h-[520px] bg-gradient-to-b from-sky-400/25 via-cyan-500/20 to-transparent blur-[110px] rounded-full" />
+        <div className="absolute top-1/4 left-1/4 w-[550px] h-[450px] bg-blue-600/20 blur-[120px] rounded-full" />
+        <div className="absolute top-1/3 right-1/4 w-[550px] h-[450px] bg-cyan-600/20 blur-[120px] rounded-full" />
 
         {/* Звездная глубина космоса */}
         <div
-          className="absolute inset-0 opacity-[0.035]"
+          className="absolute inset-0 opacity-[0.06]"
           style={{
             backgroundImage: 'radial-gradient(circle at 1px 1px, #ffffff 1px, transparent 0)',
-            backgroundSize: '36px 36px',
+            backgroundSize: '32px 32px',
           }}
         />
 
         {/* Вращающаяся орбита 1 */}
-        <div className="absolute top-10 sm:top-14 md:top-20 left-1/2 -translate-x-1/2 w-[min(940px,94vw)] h-[min(580px,60vh)] pointer-events-none [perspective:1200px]">
-          <div className="orbit-ring-1 w-full h-full rounded-full border border-cyan-400/30 relative">
-            <span className="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1/2 w-2.5 h-2.5 rounded-full bg-cyan-300 shadow-[0_0_15px_#22d3ee]" />
+        <div className="absolute top-8 sm:top-12 md:top-16 left-1/2 -translate-x-1/2 w-[min(960px,94vw)] h-[min(600px,62vh)] pointer-events-none [perspective:1200px]">
+          <div className="orbit-ring-1 w-full h-full rounded-full border border-cyan-400/35 relative shadow-[0_0_15px_rgba(34,211,238,0.2)]">
+            <span className="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1/2 w-3 h-3 rounded-full bg-cyan-300 shadow-[0_0_20px_#22d3ee,0_0_35px_#22d3ee]" />
           </div>
         </div>
 
         {/* Вращающаяся орбита 2 */}
-        <div className="absolute top-16 sm:top-20 md:top-28 left-1/2 -translate-x-1/2 w-[min(720px,76vw)] h-[min(440px,48vh)] pointer-events-none [perspective:1200px]">
-          <div className="orbit-ring-2 w-full h-full rounded-full border border-white/15 relative">
-            <span className="absolute bottom-0 left-1/2 -translate-x-1/2 translate-y-1/2 w-1.5 h-1.5 rounded-full bg-white shadow-[0_0_12px_#ffffff]" />
+        <div className="absolute top-14 sm:top-18 md:top-24 left-1/2 -translate-x-1/2 w-[min(740px,78vw)] h-[min(460px,50vh)] pointer-events-none [perspective:1200px]">
+          <div className="orbit-ring-2 w-full h-full rounded-full border border-white/20 relative shadow-[0_0_15px_rgba(255,255,255,0.15)]">
+            <span className="absolute bottom-0 left-1/2 -translate-x-1/2 translate-y-1/2 w-2 h-2 rounded-full bg-white shadow-[0_0_15px_#ffffff,0_0_25px_#38bdf8]" />
           </div>
         </div>
 
-        {/* ВИДИМЫЙ КУПОЛ ПЛАНЕТЫ */}
-        <div className="absolute top-[22vh] sm:top-[26vh] left-1/2 -translate-x-1/2 w-[160vw] min-w-[1400px] max-w-[3200px] h-[900px] sm:h-[1100px] rounded-[100%] bg-gradient-to-b from-[#0b274c] via-[#06152a] to-[#06080c] border-t-2 border-cyan-400/80 shadow-[0_-12px_70px_rgba(34,211,238,0.55),0_0_140px_rgba(56,189,248,0.3)]">
-          <div className="absolute -top-12 left-1/2 -translate-x-1/2 w-[80%] h-28 bg-cyan-400/30 blur-[45px] rounded-full pointer-events-none" />
-          <div className="absolute -top-6 left-1/2 -translate-x-1/2 w-[60%] h-16 bg-sky-300/40 blur-[25px] rounded-full pointer-events-none" />
+        {/* ВИДИМЫЙ КУПОЛ ПЛАНЕТЫ С НЕОНОВЫМ СВЕЧЕНИЕМ КРОМКИ */}
+        <div className="absolute top-[24vh] sm:top-[28vh] left-1/2 -translate-x-1/2 w-[160vw] min-w-[1200px] max-w-[3000px] h-[850px] sm:h-[1050px] rounded-[100%] bg-gradient-to-b from-[#0e2c56] via-[#07162b] to-[#06080c] border-t-2 border-cyan-400/90 shadow-[0_-15px_80px_rgba(34,211,238,0.65),0_0_140px_rgba(56,189,248,0.35)]">
+          <div className="absolute -top-12 left-1/2 -translate-x-1/2 w-[80%] h-28 bg-cyan-400/35 blur-[45px] rounded-full pointer-events-none" />
+          <div className="absolute -top-6 left-1/2 -translate-x-1/2 w-[60%] h-16 bg-sky-300/45 blur-[25px] rounded-full pointer-events-none" />
         </div>
       </div>
 
+      {/* ========================================================= */}
+      {/* МОБИЛЬНАЯ ВЕРСИЯ (< lg): БЕЗУПРЕЧНАЯ ГЕОМЕТРИЯ БЕЗ НАЛОЖЕНИЙ */}
+      {/* 1) Заголовок упирается низом точно в середину экрана (50dvh) */}
+      {/* 2) Текст «Разработка...» ровно посередине между 50dvh и верхней кнопкой */}
+      {/* 3) Бегущая строка ровно посередине между низом заголовка и верхом описания */}
+      {/* Вся структура в естественном flex-потоке: элементы физически НЕ могут наехать друг на друга */}
+      {/* ========================================================= */}
       <div className="flex lg:hidden flex-col h-full w-full relative z-10">
-        <div className="h-[50dvh] flex flex-col justify-end items-center px-4 pb-3 text-center">
-          <h1 className="text-[32px] sm:text-3xl font-black tracking-tight leading-[1.14] max-w-md mx-auto">
+        {/* Верхняя половина (0 - 50dvh): Заголовок упирается низом точно в середину экрана */}
+        <div className="h-[50dvh] flex flex-col justify-end items-center px-4 pb-2 sm:pb-3 text-center">
+          <h1 className="text-[26px] sm:text-3xl font-black tracking-tight leading-[1.14] max-w-md mx-auto">
             <span className="block text-white mb-0.5">
               {t.hero.titlePrefix}
             </span>
@@ -116,13 +124,13 @@ export const Hero: React.FC = () => {
           </h1>
         </div>
 
-        {/* Нижняя половина */}
-        <div className="h-[50dvh] flex flex-col justify-between items-center w-full relative">
-          {/* Зона между средней линией (50dvh) и верхней кнопкой */}
-          <div className="flex-1 w-full relative">
-            {/* Бегущая строка */}
-            <div className="absolute top-0 left-0 right-0 bottom-3/5 flex items-center justify-center pointer-events-none overflow-hidden">
-              <div className="w-screen overflow-hidden py-1">
+        {/* Нижняя половина (50dvh - 100dvh) */}
+        <div className="h-[50dvh] min-h-0 flex flex-col justify-between items-center w-full relative">
+          {/* Пространство между 50dvh и верхней кнопкой в естественном flex-потоке */}
+          <div className="flex-1 w-full flex flex-col justify-between items-center min-h-0 py-1">
+            {/* 1. Верхний слот: Бегущая строка (ровно посередине между 50dvh и описанием) */}
+            <div className="flex-1 w-full flex items-center justify-center min-h-[30px] overflow-hidden pointer-events-none">
+              <div className="w-screen overflow-hidden py-0.5 sm:py-1">
                 <div className="animate-hero-marquee flex items-center whitespace-nowrap">
                   <div className="flex items-center shrink-0">
                     {tickerList.map((tag, idx) => (
@@ -152,22 +160,25 @@ export const Hero: React.FC = () => {
               </div>
             </div>
 
-            {/* Текст «Разработка современных...»: центр текста ровно на 50% между 50dvh и верхней кнопкой */}
-            <div className="absolute top-1/2 left-0 right-0 -translate-y-1/2 px-4 text-center">
-              <p className="text-base sm:text-lg text-slate-300 leading-relaxed max-w-sm mx-auto text-balance font-normal">
+            {/* 2. Центральный слот: Описание (ровно посередине между 50dvh и кнопками) */}
+            <div className="shrink-0 px-4 text-center max-w-sm mx-auto my-auto">
+              <p className="text-xs sm:text-[13px] md:text-sm text-slate-300 leading-relaxed text-balance font-normal">
                 {t.hero.description}
               </p>
             </div>
+
+            {/* 3. Нижний слот: симметричное пространство для идеальной центровки описания */}
+            <div className="flex-1 w-full min-h-[10px]" />
           </div>
 
           {/* Нижняя группа: Кнопки + Галочка */}
           <div className="shrink-0 flex flex-col items-center w-full pb-2 px-4 z-20">
-            <div className="flex flex-col items-center justify-center gap-2.5 max-w-xs w-full mb-2">
+            <div className="flex flex-col sm:flex-row items-center justify-center gap-2 max-w-xs sm:max-w-none w-full mb-1.5">
               {/* Главная кнопка */}
               <a
                 href="#contact"
                 onClick={(e) => handleScrollTo(e, '#contact')}
-                className="relative group overflow-hidden w-full py-2.5 rounded-full font-bold text-slate-950 bg-cyan-400 transition-colors duration-300 active:scale-[0.98] text-xs flex items-center justify-center gap-2 cursor-pointer shadow-lg shadow-cyan-400/20"
+                className="relative group overflow-hidden w-full sm:w-auto px-6 py-2.5 rounded-full font-bold text-slate-950 bg-cyan-400 transition-colors duration-300 active:scale-[0.98] text-xs flex items-center justify-center gap-2 cursor-pointer shadow-lg shadow-cyan-400/20"
               >
                 <span className="absolute inset-0 bg-white rounded-full -translate-x-full group-hover:translate-x-0 transition-transform duration-300 ease-out pointer-events-none" />
                 <span className="relative z-10 flex items-center gap-2">
@@ -180,7 +191,7 @@ export const Hero: React.FC = () => {
               <a
                 href="#projects"
                 onClick={(e) => handleScrollTo(e, '#projects')}
-                className="relative group overflow-hidden w-full py-2.5 rounded-full font-semibold text-slate-200 transition-colors duration-300 active:scale-[0.98] text-xs flex items-center justify-center gap-2 cursor-pointer bg-white/5 border border-white/10 hover:border-white/30"
+                className="relative group overflow-hidden w-full sm:w-auto px-6 py-2.5 rounded-full font-semibold text-slate-200 transition-colors duration-300 active:scale-[0.98] text-xs flex items-center justify-center gap-2 cursor-pointer bg-white/5 border border-white/10 hover:border-white/30"
               >
                 <span className="absolute inset-0 bg-white rounded-full -translate-x-full group-hover:translate-x-0 transition-transform duration-300 ease-out pointer-events-none" />
                 <span className="relative z-10 transition-colors duration-300 group-hover:text-slate-950 font-semibold">
@@ -207,7 +218,7 @@ export const Hero: React.FC = () => {
       {/* ========================================================= */}
       {/* ДЕСКТОП ВЕРСИЯ (>= lg): ИДЕАЛЬНЫЙ БАЛАНС И ОДНА СТРОКА ТЕГОВ */}
       {/* ========================================================= */}
-      <div className="hidden lg:flex flex-col justify-between pt-25 pb-4 max-w-6xl mx-auto px-6 z-10 w-full text-center h-full">
+      <div className="hidden lg:flex flex-col justify-between pt-22 pb-4 max-w-6xl mx-auto px-6 z-10 w-full text-center h-full">
         {/* Верхний спейсер */}
         <div className="shrink-0 h-1" />
 
