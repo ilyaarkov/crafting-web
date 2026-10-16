@@ -86,10 +86,10 @@ export const Hero: React.FC = () => {
         />
 
         {/* Световой ореол горизонта */}
-        <div className="absolute top-[50vh] left-1/2 -translate-x-1/2 w-[85vw] sm:w-[900px] h-[200px] sm:h-[350px] bg-cyan-400/20 blur-[35px] sm:blur-[100px] rounded-full pointer-events-none" />
+        <div className="absolute top-[58dvh] lg:top-[50vh] left-1/2 -translate-x-1/2 w-[85vw] sm:w-[900px] h-[200px] sm:h-[350px] bg-cyan-400/20 blur-[35px] sm:blur-[100px] rounded-full pointer-events-none" />
 
         {/* КРУГЛЫЙ КУПОЛ ЗЕМЛИ ИЗ КОСМОСА С ПЛАВНЫМ ВРАЩЕНИЕМ (ОДИНАКОВЫЙ ИДЕАЛЬНЫЙ ПОЛУКРУГ НА ВСЕХ ЭКРАНАХ) */}
-        <div className="absolute top-[62vh] left-1/2 -translate-x-1/2 w-[220vw] min-w-[950px] max-w-[2600px] aspect-square rounded-full pointer-events-none select-none z-0">
+        <div className="absolute top-[70dvh] lg:top-[62vh] left-1/2 -translate-x-1/2 w-[220vw] min-w-[950px] max-w-[2600px] aspect-square rounded-full pointer-events-none select-none z-0">
           {/* Световые ореолы кромки горизонта (Apple Maps стиль) */}
           <div className="absolute -top-8 sm:-top-14 left-1/2 -translate-x-1/2 w-[70%] h-16 sm:h-28 bg-cyan-400/35 blur-[25px] sm:blur-[45px] rounded-full pointer-events-none" />
           <div className="absolute -top-3 sm:-top-6 left-1/2 -translate-x-1/2 w-[50%] h-8 sm:h-14 bg-sky-300/45 blur-[12px] sm:blur-[22px] rounded-full pointer-events-none" />
