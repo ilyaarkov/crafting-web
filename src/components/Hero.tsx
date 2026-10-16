@@ -86,7 +86,7 @@ export const Hero: React.FC = () => {
         />
 
         {/* Световой ореол горизонта */}
-        <div className="absolute top-[58dvh] lg:top-[50vh] left-1/2 -translate-x-1/2 w-[85vw] sm:w-[900px] h-[200px] sm:h-[350px] bg-cyan-400/20 blur-[35px] sm:blur-[100px] rounded-full pointer-events-none" />
+        <div className="absolute top-[60dvh] lg:top-[50vh] left-1/2 -translate-x-1/2 w-[85vw] sm:w-[900px] h-[200px] sm:h-[350px] bg-cyan-400/20 blur-[35px] sm:blur-[100px] rounded-full pointer-events-none" />
 
         {/* КРУГЛЫЙ КУПОЛ ЗЕМЛИ ИЗ КОСМОСА С ПЛАВНЫМ ВРАЩЕНИЕМ (ОДИНАКОВЫЙ ИДЕАЛЬНЫЙ ПОЛУКРУГ НА ВСЕХ ЭКРАНАХ) */}
         <div className="absolute top-[calc(70dvh+10px)] lg:top-[62vh] left-1/2 -translate-x-1/2 w-[220vw] min-w-[950px] max-w-[2600px] aspect-square rounded-full pointer-events-none select-none z-0">
