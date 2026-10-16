@@ -137,7 +137,7 @@ export interface Translations {
     items: {
       id: string;
       title: string;
-      tag: string;
+      tag?: string;
       description: string;
       p2: string;
       p3?: string;
@@ -634,7 +634,6 @@ export const translations: Record<Language, Translations> = {
         {
           id: 'specialist-portfolio',
           title: 'Сайт-портфолио для специалиста',
-          tag: 'Реальный коммерческий проект',
           description: 'Персональный сайт, который собрал в одном месте информацию о специалисте, опыт, услуги, проекты и способы связи.',
           p2: 'До появления сайта основная информация находилась на разных площадках. Теперь потенциальному клиенту можно отправить одну ссылку с понятной презентацией работ и компетенций.',
           p3: 'Сайт уже помог получить новые клиентские обращения и стал полноценным инструментом личной презентации.',
@@ -663,7 +662,6 @@ export const translations: Record<Language, Translations> = {
         {
           id: 'nonprofit-redesign',
           title: 'Новый сайт для некоммерческой организации',
-          tag: 'Редизайн существующего сайта',
           description: 'У организации уже был сайт, но его внешний вид и структура устарели, а посетителям было сложно находить нужную информацию.',
           p2: 'На основе существующих материалов я разработал более современную и удобную версию: переработал подачу информации, навигацию и внешний вид, сохранив важное содержание организации.',
           whatDoneTitle: 'Что сделано:',
@@ -690,7 +688,6 @@ export const translations: Record<Language, Translations> = {
         {
           id: 'wine-coop',
           title: 'Сайт винного кооператива',
-          tag: 'Функциональный проект · не размещён публично',
           description: 'Сайт с каталогом и внутренней системой управления информацией. Проект показывает мои возможности не только во внешнем оформлении, но и в разработке более сложной логики.',
           p2: 'Публичная версия проекта сейчас недоступна, поэтому в портфолио представлены основные экраны и описание реализованных функций.',
           whatDoneTitle: 'Что реализовано:',
@@ -717,7 +714,6 @@ export const translations: Record<Language, Translations> = {
         {
           id: 'driving-center',
           title: 'Сайт центра контраварийного вождения',
-          tag: 'Демонстрационная концепция',
           description: 'Учебный проект, созданный для демонстрации дизайна и структуры сайта организации, которая проводит курсы безопасного и контраварийного вождения.',
           p2: 'Это не сайт действующей организации и не коммерческий кейс. Проект показывает, как может выглядеть сайт образовательного или сервисного бизнеса.',
           whatDoneTitle: 'Что показано в проекте:',
@@ -1319,7 +1315,6 @@ export const translations: Record<Language, Translations> = {
         {
           id: 'specialist-portfolio',
           title: 'Specialist Portfolio Website',
-          tag: 'Real Commercial Project',
           description: 'A personal brand website that brought together specialist information, experience, services, case studies, and contact options in one place.',
           p2: 'Before this website, details were fragmented across different social accounts. Now prospective clients can be sent a single link with a refined overview of skills and work.',
           p3: 'The site has already generated new inbound inquiries and serves as an indispensable self-presentation asset.',
@@ -1348,7 +1343,6 @@ export const translations: Record<Language, Translations> = {
         {
           id: 'nonprofit-redesign',
           title: 'Redesign for Non-Profit Organization',
-          tag: 'Website Redesign Case',
           description: 'The organization already had a website, but its layout and visual hierarchy were outdated, making it hard for visitors to discover relevant programs and help.',
           p2: 'Using existing materials, I engineered a fresh, accessible version: revised content structure, streamlined navigation, and elevated aesthetics while protecting crucial institutional copy.',
           whatDoneTitle: 'Delivered:',
@@ -1375,7 +1369,6 @@ export const translations: Record<Language, Translations> = {
         {
           id: 'wine-coop',
           title: 'Wine Cooperative Web Platform',
-          tag: 'Functional Project · Currently Private',
           description: 'A full-stack catalog website with an internal management dashboard. This project showcases capability in both refined aesthetics and complex data logic.',
           p2: 'The live public release is currently kept in private preview, so the portfolio features core interface mockups and technical scope breakdown.',
           whatDoneTitle: 'Implemented:',
@@ -1402,7 +1395,6 @@ export const translations: Record<Language, Translations> = {
         {
           id: 'driving-center',
           title: 'Defensive Driving Center Platform',
-          tag: 'Demonstration Concept',
           description: 'A pilot concept project created to demonstrate structure, typography, and styling for a modern driver safety and emergency handling academy.',
           p2: 'This represents a demonstration prototype rather than an active operating company. It illustrates how an educational or high-performance service business can be presented online.',
           whatDoneTitle: 'Featured in concept:',

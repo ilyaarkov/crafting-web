@@ -160,10 +160,12 @@ export const ProjectDetailPage: React.FC<ProjectDetailPageProps> = ({
         <div className="max-w-6xl mx-auto px-4 sm:px-6 py-12 sm:py-16 lg:py-20 relative z-10">
           {/* Шапка проекта */}
           <div className="max-w-4xl mb-10 sm:mb-12">
-            <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full border border-cyan-500/30 bg-cyan-950/30 text-xs uppercase tracking-widest text-cyan-400 font-semibold mb-4">
-              <Layers className="w-3.5 h-3.5" />
-              <span>{project.tag || (lang === 'ru' ? 'Веб-проект' : 'Web Project')}</span>
-            </div>
+            {project.tag && (
+              <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full border border-cyan-500/30 bg-cyan-950/30 text-xs uppercase tracking-widest text-cyan-400 font-semibold mb-4">
+                <Layers className="w-3.5 h-3.5" />
+                <span>{project.tag}</span>
+              </div>
+            )}
             <h1 className="text-3xl sm:text-5xl font-extrabold text-white tracking-tight leading-tight mb-4">
               {project.title}
             </h1>
