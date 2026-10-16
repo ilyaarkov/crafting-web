@@ -150,12 +150,34 @@ export const Process: React.FC = () => {
   }, [totalLength, updateRouteGeometry]);
 
   return (
-    <section id="process" className="py-14 sm:py-18 lg:py-22 relative overflow-hidden">
-      {/* Мягкие фоновые ореолы */}
-      <div className="absolute top-1/4 left-1/4 w-[450px] h-[320px] bg-cyan-500/5 blur-[140px] rounded-full pointer-events-none -z-10" />
-      <div className="absolute bottom-1/4 right-1/4 w-[450px] h-[320px] bg-emerald-500/5 blur-[140px] rounded-full pointer-events-none -z-10" />
+    <section id="process" className="py-14 sm:py-18 lg:py-22 relative overflow-hidden isolate z-0 bg-[#06080c]">
+      {/* ========================================================= */}
+      {/* ФОН СЕКЦИИ: Планшеты и ПК (на телефонах скрыт для чистого черного фона) */}
+      {/* Плавный градиент в чистый черный сверху и снизу для 100% бесшовности */}
+      {/* ========================================================= */}
+      <div className="hidden md:block absolute inset-0 w-full h-full overflow-hidden pointer-events-none z-0 [mask-image:linear-gradient(to_bottom,transparent_0%,black_15%,black_85%,transparent_100%)]">
+        {/* Мягкий фоновый градиент глубины */}
+        <div className="absolute inset-0 bg-gradient-to-b from-[#06080c] via-[#060c18]/45 to-[#06080c]" />
 
-      <div className="max-w-5xl mx-auto px-4 sm:px-6">
+        {/* Глубокие мягкие туманности по краям */}
+        <div className="absolute top-1/4 -left-32 w-[550px] h-[550px] bg-cyan-500/[0.09] blur-[140px] rounded-full" />
+        <div className="absolute bottom-1/3 -right-32 w-[600px] h-[600px] bg-emerald-500/[0.08] blur-[150px] rounded-full" />
+        <div className="absolute bottom-10 left-1/4 w-[500px] h-[350px] bg-sky-500/[0.06] blur-[130px] rounded-full" />
+
+        {/* Тонкая сетка звёздной пыли (32px) */}
+        <div
+          className="absolute inset-0 opacity-[0.045]"
+          style={{
+            backgroundImage: 'radial-gradient(circle at 1px 1px, #ffffff 1px, transparent 0)',
+            backgroundSize: '32px 32px',
+          }}
+        />
+
+        {/* Финишный мягкий градиент к черному сверху и снизу */}
+        <div className="absolute inset-0 bg-gradient-to-b from-[#06080c] via-transparent to-[#06080c]" />
+      </div>
+
+      <div className="max-w-5xl mx-auto px-4 sm:px-6 relative z-10">
         {/* Заголовок блока: компактный и выразительный */}
         <div className="max-w-3xl mb-10 sm:mb-14">
           <div className="text-xs uppercase tracking-widest text-cyan-400 font-semibold mb-2.5">

@@ -15,6 +15,7 @@ import { TechStackPage } from './pages/TechStackPage';
 import { PortfolioPage } from './pages/PortfolioPage';
 import { ProjectDetailPage } from './pages/ProjectDetailPage';
 import { ServiceDetailPage } from './pages/ServiceDetailPage';
+import { MobileLoader } from './components/MobileLoader';
 
 type RouteState =
   | { type: 'home' }
@@ -83,6 +84,7 @@ export default function App() {
 
   return (
     <LanguageProvider>
+      <MobileLoader />
       {route.type === 'techstack' ? (
         <TechStackPage onNavigateHome={navigateHome} />
       ) : route.type === 'portfolio' ? (
