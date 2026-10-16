@@ -7,9 +7,19 @@ import { PROJECTS_DATA } from '../data/projectsData';
 export const Projects: React.FC = () => {
   const { t, lang } = useLanguage();
   const sectionRef = useRef<HTMLElement>(null);
-  const [isVisible, setIsVisible] = useState(false);
+  const [isVisible, setIsVisible] = useState(() => {
+    if (typeof window !== 'undefined' && window.innerWidth <= 768) {
+      return true;
+    }
+    return false;
+  });
 
   useEffect(() => {
+    if (typeof window !== 'undefined' && window.innerWidth <= 768) {
+      setIsVisible(true);
+      return;
+    }
+
     const observer = new IntersectionObserver(
       ([entry]) => {
         if (entry.isIntersecting) {

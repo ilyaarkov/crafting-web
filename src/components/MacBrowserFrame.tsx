@@ -6,6 +6,7 @@ interface MacBrowserFrameProps {
   className?: string;
   imageClassName?: string;
   overlayText?: string;
+  loading?: 'eager' | 'lazy';
 }
 
 export const MacBrowserFrame: React.FC<MacBrowserFrameProps> = ({
@@ -14,6 +15,7 @@ export const MacBrowserFrame: React.FC<MacBrowserFrameProps> = ({
   className = '',
   imageClassName = '',
   overlayText,
+  loading = 'eager',
 }) => {
   return (
     <div
@@ -33,7 +35,8 @@ export const MacBrowserFrame: React.FC<MacBrowserFrameProps> = ({
         <img
           src={imageSrc}
           alt={imageAlt}
-          loading="lazy"
+          loading={loading}
+          decoding="auto"
           className={`w-full h-full object-cover object-top transition-transform duration-500 ease-out group-hover:scale-[1.02] ${imageClassName}`}
         />
         <div className="absolute inset-0 bg-gradient-to-t from-[#060a12]/30 via-transparent to-transparent pointer-events-none" />

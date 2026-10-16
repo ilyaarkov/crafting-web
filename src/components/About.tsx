@@ -43,14 +43,14 @@ export const About: React.FC = () => {
         </svg>
       ),
     },
-    // X: {
-    //   hoverClasses: 'hover:text-white hover:border-white/60 hover:bg-white/15 hover:shadow-[0_0_20px_rgba(255,255,255,0.4)]',
-    //   icon: (
-    //     <svg className="w-5 h-5 fill-current" viewBox="0 0 24 24">
-    //       <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z" />
-    //     </svg>
-    //   ),
-    // },
+    X: {
+      hoverClasses: 'hover:text-white hover:border-white/60 hover:bg-white/15 hover:shadow-[0_0_20px_rgba(255,255,255,0.4)]',
+      icon: (
+        <svg className="w-5 h-5 fill-current" viewBox="0 0 24 24">
+          <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z" />
+        </svg>
+      ),
+    },
     LinkedIn: {
       hoverClasses: 'hover:text-[#0A66C2] hover:border-[#0A66C2]/60 hover:bg-[#0A66C2]/15 hover:shadow-[0_0_20px_rgba(10,102,194,0.4)]',
       icon: (
@@ -127,8 +127,9 @@ export const About: React.FC = () => {
                       onError={() => setImgError(true)}
                       width={320}
                       height={320}
-                      loading="lazy"
-                      decoding="async"
+                      loading="eager"
+                      fetchPriority="high"
+                      decoding="sync"
                       className="w-full h-full object-cover object-top scale-105 group-hover:scale-110 transition-transform duration-700"
                     />
                   </picture>
