@@ -97,7 +97,7 @@ export const Hero: React.FC = () => {
               <img
                 src="/images/earth.png"
                 alt="Earth"
-                className="w-full h-full object-cover rounded-full will-change-transform earth-rotate"
+                className="w-full h-full object-cover rounded-full will-change-transform earth-rotate scale-[1.1]"
                 loading="eager"
                 fetchPriority="high"
                 decoding="async"
