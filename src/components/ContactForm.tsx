@@ -101,7 +101,7 @@ export const ContactForm: React.FC = () => {
   };
 
   return (
-    <section id="contact" className="py-20 lg:py-32 relative">
+    <section id="contact" className="py-20 lg:py-32 relative bg-[#06080c] z-10">
       <div className="absolute top-1/2 right-1/4 w-[500px] h-[400px] bg-cyan-600/10 blur-[130px] rounded-full pointer-events-none -z-10" />
 
       <div className="max-w-5xl mx-auto px-4 sm:px-6">

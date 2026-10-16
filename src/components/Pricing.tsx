@@ -69,7 +69,7 @@ export const Pricing: React.FC = () => {
   };
 
   return (
-    <section id="pricing" className="py-16 sm:py-20 lg:py-32 relative overflow-hidden">
+    <section id="pricing" className="py-16 sm:py-20 lg:py-32 relative overflow-hidden bg-[#06080c] z-10">
       <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[500px] bg-gradient-to-tr from-cyan-600/15 via-blue-600/10 to-transparent blur-[140px] rounded-full pointer-events-none -z-10" />
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6">

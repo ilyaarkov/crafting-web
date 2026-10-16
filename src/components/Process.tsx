@@ -279,8 +279,8 @@ export const Process: React.FC = () => {
                     <h3
                       className={`text-xl sm:text-2xl lg:text-3xl font-extrabold tracking-tight transition-colors duration-300 ${
                         isActive
-                          ? 'text-white drop-shadow-[0_0_15px_rgba(52,211,153,0.4)]'
-                          : 'text-slate-500'
+                          ? 'text-emerald-300 drop-shadow-[0_0_15px_rgba(52,211,153,0.4)]'
+                          : 'text-white'
                       }`}
                     >
                       {step.title}
@@ -288,7 +288,7 @@ export const Process: React.FC = () => {
 
                     <p
                       className={`text-xs sm:text-sm leading-relaxed mt-2 max-w-lg mx-auto transition-colors duration-300 ${
-                        isActive ? 'text-slate-200 font-medium' : 'text-slate-600'
+                        isActive ? 'text-slate-100 font-medium' : 'text-slate-300'
                       }`}
                     >
                       {step.description}
@@ -332,7 +332,7 @@ export const Process: React.FC = () => {
                     <div className="flex-1 min-w-0">
                       <h3
                         className={`text-lg font-bold tracking-tight transition-colors duration-300 ${
-                          isActive ? 'text-white' : 'text-slate-500'
+                          isActive ? 'text-cyan-300 drop-shadow-[0_0_10px_rgba(34,211,238,0.3)]' : 'text-white'
                         }`}
                       >
                         {step.title}
@@ -340,7 +340,7 @@ export const Process: React.FC = () => {
 
                       <p
                         className={`text-xs leading-relaxed mt-1 transition-colors duration-300 ${
-                          isActive ? 'text-slate-300' : 'text-slate-600'
+                          isActive ? 'text-slate-100 font-medium' : 'text-slate-300'
                         }`}
                       >
                         {step.description}

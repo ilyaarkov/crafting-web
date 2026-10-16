@@ -49,7 +49,7 @@ export const Projects: React.FC = () => {
     <section
       ref={sectionRef}
       id="projects"
-      className="py-16 sm:py-20 lg:py-24 relative overflow-hidden"
+      className="py-16 sm:py-20 lg:py-24 relative overflow-hidden bg-[#06080c] z-10"
     >
       {/* Деликатные фоновые ореолы */}
       <div className="absolute top-1/4 -right-40 w-96 h-96 bg-cyan-500/10 blur-[150px] rounded-full pointer-events-none -z-10" />

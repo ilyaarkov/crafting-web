@@ -62,7 +62,7 @@ export const About: React.FC = () => {
   };
 
   return (
-    <section id="about" className="py-20 lg:py-28 relative overflow-hidden">
+    <section id="about" className="py-20 lg:py-28 relative overflow-hidden bg-[#06080c] z-10">
       <style>{`
         @keyframes morphDarkMatter {
           0%, 100% {

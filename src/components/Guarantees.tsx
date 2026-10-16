@@ -8,7 +8,7 @@ export const Guarantees: React.FC = () => {
   const { t } = useLanguage();
 
   return (
-    <section id="guarantees" className="py-20 lg:py-24 relative overflow-hidden">
+    <section id="guarantees" className="py-20 lg:py-24 relative overflow-hidden bg-[#06080c] z-10">
       <div className="absolute top-1/3 left-1/4 w-[500px] h-[350px] bg-cyan-500/5 blur-[130px] rounded-full pointer-events-none -z-10" />
       <div className="absolute bottom-1/4 right-1/4 w-[450px] h-[350px] bg-indigo-500/5 blur-[130px] rounded-full pointer-events-none -z-10" />
 

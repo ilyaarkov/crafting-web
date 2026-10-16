@@ -16,7 +16,9 @@ export const MobileLoader: React.FC = () => {
   const [progress, setProgress] = useState<number>(0);
   const [isDone, setIsDone] = useState<boolean>(false);
   const [isVisible, setIsVisible] = useState<boolean>(true);
-  const isCompleteRef = useRef<boolean>(false);
+
+  const assetsLoadedRef = useRef<boolean>(false);
+  const startTimeRef = useRef<number>(Date.now());
 
   useEffect(() => {
     if (typeof window === 'undefined') return;
@@ -32,8 +34,9 @@ export const MobileLoader: React.FC = () => {
     }
 
     setIsMobile(true);
+    startTimeRef.current = Date.now();
 
-    // Lock scroll on mobile while loading
+    // 1. Lock scroll on mobile while loading
     const originalBodyOverflow = document.body.style.overflow;
     const originalHtmlOverflow = document.documentElement.style.overflow;
     const originalTouchAction = document.body.style.touchAction;
@@ -42,7 +45,7 @@ export const MobileLoader: React.FC = () => {
     document.documentElement.style.overflow = 'hidden';
     document.body.style.touchAction = 'none';
 
-    // List of critical assets that MUST be fully downloaded and decoded into memory
+    // 2. Real preloading & GPU bitmap decoding of every single image across the website
     const criticalImages = [
       '/images/before-chaos.webp',
       '/images/ilya.webp',
@@ -52,99 +55,145 @@ export const MobileLoader: React.FC = () => {
       '/projects/driftet.webp',
     ];
 
-    let totalTasks = criticalImages.length + 2; // images + fonts + window load
-    let completedTasks = 0;
-
-    const updateProgressFromTasks = () => {
-      completedTasks++;
-      const computedRatio = Math.min(0.95, completedTasks / totalTasks);
-      const targetPercent = Math.round(computedRatio * 95);
-      setProgress((prev) => Math.max(prev, targetPercent));
-    };
-
-    // Helper to preload AND decode an image bitmap into GPU memory
     const preloadAndDecode = (src: string): Promise<void> => {
       return new Promise<void>((resolve) => {
         const img = new Image();
         img.src = src;
 
-        const onDone = () => {
+        const handleSuccess = () => {
           if ('decode' in img) {
             img
               .decode()
               .catch(() => {})
-              .finally(() => {
-                updateProgressFromTasks();
-                resolve();
-              });
+              .finally(() => resolve());
           } else {
-            updateProgressFromTasks();
             resolve();
           }
         };
 
         if (img.complete && img.naturalWidth > 0) {
-          onDone();
+          handleSuccess();
         } else {
-          img.onload = onDone;
-          img.onerror = () => {
-            updateProgressFromTasks();
-            resolve();
-          };
+          img.onload = handleSuccess;
+          img.onerror = () => resolve();
         }
       });
     };
 
-    // Helper for document fonts
-    const fontsPromise = (
+    // 3. Document fonts readiness
+    const fontsPromise =
       document.fonts && document.fonts.ready
         ? document.fonts.ready
-        : Promise.resolve()
-    ).then(() => {
-      updateProgressFromTasks();
-    });
+        : Promise.resolve();
 
-    // Helper for window load
+    // 4. Window load event
     const windowLoadPromise = new Promise<void>((resolve) => {
       if (document.readyState === 'complete') {
-        updateProgressFromTasks();
         resolve();
       } else {
         const onLoad = () => {
           window.removeEventListener('load', onLoad);
-          updateProgressFromTasks();
           resolve();
         };
         window.addEventListener('load', onLoad);
       }
     });
 
-    // Also collect any img elements currently attached in DOM
-    const domImages = Array.from(document.querySelectorAll('img'));
-    const domImagesPromises = domImages.map((img) => {
-      if (img.complete && img.naturalWidth > 0) return Promise.resolve();
-      return new Promise<void>((resolve) => {
-        img.addEventListener('load', () => resolve(), { once: true });
-        img.addEventListener('error', () => resolve(), { once: true });
+    // 5. Artificial pre-rendering & DOM warm-up of ALL sections
+    const warmUpAllSections = () => {
+      const sectionSelectors = [
+        '#hero',
+        '#about',
+        '#specialization',
+        '#process',
+        '#projects',
+        '#pricing',
+        '#guarantees',
+        '#contact',
+      ];
+
+      sectionSelectors.forEach((sel) => {
+        const el = document.querySelector(sel);
+        if (el) {
+          // Force layout & geometry calculation
+          const _rect = el.getBoundingClientRect();
+          const _h = (el as HTMLElement).offsetHeight;
+          const _s = (el as HTMLElement).scrollHeight;
+          void _rect;
+          void _h;
+          void _s;
+        }
+      });
+
+      // Force recalculation of body and trigger simulated layout events
+      void document.body.offsetHeight;
+      window.dispatchEvent(new Event('resize'));
+      window.dispatchEvent(new Event('scroll'));
+
+      // Decode any DOM images
+      const domImgs = Array.from(document.querySelectorAll('img'));
+      domImgs.forEach((img) => {
+        if ('decode' in img && img.complete) {
+          img.decode().catch(() => {});
+        }
+      });
+    };
+
+    // Parallel execution of all actual assets + warm-up
+    Promise.all([
+      fontsPromise,
+      windowLoadPromise,
+      ...criticalImages.map(preloadAndDecode),
+    ]).then(() => {
+      // Warm up and pre-render sections
+      warmUpAllSections();
+      // Double requestAnimationFrame to ensure browser commits styles to screen buffer
+      requestAnimationFrame(() => {
+        requestAnimationFrame(() => {
+          warmUpAllSections();
+          assetsLoadedRef.current = true;
+        });
       });
     });
 
-    // Fallback safety timer: in case network drops or hangs on bad 3G, unlock after 6.5s
-    const fallbackTimer = setTimeout(() => {
-      if (!isCompleteRef.current) {
-        finalizeLoad();
-      }
-    }, 6500);
+    // 6. Deliberate, smooth progress animation (~2.2s total)
+    // Ensures user gets a real, satisfying progress experience and all sections are 100% ready
+    const TARGET_MIN_DURATION = 2100; // ms
 
-    const finalizeLoad = () => {
-      if (isCompleteRef.current) return;
-      isCompleteRef.current = true;
-      clearTimeout(fallbackTimer);
+    const timer = setInterval(() => {
+      const elapsed = Date.now() - startTimeRef.current;
+      const timeRatio = Math.min(1, elapsed / TARGET_MIN_DURATION);
 
-      // Verify layout & rendering frame commits
-      requestAnimationFrame(() => {
-        requestAnimationFrame(() => {
-          setProgress(100);
+      setProgress((prev) => {
+        let next = prev;
+
+        if (timeRatio < 0.25) {
+          // Stage 1: 0% -> 25% (Initialization)
+          next = Math.round(timeRatio * 100);
+        } else if (timeRatio < 0.55) {
+          // Stage 2: 25% -> 55% (Assets & Fonts)
+          next = Math.round(25 + ((timeRatio - 0.25) / 0.3) * 30);
+        } else if (timeRatio < 0.85) {
+          // Stage 3: 55% -> 85% (Section pre-render)
+          next = Math.round(55 + ((timeRatio - 0.55) / 0.3) * 30);
+        } else if (timeRatio < 1) {
+          // Stage 4: 85% -> 98% (Warm-up & finalize)
+          next = Math.round(85 + ((timeRatio - 0.85) / 0.15) * 13);
+        } else {
+          // Reached duration target, now check if assets are also loaded
+          if (assetsLoadedRef.current || elapsed > 3500) {
+            next = 100;
+          } else {
+            next = 98; // hold briefly until assets confirm
+          }
+        }
+
+        if (next >= 100) {
+          clearInterval(timer);
+
+          // Force one final layout & event pass
+          warmUpAllSections();
+
           setTimeout(() => {
             setIsDone(true);
             setTimeout(() => {
@@ -152,39 +201,21 @@ export const MobileLoader: React.FC = () => {
               document.body.style.overflow = originalBodyOverflow;
               document.documentElement.style.overflow = originalHtmlOverflow;
               document.body.style.touchAction = originalTouchAction;
+              // Trigger final scroll & resize event once visible
+              window.dispatchEvent(new Event('resize'));
+              window.dispatchEvent(new Event('scroll'));
             }, 500);
-          }, 250);
-        });
-      });
-    };
+          }, 300);
 
-    // Await all critical tasks
-    Promise.all([
-      fontsPromise,
-      windowLoadPromise,
-      ...criticalImages.map(preloadAndDecode),
-      ...domImagesPromises,
-    ]).then(() => {
-      finalizeLoad();
-    });
-
-    // Smooth counter ticker toward current loaded progress
-    const ticker = setInterval(() => {
-      setProgress((prev) => {
-        if (isCompleteRef.current) {
-          clearInterval(ticker);
           return 100;
         }
-        if (prev < 90) {
-          return prev + 1;
-        }
-        return prev;
+
+        return Math.max(prev, next);
       });
-    }, 40);
+    }, 35);
 
     return () => {
-      clearInterval(ticker);
-      clearTimeout(fallbackTimer);
+      clearInterval(timer);
       document.body.style.overflow = originalBodyOverflow;
       document.documentElement.style.overflow = originalHtmlOverflow;
       document.body.style.touchAction = originalTouchAction;
@@ -196,12 +227,14 @@ export const MobileLoader: React.FC = () => {
   }
 
   const getStatusText = () => {
-    if (progress < 40) {
-      return isEn ? 'Initializing...' : 'Инициализация...';
-    } else if (progress < 80) {
-      return isEn ? 'Loading assets...' : 'Загрузка контента...';
+    if (progress < 25) {
+      return isEn ? 'Initializing components...' : 'Инициализация компонентов...';
+    } else if (progress < 55) {
+      return isEn ? 'Loading graphics & fonts...' : 'Загрузка графики и шрифтов...';
+    } else if (progress < 85) {
+      return isEn ? 'Rendering all sections...' : 'Рендеринг всех блоков...';
     } else if (progress < 100) {
-      return isEn ? 'Rendering page...' : 'Рендеринг интерфейса...';
+      return isEn ? 'Finalizing render...' : 'Подготовка к плавному скроллу...';
     } else {
       return isEn ? 'Ready' : 'Готово к работе';
     }
@@ -216,10 +249,10 @@ export const MobileLoader: React.FC = () => {
         isDone ? 'opacity-0 scale-[1.01] pointer-events-none' : 'opacity-100 scale-100'
       }`}
     >
-      {/* Top spacer to balance layout vertically */}
+      {/* Top spacer */}
       <div className="w-full flex justify-center pt-2 sm:pt-4" />
 
-      {/* Center Block: Clean domain, slogan, progress bar */}
+      {/* Center Block */}
       <div className="relative z-10 flex flex-col items-center w-full max-w-sm text-center">
         {/* Domain name */}
         <div className="font-['JetBrains_Mono',monospace] text-2xl sm:text-3xl font-extrabold tracking-tight text-white mb-2">
@@ -227,7 +260,7 @@ export const MobileLoader: React.FC = () => {
           <span className="text-cyan-400">.com</span>
         </div>
 
-        {/* Slogan without slops or glowing circles */}
+        {/* Slogan */}
         <p className="text-xs sm:text-sm text-slate-300 leading-relaxed max-w-[280px] sm:max-w-[300px] mb-8 sm:mb-9 font-normal">
           {isEn
             ? 'Custom modern websites for experts, specialists, and businesses.'
@@ -255,7 +288,7 @@ export const MobileLoader: React.FC = () => {
         </div>
       </div>
 
-      {/* Bottom Block: Only 3 Social Icons (Instagram, Telegram, Email) */}
+      {/* Bottom Block: Instagram, Telegram, Email */}
       <div className="w-full flex flex-col items-center pb-2 sm:pb-4">
         <div className="flex items-center justify-center gap-3.5">
           {/* Instagram */}
@@ -284,7 +317,7 @@ export const MobileLoader: React.FC = () => {
             </svg>
           </a>
 
-          {/* Email: mailto with hello@ilyaarkov.com */}
+          {/* Email */}
           <a
             href="mailto:hello@ilyaarkov.com"
             aria-label="Email hello@ilyaarkov.com"

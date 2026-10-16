@@ -5,25 +5,23 @@ import { ArrowRight, Layers } from 'lucide-react';
 export const Specialization: React.FC = () => {
   const { t, lang } = useLanguage();
   const isEn = lang === 'en';
-  const [visibleItems, setVisibleItems] = useState<Record<string, boolean>>({});
   const [activeMobileTab, setActiveMobileTab] = useState<number>(0);
   const itemRefs = useRef<Record<string, HTMLDivElement | null>>({});
 
   const categories = t.specialization.categories;
 
-  // Intersection Observer для плавной анимации появления каждого элемента при скролле
-  useEffect(() => {
-    if (typeof IntersectionObserver === 'undefined') {
-      const allVisible: Record<string, boolean> = {};
-      categories.forEach((cat, cIdx) => {
-        cat.items.forEach((_, iIdx) => {
-          allVisible[`${cIdx}-${iIdx}`] = true;
-        });
+  const [visibleItems, setVisibleItems] = useState<Record<string, boolean>>(() => {
+    const all: Record<string, boolean> = {};
+    categories.forEach((cat, cIdx) => {
+      cat.items.forEach((_, iIdx) => {
+        all[`${cIdx}-${iIdx}`] = true;
+        all[`m-${cIdx}-${iIdx}`] = true;
       });
-      setVisibleItems(allVisible);
-      return;
-    }
+    });
+    return all;
+  });
 
+  useEffect(() => {
     const observer = new IntersectionObserver(
       (entries) => {
         entries.forEach((entry) => {
@@ -107,20 +105,7 @@ export const Specialization: React.FC = () => {
   };
 
   return (
-    <section id="specialization" className="py-20 lg:py-32 relative overflow-hidden">
-      {/* Мягкие световые ореолы */}
-      <div className="absolute top-1/4 -left-48 w-[600px] h-[600px] bg-cyan-500/8 blur-[180px] rounded-full pointer-events-none -z-10" />
-      <div className="absolute bottom-1/4 -right-48 w-[600px] h-[600px] bg-sky-600/8 blur-[180px] rounded-full pointer-events-none -z-10" />
-
-      {/* Тонкая сетка для глубины */}
-      <div
-        className="absolute inset-0 opacity-[0.015] pointer-events-none"
-        style={{
-          backgroundImage: 'radial-gradient(circle at 1px 1px, #ffffff 1px, transparent 0)',
-          backgroundSize: '48px 48px',
-        }}
-      />
-
+    <section id="specialization" className="py-20 lg:py-32 relative overflow-hidden bg-[#06080c]">
       <div className="max-w-6xl mx-auto px-4 sm:px-6 relative z-10">
         {/* Заголовок секции: только чистый текст без звездочек, фона и рамок */}
         <div className="max-w-3xl mb-12 sm:mb-16 lg:mb-20">
@@ -195,8 +180,10 @@ export const Specialization: React.FC = () => {
           })}
         </div>
 
+        {/* Элегантная нижняя строка с приглашением обсудить задачу под ключ */}
         <div className="mt-14 sm:mt-18 pt-8 border-t border-white/10 flex flex-col sm:flex-row items-center justify-between gap-4">
           <div className="flex items-center gap-3 text-xs sm:text-sm text-slate-400 text-center sm:text-left">
+            <Layers className="w-4 h-4 text-cyan-400 shrink-0" />
             <span>
               {isEn
                 ? 'Need a tailored custom solution or a combination of multiple formats?'
