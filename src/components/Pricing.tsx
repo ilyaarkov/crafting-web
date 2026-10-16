@@ -34,10 +34,10 @@ export const Pricing: React.FC = () => {
           <h2 className="text-2xl sm:text-4xl lg:text-5xl font-extrabold text-white tracking-tight leading-tight">
             {t.pricing.title}
           </h2>
-          <p className="mt-4 text-sm sm:text-base text-slate-300 leading-relaxed">
+          <p className="mt-4 text-sm sm:text-base text-slate-300 leading-relaxed text-balance">
             {t.pricing.intro}
           </p>
-          <p className="mt-3 text-sm sm:text-base text-slate-300 leading-relaxed">
+          <p className="mt-3 text-sm sm:text-base text-slate-300 leading-relaxed text-balance">
             {t.pricing.followUp}
           </p>
         </div>
