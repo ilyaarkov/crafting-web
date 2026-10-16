@@ -56,6 +56,10 @@ export const Hero: React.FC = () => {
           -webkit-backface-visibility: hidden;
           backface-visibility: hidden;
         }
+        .earth-tilt {
+          transform: perspective(1600px) rotateX(30deg);
+          transform-origin: center top;
+        }
         @media (prefers-reduced-motion: reduce) {
           .earth-rotate {
             animation: none;
@@ -92,7 +96,7 @@ export const Hero: React.FC = () => {
 
           {/* Идеально круглая сфера с медленно вращающейся текстурой фотореалистичной Земли */}
           <div className="relative w-full h-full rounded-full overflow-hidden shadow-[0_-12px_60px_rgba(34,211,238,0.55),0_0_120px_rgba(56,189,248,0.25)] bg-[#040812]">
-            <picture>
+            <picture className="absolute inset-0 earth-tilt">
               <source srcSet="/images/earth.png" type="image/png" />
               <img
                 src="/images/earth.png"
