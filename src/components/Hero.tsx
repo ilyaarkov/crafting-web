@@ -170,7 +170,7 @@ export const Hero: React.FC = () => {
 
             {/* 2. Центральный слот: Описание (ровно посередине между 50dvh и кнопками) */}
             <div className="shrink-0 px-4 text-center max-w-sm mx-auto my-auto">
-              <p className="text-xs sm:text-[13px] md:text-sm text-slate-300 leading-relaxed text-balance font-normal">
+              <p className="p-4 text-sm sm:text-[15px] md:text-base text-slate-300 leading-relaxed text-balance font-normal bg-[#06080c]/65 backdrop-blur-md shadow-[0_0_32px_24px_rgba(6,8,12,0.65)]">
                 {t.hero.description}
               </p>
             </div>
@@ -255,7 +255,7 @@ export const Hero: React.FC = () => {
             ))}
           </div>
 
-          <p className="text-base lg:text-lg text-slate-300 leading-relaxed max-w-2xl mx-auto text-balance font-normal px-3 mt-2">
+          <p className="p-4 text-base lg:text-lg text-slate-300 leading-relaxed max-w-2xl mx-auto text-balance font-normal mt-2 bg-[#06080c]/65 backdrop-blur-md shadow-[0_0_32px_24px_rgba(6,8,12,0.65)]">
             {t.hero.description}
           </p>
         </div>
