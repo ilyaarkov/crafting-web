@@ -8,19 +8,225 @@ import {
 export const Hero: React.FC = () => {
   const { t } = useLanguage();
   const heroRef = React.useRef<HTMLElement>(null);
+  const networkRef = React.useRef<HTMLCanvasElement>(null);
+  const pointerRef = React.useRef({ x: 0, y: 0, active: false });
 
   const handlePointerMove = (e: React.PointerEvent<HTMLElement>) => {
     if (e.pointerType !== 'mouse') return;
 
     const bounds = e.currentTarget.getBoundingClientRect();
-    heroRef.current?.style.setProperty(
-      '--pointer-x',
-      `${e.clientX - bounds.left - bounds.width / 2}px`,
-    );
-    heroRef.current?.style.setProperty(
-      '--pointer-y',
-      `${e.clientY - bounds.top - bounds.height / 2}px`,
-    );
+    pointerRef.current.x = e.clientX - bounds.left;
+    pointerRef.current.y = e.clientY - bounds.top;
+    pointerRef.current.active = true;
+  };
+
+  React.useEffect(() => {
+    const canvas = networkRef.current;
+    const section = heroRef.current;
+    const context = canvas?.getContext('2d');
+    if (!canvas || !section || !context) return;
+
+    const spacing = 68;
+    const honeycombSize = 26;
+    const crystallizationRadius = 230;
+    const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
+    let width = 0;
+    let height = 0;
+    let columns = 0;
+    let frameId = 0;
+    let nodes: Array<{ x: number; y: number; row: number; col: number; phase: number }> = [];
+
+    const resize = () => {
+      const bounds = section.getBoundingClientRect();
+      const pixelRatio = Math.min(window.devicePixelRatio || 1, 1.5);
+      width = bounds.width;
+      height = bounds.height;
+      canvas.width = Math.round(width * pixelRatio);
+      canvas.height = Math.round(height * pixelRatio);
+      canvas.style.width = `${width}px`;
+      canvas.style.height = `${height}px`;
+      context.setTransform(pixelRatio, 0, 0, pixelRatio, 0, 0);
+
+      columns = Math.ceil(width / spacing) + 2;
+      const rows = Math.ceil(height / spacing) + 2;
+      nodes = Array.from({ length: rows * columns }, (_, index) => {
+        const row = Math.floor(index / columns);
+        const col = index % columns;
+        return {
+          x: col * spacing + (row % 2) * spacing / 2 - spacing / 2,
+          y: row * spacing - spacing / 2,
+          row,
+          col,
+          phase: Math.random() * Math.PI * 2,
+        };
+      });
+    };
+
+    const closestHoneycombVertex = (x: number, y: number, centerX: number, centerY: number) => {
+      const qEstimate = Math.round((x - centerX) / (1.5 * honeycombSize));
+      const best = { x, y, distance: Number.POSITIVE_INFINITY };
+
+      for (let q = qEstimate - 1; q <= qEstimate + 1; q += 1) {
+        const rEstimate = Math.round(
+          (y - centerY) / (Math.sqrt(3) * honeycombSize) - q / 2,
+        );
+        for (let r = rEstimate - 1; r <= rEstimate + 1; r += 1) {
+          const cellX = centerX + 1.5 * honeycombSize * q;
+          const cellY = centerY + Math.sqrt(3) * honeycombSize * (r + q / 2);
+          for (let corner = 0; corner < 6; corner += 1) {
+            const angle = (corner * Math.PI) / 3;
+            const vertexX = cellX + honeycombSize * Math.cos(angle);
+            const vertexY = cellY + honeycombSize * Math.sin(angle);
+            const distance = Math.hypot(x - vertexX, y - vertexY);
+            if (distance < best.distance) {
+              best.x = vertexX;
+              best.y = vertexY;
+              best.distance = distance;
+            }
+          }
+        }
+      }
+      return best;
+    };
+
+    const draw = (time: number) => {
+      const elapsed = reducedMotion.matches ? 0 : time / 1000;
+      const pointer = pointerRef.current;
+      const isCrystallizing = pointer.active;
+      const positions = nodes.map((node) => {
+        const driftX = reducedMotion.matches
+          ? 0
+          : Math.sin(elapsed * 0.42 + node.phase) * 9 +
+            Math.sin(elapsed * 0.19 + node.phase * 1.7) * 5;
+        const driftY = reducedMotion.matches
+          ? 0
+          : Math.cos(elapsed * 0.36 + node.phase * 1.3) * 8 +
+            Math.sin(elapsed * 0.23 + node.phase) * 5;
+        const x = node.x + driftX;
+        const y = node.y + driftY;
+
+        if (!isCrystallizing) return { x, y, influence: 0 };
+
+        const distance = Math.hypot(x - pointer.x, y - pointer.y);
+        const influence = Math.max(0, 1 - distance / crystallizationRadius);
+        if (!influence) return { x, y, influence };
+
+        const vertex = closestHoneycombVertex(x, y, pointer.x, pointer.y);
+        const strength = influence * influence * 0.88;
+        return {
+          x: x + (vertex.x - x) * strength,
+          y: y + (vertex.y - y) * strength,
+          influence,
+        };
+      });
+
+      context.clearRect(0, 0, width, height);
+      context.lineWidth = 0.7;
+      context.strokeStyle = 'rgba(125, 177, 198, 0.14)';
+      context.beginPath();
+      positions.forEach((point, index) => {
+        const node = nodes[index];
+        const right = node.col + 1 < columns ? index + 1 : -1;
+        const below = index + columns;
+        if (right >= 0 && right < positions.length) {
+          context.moveTo(point.x, point.y);
+          context.lineTo(positions[right].x, positions[right].y);
+        }
+        if (below < positions.length) {
+          context.moveTo(point.x, point.y);
+          context.lineTo(positions[below].x, positions[below].y);
+          const diagonal = node.row % 2 === 0
+            ? (node.col > 0 ? below - 1 : -1)
+            : (node.col + 1 < columns ? below + 1 : -1);
+          if (diagonal >= 0 && diagonal < positions.length) {
+            context.moveTo(point.x, point.y);
+            context.lineTo(positions[diagonal].x, positions[diagonal].y);
+          }
+        }
+      });
+      context.stroke();
+
+      if (isCrystallizing) {
+        context.save();
+        context.lineWidth = 1;
+        positions.forEach((point, index) => {
+          const node = nodes[index];
+          const right = node.col + 1 < columns ? index + 1 : -1;
+          const below = index + columns;
+          const diagonal = node.row % 2 === 0
+            ? (node.col > 0 ? below - 1 : -1)
+            : (node.col + 1 < columns ? below + 1 : -1);
+          const neighbors = [right, below, diagonal];
+          neighbors.forEach((neighborIndex) => {
+            if (neighborIndex < 0 || neighborIndex >= positions.length) return;
+            const neighbor = positions[neighborIndex];
+            const influence = Math.max(point.influence, neighbor.influence);
+            if (influence < 0.08) return;
+            context.strokeStyle = `rgba(103, 232, 249, ${influence * 0.62})`;
+            context.beginPath();
+            context.moveTo(point.x, point.y);
+            context.lineTo(neighbor.x, neighbor.y);
+            context.stroke();
+          });
+        });
+
+        const qMin = Math.floor(-crystallizationRadius / (1.5 * honeycombSize));
+        const qMax = Math.ceil(crystallizationRadius / (1.5 * honeycombSize));
+        for (let q = qMin; q <= qMax; q += 1) {
+          const rMin = Math.floor(
+            -crystallizationRadius / (Math.sqrt(3) * honeycombSize) - q / 2,
+          );
+          const rMax = Math.ceil(
+            crystallizationRadius / (Math.sqrt(3) * honeycombSize) - q / 2,
+          );
+          for (let r = rMin; r <= rMax; r += 1) {
+            const cellX = pointer.x + 1.5 * honeycombSize * q;
+            const cellY = pointer.y + Math.sqrt(3) * honeycombSize * (r + q / 2);
+            const distance = Math.hypot(cellX - pointer.x, cellY - pointer.y);
+            if (distance > crystallizationRadius) continue;
+            const alpha = (1 - distance / crystallizationRadius) * 0.2;
+            context.strokeStyle = `rgba(103, 232, 249, ${alpha})`;
+            context.beginPath();
+            for (let corner = 0; corner < 6; corner += 1) {
+              const angle = (corner * Math.PI) / 3;
+              const x = cellX + honeycombSize * Math.cos(angle);
+              const y = cellY + honeycombSize * Math.sin(angle);
+              if (corner === 0) context.moveTo(x, y);
+              else context.lineTo(x, y);
+            }
+            context.closePath();
+            context.stroke();
+          }
+        }
+        context.restore();
+      }
+
+      positions.forEach((point) => {
+        const radius = 1 + point.influence * 0.8;
+        context.fillStyle = point.influence
+          ? `rgba(165, 243, 252, ${0.38 + point.influence * 0.55})`
+          : 'rgba(148, 192, 209, 0.48)';
+        context.beginPath();
+        context.arc(point.x, point.y, radius, 0, Math.PI * 2);
+        context.fill();
+      });
+
+      frameId = window.requestAnimationFrame(draw);
+    };
+
+    resize();
+    const resizeObserver = new ResizeObserver(resize);
+    resizeObserver.observe(section);
+    frameId = window.requestAnimationFrame(draw);
+
+    return () => {
+      window.cancelAnimationFrame(frameId);
+      resizeObserver.disconnect();
+    };
+  }, []);
+
+  const handlePointerLeave = () => {
+    pointerRef.current.active = false;
   };
 
   const handleScrollTo = (e: React.MouseEvent<HTMLAnchorElement>, id: string) => {
@@ -42,6 +248,7 @@ export const Hero: React.FC = () => {
     <section
       ref={heroRef}
       onPointerMove={handlePointerMove}
+      onPointerLeave={handlePointerLeave}
       className="relative overflow-hidden isolate h-[100dvh] max-h-[100dvh] flex flex-col justify-between bg-[#080b12]"
     >
       <style>{`
@@ -59,24 +266,6 @@ export const Hero: React.FC = () => {
             radial-gradient(ellipse at 84% 76%, rgba(79, 70, 229, 0.14), transparent 42%),
             linear-gradient(135deg, #090e19 0%, #080b12 52%, #0b0d19 100%);
         }
-        .hero-cursor-glow {
-          position: absolute;
-          top: 50%;
-          left: 50%;
-          width: min(72vw, 760px);
-          aspect-ratio: 1;
-          border-radius: 50%;
-          background: radial-gradient(circle, rgba(34, 211, 238, 0.16), rgba(56, 189, 248, 0.07) 34%, transparent 70%);
-          filter: blur(18px);
-          transform: translate3d(calc(-50% + var(--pointer-x, 0px)), calc(-50% + var(--pointer-y, 0px)), 0);
-          transition: transform 220ms ease-out;
-          will-change: transform;
-        }
-        @media (prefers-reduced-motion: reduce) {
-          .hero-cursor-glow {
-            transition: none;
-          }
-        }
         .marquee-track {
           display: flex;
           width: max-content;
@@ -87,9 +276,12 @@ export const Hero: React.FC = () => {
         }
       `}</style>
 
-      <div className="hero-ambient absolute inset-0 pointer-events-none" aria-hidden="true">
-        <div className="hero-cursor-glow" />
-      </div>
+      <div className="hero-ambient absolute inset-0 pointer-events-none" aria-hidden="true" />
+      <canvas
+        ref={networkRef}
+        className="absolute inset-0 h-full w-full pointer-events-none"
+        aria-hidden="true"
+      />
 
       {/* ========================================================= */}
       {/* МОБИЛЬНАЯ ВЕРСИЯ */}
