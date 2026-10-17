@@ -97,9 +97,9 @@ export const Hero: React.FC = () => {
           {/* Идеально круглая сфера с медленно вращающейся текстурой фотореалистичной Земли */}
           <div className="relative w-full h-full rounded-full overflow-hidden shadow-[0_-12px_60px_rgba(34,211,238,0.55),0_0_120px_rgba(56,189,248,0.25)] bg-[#040812]" style={{ perspective: '1800px', perspectiveOrigin: 'center top' }}>
             <picture className="absolute inset-0 earth-tilt">
-              <source srcSet="/images/earth.png" type="image/png" />
+              <source srcSet="/images/earth.webp" type="image/webp" />
               <img
-                src="/images/earth.png"
+                src="/images/earth.webp"
                 alt="Earth"
                 className="w-full h-full object-cover object-center rounded-full will-change-transform earth-rotate scale-[1.2] blur-[0.5px]"
                 loading="eager"
