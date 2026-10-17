@@ -66,53 +66,57 @@ export const Hero: React.FC = () => {
           }
         }
         .hero-ambient {
-          background: linear-gradient(145deg, #080d17 0%, #0a1220 48%, #070a12 100%);
-        }
-        .hero-tunnel-depth {
           background:
-            radial-gradient(ellipse 28% 46% at 50% 43%, #010207 0%, #010207 45%, rgba(2, 5, 14, 0.97) 62%, transparent 100%),
-            radial-gradient(ellipse 60% 105% at 50% 47%, transparent 15%, rgba(12, 53, 78, 0.8) 28%, rgba(36, 111, 138, 0.5) 34%, rgba(14, 36, 58, 0.8) 44%, rgba(2, 6, 14, 0.65) 58%, transparent 78%),
-            radial-gradient(ellipse 120% 130% at 50% 48%, #02040a 10%, transparent 80%);
-          transform: translate3d(var(--parallax-x, 0px), var(--parallax-y, 0px), 0) scale(1.04);
-          transition: transform 900ms cubic-bezier(0.2, 0.7, 0.2, 1);
+            radial-gradient(ellipse at 50% 44%, rgba(17, 42, 75, 0.32), transparent 58%),
+            linear-gradient(145deg, #080b14 0%, #0b1020 52%, #080b14 100%);
         }
-        .hero-tunnel-flow {
-          background: conic-gradient(
-            from 12deg at 50% 47%,
-            transparent 0deg,
-            rgba(24, 100, 132, 0.16) 32deg,
-            transparent 57deg,
-            transparent 112deg,
-            rgba(40, 76, 139, 0.13) 145deg,
-            transparent 174deg,
-            transparent 224deg,
-            rgba(24, 100, 132, 0.14) 254deg,
-            transparent 282deg,
-            transparent 326deg,
-            rgba(40, 76, 139, 0.12) 345deg,
-            transparent 360deg
-          );
-          filter: blur(38px);
-          opacity: 1;
-          transform: translate3d(var(--parallax-x, 0px), var(--parallax-y, 0px), 0) scale(1.45);
-          transition: transform 1100ms cubic-bezier(0.2, 0.7, 0.2, 1);
+        .hero-lightstreams {
+          overflow: visible;
+          transform: translate3d(var(--parallax-x, 0px), var(--parallax-y, 0px), 0) scale(1.035);
+          transition: transform 1200ms cubic-bezier(0.2, 0.7, 0.2, 1);
+        }
+        .hero-lightstream {
+          fill: none;
+          opacity: 0.66;
+          animation: lightstreamDrift 19s ease-in-out infinite alternate;
+          transform-box: fill-box;
+          transform-origin: center;
+        }
+        .hero-lightstream:nth-of-type(2) {
+          animation-duration: 23s;
+          animation-delay: -7s;
+        }
+        .hero-lightstream:nth-of-type(3) {
+          animation-duration: 27s;
+          animation-delay: -13s;
+        }
+        .hero-lightstream:nth-of-type(4) {
+          animation-duration: 21s;
+          animation-delay: -4s;
+        }
+        @keyframes lightstreamDrift {
+          0% { transform: translate3d(-8px, 5px, 0); }
+          50% { transform: translate3d(5px, -7px, 0); }
+          100% { transform: translate3d(9px, 4px, 0); }
         }
         .hero-cursor-light {
           position: absolute;
           top: 0;
           left: 0;
-          width: min(54vw, 640px);
+          width: min(46vw, 560px);
           aspect-ratio: 1;
           border-radius: 50%;
-          background: radial-gradient(circle, rgba(34, 211, 238, 0.24), rgba(37, 99, 235, 0.12) 32%, transparent 70%);
-          filter: blur(42px);
+          background: radial-gradient(circle, rgba(34, 211, 238, 0.11), rgba(59, 130, 246, 0.07) 30%, transparent 70%);
+          filter: blur(36px);
           opacity: var(--cursor-opacity, 0);
           transform: translate3d(var(--cursor-x, 50vw), var(--cursor-y, 50vh), 0) translate(-50%, -50%);
           transition: opacity 700ms ease, transform 900ms cubic-bezier(0.2, 0.7, 0.2, 1);
         }
         @media (prefers-reduced-motion: reduce) {
-          .hero-tunnel-depth,
-          .hero-tunnel-flow,
+          .hero-lightstream {
+            animation: none;
+          }
+          .hero-lightstreams,
           .hero-cursor-light {
             transition: none;
           }
@@ -128,8 +132,40 @@ export const Hero: React.FC = () => {
       `}</style>
 
       <div className="hero-ambient absolute inset-0 pointer-events-none" aria-hidden="true">
-        <div className="hero-tunnel-depth absolute -inset-[4%]" />
-        <div className="hero-tunnel-flow absolute -inset-[18%]" />
+        <svg
+          className="hero-lightstreams absolute -inset-[4%] h-[108%] w-[108%]"
+          viewBox="0 0 1440 900"
+          preserveAspectRatio="xMidYMid slice"
+        >
+          <defs>
+            <linearGradient id="hero-stream-cyan" x1="0" y1="0" x2="1" y2="1">
+              <stop offset="0" stopColor="#22d3ee" stopOpacity="0" />
+              <stop offset="0.38" stopColor="#22d3ee" stopOpacity="0.72" />
+              <stop offset="0.72" stopColor="#818cf8" stopOpacity="0.78" />
+              <stop offset="1" stopColor="#a78bfa" stopOpacity="0" />
+            </linearGradient>
+            <linearGradient id="hero-stream-violet" x1="0" y1="1" x2="1" y2="0">
+              <stop offset="0" stopColor="#818cf8" stopOpacity="0" />
+              <stop offset="0.48" stopColor="#818cf8" stopOpacity="0.62" />
+              <stop offset="1" stopColor="#22d3ee" stopOpacity="0" />
+            </linearGradient>
+            <filter id="hero-stream-glow" x="-30%" y="-100%" width="160%" height="300%">
+                <feGaussianBlur stdDeviation="6" />
+            </filter>
+          </defs>
+            <g opacity="0.3" filter="url(#hero-stream-glow)" strokeWidth="9">
+            <path d="M-120 690 C120 650 210 360 430 350 C650 340 640 615 860 620 C1100 625 1145 370 1570 260" stroke="url(#hero-stream-cyan)" />
+            <path d="M-130 780 C140 730 260 470 465 455 C660 440 700 700 900 710 C1130 722 1230 490 1580 400" stroke="url(#hero-stream-violet)" />
+            <path d="M-100 300 C160 315 245 575 470 590 C700 606 770 345 970 335 C1190 325 1300 520 1560 575" stroke="url(#hero-stream-violet)" />
+            <path d="M-100 190 C150 200 285 405 475 420 C690 437 785 215 1000 215 C1230 215 1320 350 1580 360" stroke="url(#hero-stream-cyan)" />
+          </g>
+            <g strokeWidth="1.4">
+            <path className="hero-lightstream" d="M-120 690 C120 650 210 360 430 350 C650 340 640 615 860 620 C1100 625 1145 370 1570 260" stroke="url(#hero-stream-cyan)" />
+            <path className="hero-lightstream" d="M-130 780 C140 730 260 470 465 455 C660 440 700 700 900 710 C1130 722 1230 490 1580 400" stroke="url(#hero-stream-violet)" />
+            <path className="hero-lightstream" d="M-100 300 C160 315 245 575 470 590 C700 606 770 345 970 335 C1190 325 1300 520 1560 575" stroke="url(#hero-stream-violet)" />
+            <path className="hero-lightstream" d="M-100 190 C150 200 285 405 475 420 C690 437 785 215 1000 215 C1230 215 1320 350 1580 360" stroke="url(#hero-stream-cyan)" />
+          </g>
+        </svg>
         <div className="hero-cursor-light" />
       </div>
 
