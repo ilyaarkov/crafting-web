@@ -7,6 +7,21 @@ import {
 
 export const Hero: React.FC = () => {
   const { t } = useLanguage();
+  const heroRef = React.useRef<HTMLElement>(null);
+
+  const handlePointerMove = (e: React.PointerEvent<HTMLElement>) => {
+    if (e.pointerType !== 'mouse') return;
+
+    const bounds = e.currentTarget.getBoundingClientRect();
+    heroRef.current?.style.setProperty(
+      '--pointer-x',
+      `${e.clientX - bounds.left - bounds.width / 2}px`,
+    );
+    heroRef.current?.style.setProperty(
+      '--pointer-y',
+      `${e.clientY - bounds.top - bounds.height / 2}px`,
+    );
+  };
 
   const handleScrollTo = (e: React.MouseEvent<HTMLAnchorElement>, id: string) => {
     e.preventDefault();
@@ -24,7 +39,11 @@ export const Hero: React.FC = () => {
   const marqueeBlock = [...t.hero.tags, ...t.hero.tags, ...t.hero.tags];
 
   return (
-    <section className="relative overflow-hidden isolate h-[100dvh] max-h-[100dvh] flex flex-col justify-between bg-[#06080c]">
+    <section
+      ref={heroRef}
+      onPointerMove={handlePointerMove}
+      className="relative overflow-hidden isolate h-[100dvh] max-h-[100dvh] flex flex-col justify-between bg-[#080b12]"
+    >
       <style>{`
         @keyframes continuousMarquee {
           0% {
@@ -32,6 +51,30 @@ export const Hero: React.FC = () => {
           }
           100% {
             transform: translate3d(-50%, 0, 0);
+          }
+        }
+        .hero-ambient {
+          background:
+            radial-gradient(ellipse at 18% 12%, rgba(14, 165, 233, 0.17), transparent 44%),
+            radial-gradient(ellipse at 84% 76%, rgba(79, 70, 229, 0.14), transparent 42%),
+            linear-gradient(135deg, #090e19 0%, #080b12 52%, #0b0d19 100%);
+        }
+        .hero-cursor-glow {
+          position: absolute;
+          top: 50%;
+          left: 50%;
+          width: min(72vw, 760px);
+          aspect-ratio: 1;
+          border-radius: 50%;
+          background: radial-gradient(circle, rgba(34, 211, 238, 0.16), rgba(56, 189, 248, 0.07) 34%, transparent 70%);
+          filter: blur(18px);
+          transform: translate3d(calc(-50% + var(--pointer-x, 0px)), calc(-50% + var(--pointer-y, 0px)), 0);
+          transition: transform 220ms ease-out;
+          will-change: transform;
+        }
+        @media (prefers-reduced-motion: reduce) {
+          .hero-cursor-glow {
+            transition: none;
           }
         }
         .marquee-track {
@@ -43,6 +86,10 @@ export const Hero: React.FC = () => {
           backface-visibility: hidden;
         }
       `}</style>
+
+      <div className="hero-ambient absolute inset-0 pointer-events-none" aria-hidden="true">
+        <div className="hero-cursor-glow" />
+      </div>
 
       {/* ========================================================= */}
       {/* МОБИЛЬНАЯ ВЕРСИЯ */}
@@ -71,11 +118,8 @@ export const Hero: React.FC = () => {
                   <div className="flex items-center shrink-0">
                     {marqueeBlock.map((tag, idx) => (
                       <span key={`mob-ticker-a-${idx}`} className="inline-flex items-center">
-                        <span className="text-[11px] sm:text-xs font-['JetBrains_Mono',monospace] font-semibold text-slate-200 uppercase tracking-wider px-2">
+                        <span className="text-[11px] sm:text-xs font-sans font-bold text-slate-200 uppercase tracking-[0.14em] px-4">
                           {tag}
-                        </span>
-                        <span className="text-cyan-400 font-bold text-xs sm:text-sm px-1.5 drop-shadow-[0_0_8px_rgba(34,211,238,0.7)] font-['JetBrains_Mono',monospace]">
-                          //
                         </span>
                       </span>
                     ))}
@@ -83,11 +127,8 @@ export const Hero: React.FC = () => {
                   <div className="flex items-center shrink-0" aria-hidden="true">
                     {marqueeBlock.map((tag, idx) => (
                       <span key={`mob-ticker-b-${idx}`} className="inline-flex items-center">
-                        <span className="text-[11px] sm:text-xs font-['JetBrains_Mono',monospace] font-semibold text-slate-200 uppercase tracking-wider px-2">
+                        <span className="text-[11px] sm:text-xs font-sans font-bold text-slate-200 uppercase tracking-[0.14em] px-4">
                           {tag}
-                        </span>
-                        <span className="text-cyan-400 font-bold text-xs sm:text-sm px-1.5 drop-shadow-[0_0_8px_rgba(34,211,238,0.7)] font-['JetBrains_Mono',monospace]">
-                          //
                         </span>
                       </span>
                     ))}
@@ -170,16 +211,9 @@ export const Hero: React.FC = () => {
           </h1>
 
           {/* Строка специализаций на ПК: ГАРАНТИРОВАННО В ОДНУ СТРОКУ, БЕЗ ПЕРЕНОСОВ */}
-          <div className="flex flex-nowrap items-center justify-center gap-x-2 text-xs font-['JetBrains_Mono',monospace] font-semibold text-slate-300 uppercase tracking-wider my-3.5 w-full max-w-5xl mx-auto whitespace-nowrap">
+          <div className="flex flex-nowrap items-center justify-center gap-x-6 text-xs font-sans font-bold text-slate-300 uppercase tracking-[0.16em] my-3.5 w-full max-w-5xl mx-auto whitespace-nowrap">
             {t.hero.tags.map((tag, idx) => (
-              <React.Fragment key={idx}>
-                {idx > 0 && (
-                  <span className="text-cyan-400/80 font-bold px-1.5 drop-shadow-[0_0_8px_rgba(34,211,238,0.6)] shrink-0">
-                    //
-                  </span>
-                )}
-                <span className="hover:text-cyan-300 transition-colors whitespace-nowrap shrink-0">{tag}</span>
-              </React.Fragment>
+              <span key={idx} className="hover:text-cyan-300 transition-colors whitespace-nowrap shrink-0">{tag}</span>
             ))}
           </div>
 
