@@ -34,14 +34,6 @@ export const Hero: React.FC = () => {
             transform: translate3d(-50%, 0, 0);
           }
         }
-        @keyframes earthSlowSpin {
-          from {
-            transform: rotate(0deg);
-          }
-          to {
-            transform: rotate(360deg);
-          }
-        }
         .marquee-track {
           display: flex;
           width: max-content;
@@ -50,71 +42,7 @@ export const Hero: React.FC = () => {
           -webkit-backface-visibility: hidden;
           backface-visibility: hidden;
         }
-        .earth-rotate {
-          animation: earthSlowSpin 140s linear infinite;
-          will-change: transform;
-          -webkit-backface-visibility: hidden;
-          backface-visibility: hidden;
-        }
-        .earth-tilt {
-          transform: rotateX(-24deg);
-          transform-origin: center top;
-        }
-        @media (prefers-reduced-motion: reduce) {
-          .earth-rotate {
-            animation: none;
-          }
-        }
       `}</style>
-
-      {/* ========================================================= */}
-      {/* ФОН 100vh ЭКРАНА: Величественный горизонт планеты и космическое свечение */}
-      {/* ========================================================= */}
-      <div className="absolute inset-0 w-full h-full overflow-hidden pointer-events-none z-0">
-        {/* Фоновые мягкие туманности глубокого космоса */}
-        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[90vw] sm:w-[1100px] h-[260px] sm:h-[520px] bg-gradient-to-b from-sky-400/20 via-cyan-500/15 to-transparent blur-[40px] sm:blur-[110px] rounded-full" />
-        <div className="hidden sm:block absolute top-1/4 left-1/4 w-[550px] h-[450px] bg-blue-600/20 blur-[120px] rounded-full" />
-        <div className="hidden sm:block absolute top-1/3 right-1/4 w-[550px] h-[450px] bg-cyan-600/20 blur-[120px] rounded-full" />
-
-        {/* Звездная глубина космоса */}
-        <div
-          className="absolute inset-0 opacity-[0.06]"
-          style={{
-            backgroundImage: 'radial-gradient(circle at 1px 1px, #ffffff 1px, transparent 0)',
-            backgroundSize: '32px 32px',
-          }}
-        />
-
-        {/* Световой ореол горизонта */}
-        <div className="absolute top-[60dvh] lg:top-[50vh] left-1/2 -translate-x-1/2 w-[85vw] sm:w-[900px] h-[200px] sm:h-[350px] bg-cyan-400/20 blur-[35px] sm:blur-[100px] rounded-full pointer-events-none" />
-
-        {/* КРУГЛЫЙ КУПОЛ ЗЕМЛИ ИЗ КОСМОСА С ПЛАВНЫМ ВРАЩЕНИЕМ (ОДИНАКОВЫЙ ИДЕАЛЬНЫЙ ПОЛУКРУГ НА ВСЕХ ЭКРАНАХ) */}
-        <div className="absolute top-[calc(70dvh+10px)] lg:top-[62vh] left-1/2 -translate-x-1/2 w-[220vw] min-w-[950px] max-w-[2600px] aspect-square rounded-full pointer-events-none select-none z-0">
-          {/* Световые ореолы кромки горизонта (Apple Maps стиль) */}
-          <div className="absolute -top-8 sm:-top-14 left-1/2 -translate-x-1/2 w-[70%] h-16 sm:h-28 bg-cyan-400/35 blur-[25px] sm:blur-[45px] rounded-full pointer-events-none" />
-          <div className="absolute -top-3 sm:-top-6 left-1/2 -translate-x-1/2 w-[50%] h-8 sm:h-14 bg-sky-300/45 blur-[12px] sm:blur-[22px] rounded-full pointer-events-none" />
-
-          {/* Идеально круглая сфера с медленно вращающейся текстурой фотореалистичной Земли */}
-          <div className="relative w-full h-full rounded-full overflow-hidden shadow-[0_-12px_60px_rgba(34,211,238,0.55),0_0_120px_rgba(56,189,248,0.25)] bg-[#040812]" style={{ perspective: '1800px', perspectiveOrigin: 'center top' }}>
-            <picture className="absolute inset-0 earth-tilt">
-              <source srcSet="/images/earth.webp" type="image/webp" />
-              <img
-                src="/images/earth.webp"
-                alt="Earth"
-                className="w-full h-full object-cover object-center rounded-full will-change-transform earth-rotate scale-[1.2] blur-[0.5px]"
-                loading="eager"
-                fetchPriority="high"
-                decoding="async"
-              />
-            </picture>
-
-            <div className="absolute inset-0 rounded-full bg-black/50 pointer-events-none" />
-            {/* Мягкое космическое затенение к нижней части планеты для бесшовного слияния с #06080c */}
-            <div className="absolute inset-0 rounded-full bg-gradient-to-b from-transparent via-[#06080c]/55 to-[#06080c] pointer-events-none" />
-            <div className="absolute inset-0 rounded-full [background:radial-gradient(circle_at_50%_0%,transparent_55%,#06080c_90%)] pointer-events-none" />
-          </div>
-        </div>
-      </div>
 
       {/* ========================================================= */}
       {/* МОБИЛЬНАЯ ВЕРСИЯ */}
