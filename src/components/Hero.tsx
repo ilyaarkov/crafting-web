@@ -77,7 +77,7 @@ export const Hero: React.FC = () => {
       {/* ========================================================= */}
       {/* МОБИЛЬНАЯ ВЕРСИЯ */}
       {/* ========================================================= */}
-      <div className="flex lg:hidden flex-col h-full w-full relative z-10">
+      <div className="flex lg:hidden flex-col h-full w-full relative z-20">
         {/* Верхняя половина (0 - 50dvh): Заголовок упирается низом точно в середину экрана */}
         <div className="h-[50dvh] flex flex-col justify-end items-center px-4 pb-2 sm:pb-3 text-center">
           <h1 className="hero-enter text-[26px] sm:text-3xl font-black tracking-tight leading-[1.14] max-w-md mx-auto">
@@ -178,7 +178,7 @@ export const Hero: React.FC = () => {
       {/* ========================================================= */}
       {/* ДЕСКТОП ВЕРСИЯ */}
       {/* ========================================================= */}
-      <div className="hidden lg:flex flex-col justify-between pt-22 pb-4 max-w-6xl mx-auto px-6 z-10 w-full text-center h-full">
+      <div className="hidden lg:flex relative z-20 flex-col justify-between pt-22 pb-4 max-w-6xl mx-auto px-6 w-full text-center h-full">
         {/* Верхний спейсер */}
         <div className="shrink-0 h-1" />
 
@@ -206,7 +206,7 @@ export const Hero: React.FC = () => {
         </div>
 
         {/* Низ экрана на ПК: Метрики + Кнопки + Галочка */}
-          <div className="mt-auto pb-2 flex flex-col items-center w-full z-20 shrink-0">
+          <div className="relative z-30 mt-auto pb-2 flex flex-col items-center w-full shrink-0">
           <div className="hero-enter hero-enter-delay-2 grid grid-cols-3 gap-4 max-w-4xl mx-auto text-center mb-5 w-full">
             <div className="hero-metric p-4 rounded-2xl backdrop-blur-sm border hover:border-cyan-300/40 transition-colors flex flex-col items-center justify-center text-center">
               <div className="text-white font-extrabold text-lg tracking-tight mb-0.5">
