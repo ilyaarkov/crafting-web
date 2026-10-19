@@ -20,7 +20,7 @@ export const Guarantees: React.FC = () => {
           <h2 className="text-2xl sm:text-4xl font-extrabold text-white tracking-tight leading-tight mb-3">
             {t.guarantees.title}
           </h2>
-          <p className="text-slate-300 text-sm sm:text-base leading-relaxed max-w-2xl">
+          <p className="text-slate-300 text-sm sm:text-base leading-relaxed max-w-2xl [text-wrap:balance]">
             {t.guarantees.description}
           </p>
         </div>

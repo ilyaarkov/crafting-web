@@ -150,12 +150,21 @@ export const About: React.FC = () => {
             <p className="text-white font-semibold text-base sm:text-lg">
               {t.about.bioParagraph1}
             </p>
-            <p className="text-slate-300">
-              {t.about.bioParagraph2}
-            </p>
-            <p className="text-cyan-300/90 font-medium pt-1">
-              {t.about.bioParagraph3}
-            </p>
+            <div>
+              <h3 className="text-white font-semibold mb-2">{t.about.businessReasonsTitle}</h3>
+              <ul className="list-disc pl-5 space-y-1 text-slate-300 [text-wrap:pretty]">
+                {t.about.businessReasons.map((item) => <li key={item}>{item}</li>)}
+              </ul>
+            </div>
+            <div>
+              <h3 className="text-white font-semibold mb-2">{t.about.businessNeedsTitle}</h3>
+              <ul className="list-disc pl-5 space-y-1 text-slate-300 [text-wrap:pretty]">
+                {t.about.businessNeeds.map((item) => <li key={item}>{item}</li>)}
+              </ul>
+            </div>
+            <p className="text-slate-300 [text-wrap:pretty]">{t.about.bioParagraph2}</p>
+            <p className="text-slate-300 [text-wrap:pretty]">{t.about.bioParagraph3}</p>
+            <p className="text-cyan-300/90 font-medium pt-1 [text-wrap:pretty]">{t.about.bioParagraph4}</p>
           </div>
         </div>
 

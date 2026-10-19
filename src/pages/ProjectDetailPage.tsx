@@ -232,14 +232,11 @@ export const ProjectDetailPage: React.FC<ProjectDetailPageProps> = ({
                 <h3 className="text-xl font-bold text-white mb-4 tracking-tight">
                   {lang === 'ru' ? 'О проекте и задачах' : 'About the Project'}
                 </h3>
-                <p className="text-sm sm:text-base text-slate-300 leading-relaxed">
-                  {project.p2}
-                </p>
-                {project.p3 && (
-                  <p className="text-sm sm:text-base text-slate-300 leading-relaxed mt-4">
-                    {project.p3}
+                {(project.paragraphs || [project.p2, project.p3].filter(Boolean)).map((paragraph, index) => (
+                  <p key={index} className={`text-sm sm:text-base text-slate-300 leading-relaxed [text-wrap:balance] ${index ? 'mt-4' : ''}`}>
+                    {paragraph}
                   </p>
-                )}
+                ))}
               </div>
             </div>
 

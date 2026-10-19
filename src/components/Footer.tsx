@@ -24,7 +24,7 @@ export const Footer: React.FC = () => {
                 {t.footer.name}
               </span>
             </div>
-            <p className="text-sm text-slate-400 leading-relaxed">
+            <p className="text-sm text-slate-400 leading-relaxed [text-wrap:balance]">
               {t.footer.tagline}
             </p>
           </div>

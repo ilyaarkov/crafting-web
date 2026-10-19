@@ -306,7 +306,7 @@ export const Process: React.FC = () => {
                     </h3>
 
                     <p
-                      className={`text-xs sm:text-sm leading-relaxed mt-2 max-w-lg mx-auto transition-colors duration-300 ${
+                      className={`text-xs sm:text-sm leading-relaxed mt-2 max-w-lg mx-auto [text-wrap:balance] transition-colors duration-300 ${
                         isActive ? 'text-slate-100 font-medium' : 'text-slate-300'
                       }`}
                     >
@@ -358,7 +358,7 @@ export const Process: React.FC = () => {
                       </h3>
 
                       <p
-                        className={`text-xs leading-relaxed mt-1 transition-colors duration-300 ${
+                        className={`text-xs leading-relaxed mt-1 [text-wrap:balance] transition-colors duration-300 ${
                           isActive ? 'text-slate-100 font-medium' : 'text-slate-300'
                         }`}
                       >

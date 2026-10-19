@@ -206,7 +206,7 @@ export const Hero: React.FC = () => {
         </div>
 
         {/* Низ экрана на ПК: Метрики + Кнопки + Галочка */}
-          <div className="mt-auto -translate-y-5 pb-6 flex flex-col items-center w-full z-20 shrink-0">
+          <div className="mt-auto pb-2 flex flex-col items-center w-full z-20 shrink-0">
           <div className="hero-enter hero-enter-delay-2 grid grid-cols-3 gap-4 max-w-4xl mx-auto text-center mb-5 w-full">
             <div className="hero-metric p-4 rounded-2xl backdrop-blur-sm border hover:border-cyan-300/40 transition-colors flex flex-col items-center justify-center text-center">
               <div className="text-white font-extrabold text-lg tracking-tight mb-0.5">

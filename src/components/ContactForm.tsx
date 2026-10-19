@@ -119,7 +119,7 @@ export const ContactForm: React.FC = () => {
           <h2 className="text-2xl sm:text-4xl lg:text-5xl font-extrabold text-white tracking-tight leading-tight mb-4">
             {renderContactTitle(t.contact.title)}
           </h2>
-          <p className="text-slate-300 text-sm sm:text-base leading-relaxed max-w-2xl mx-auto">
+          <p className="text-slate-300 text-sm sm:text-base leading-relaxed max-w-2xl mx-auto [text-wrap:balance]">
             {t.contact.description1}
           </p>
         </div>
