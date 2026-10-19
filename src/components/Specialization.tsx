@@ -105,7 +105,7 @@ export const Specialization: React.FC = () => {
   };
 
   return (
-    <section id="specialization" className="py-20 lg:py-32 relative overflow-hidden bg-[#06080c]">
+    <section id="specialization" className="py-20 lg:py-32 relative overflow-hidden bg-site">
       <div className="max-w-6xl mx-auto px-4 sm:px-6 relative z-10">
         {/* Заголовок секции: только чистый текст без звездочек, фона и рамок */}
         <div className="max-w-3xl mb-12 sm:mb-16 lg:mb-20">

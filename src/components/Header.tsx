@@ -58,16 +58,17 @@ export const Header: React.FC = () => {
   ];
 
   const handleNavClick = (e: React.MouseEvent<HTMLAnchorElement>, href: string) => {
+    if (e.metaKey || e.ctrlKey || e.shiftKey || e.altKey || e.button !== 0) return;
+    const element = document.querySelector(href);
+    if (!element) return;
+
     e.preventDefault();
     setMobileMenuOpen(false);
-    const element = document.querySelector(href);
-    if (element) {
-      const offsetTop = element.getBoundingClientRect().top + window.scrollY - 90;
-      window.scrollTo({
-        top: offsetTop,
-        behavior: 'smooth',
-      });
-    }
+    const offsetTop = element.getBoundingClientRect().top + window.scrollY - 90;
+    window.scrollTo({
+      top: offsetTop,
+      behavior: window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth',
+    });
   };
 
   return (
@@ -86,20 +87,20 @@ export const Header: React.FC = () => {
         >
           {/* Brand Wordmark */}
           <a
-            href="#"
-            className="flex items-center gap-2 group text-base sm:text-lg font-bold tracking-tight text-white hover:text-cyan-400 transition-colors whitespace-nowrap"
+            href="/"
+            className="flex min-h-11 items-center gap-2 group text-base sm:text-lg font-bold tracking-tight text-white hover:text-cyan-400 transition-colors whitespace-nowrap"
           >
             <span>{t.header.name}</span>
           </a>
 
           {/* Desktop Navigation Links */}
-          <nav className="hidden lg:flex items-center gap-6 xl:gap-8 text-xs xl:text-sm font-medium text-slate-300">
+          <nav className="hidden xl:flex items-center gap-6 xl:gap-8 text-xs xl:text-sm font-medium text-slate-300">
             {navItems.map((item, idx) => (
               <a
                 key={idx}
                 href={item.href}
                 onClick={(e) => handleNavClick(e, item.href)}
-                className="hover:text-white transition-colors relative py-1 hover:after:w-full after:w-0 after:h-[2px] after:bg-cyan-400 after:absolute after:bottom-0 after:left-0 after:transition-all after:duration-200"
+                className="min-h-11 flex items-center hover:text-white transition-colors relative py-3 hover:after:w-full after:w-0 after:h-[2px] after:bg-cyan-400 after:absolute after:bottom-0 after:left-0 after:transition-all after:duration-200"
               >
                 {item.label}
               </a>
@@ -111,8 +112,8 @@ export const Header: React.FC = () => {
             {/* Language Switcher */}
             <button
               onClick={toggleLanguage}
-              aria-label="Switch Language"
-              className="flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-semibold bg-white/5 hover:bg-white/10 text-slate-300 hover:text-white border border-white/10 transition-colors cursor-pointer"
+              aria-label={lang === 'ru' ? 'Переключить язык на английский' : 'Switch language to Russian'}
+              className="flex min-h-11 items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-semibold bg-white/5 hover:bg-white/10 text-slate-300 hover:text-white border border-white/10 transition-colors cursor-pointer"
             >
               <Globe className="w-3.5 h-3.5 text-cyan-400" />
               <span className={lang === 'ru' ? 'text-cyan-300' : 'text-slate-400'}>RU</span>
@@ -124,7 +125,7 @@ export const Header: React.FC = () => {
             <a
               href="#contact"
               onClick={(e) => handleNavClick(e, '#contact')}
-              className="relative group overflow-hidden hidden sm:inline-flex items-center justify-center gap-1.5 px-5 py-2.5 rounded-full text-xs sm:text-sm font-bold text-slate-950 bg-cyan-400 transition-colors duration-300 active:scale-[0.98] whitespace-nowrap cursor-pointer"
+              className="relative group overflow-hidden hidden sm:inline-flex min-h-11 items-center justify-center gap-1.5 px-5 py-2.5 rounded-full text-xs sm:text-sm font-bold text-slate-950 bg-cyan-400 transition-colors duration-300 active:scale-[0.98] whitespace-nowrap cursor-pointer"
             >
               {/* Эффект смены цвета слева направо с тем же border-radius */}
               <span className="absolute inset-0 bg-white rounded-full -translate-x-full group-hover:translate-x-0 transition-transform duration-300 ease-out pointer-events-none" />
@@ -137,8 +138,10 @@ export const Header: React.FC = () => {
             {/* Mobile Hamburger Toggle */}
             <button
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-              className="lg:hidden p-2 rounded-full bg-white/5 text-slate-300 hover:text-white border border-white/10"
-              aria-label="Toggle navigation menu"
+              className="xl:hidden flex min-h-11 min-w-11 items-center justify-center rounded-full bg-white/5 text-slate-300 hover:text-white border border-white/10"
+              aria-label={lang === 'ru' ? 'Открыть или закрыть меню' : 'Open or close navigation menu'}
+              aria-expanded={mobileMenuOpen}
+              aria-controls="mobile-navigation"
             >
               {mobileMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
             </button>
@@ -146,35 +149,37 @@ export const Header: React.FC = () => {
         </div>
 
         {/* Mobile Dropdown Menu */}
-        {mobileMenuOpen && (
-          <div className="lg:hidden mt-2 p-5 rounded-2xl glass-panel border border-white/10 shadow-2xl flex flex-col gap-4 animate-in fade-in slide-in-from-top-4 duration-200">
-            <nav className="flex flex-col gap-3">
-              {navItems.map((item, idx) => (
-                <a
-                  key={idx}
-                  href={item.href}
-                  onClick={(e) => handleNavClick(e, item.href)}
-                  className="px-3 py-2 text-sm font-medium text-slate-200 hover:text-cyan-400 hover:bg-white/5 rounded-lg transition-colors"
-                >
-                  {item.label}
-                </a>
-              ))}
-            </nav>
-            <div className="pt-3 border-t border-white/10 flex flex-col gap-3">
+        <div
+          id="mobile-navigation"
+          hidden={!mobileMenuOpen}
+          className={`xl:hidden mt-2 p-5 rounded-2xl glass-panel border border-white/10 shadow-2xl flex-col gap-4 animate-in fade-in slide-in-from-top-4 duration-200 ${mobileMenuOpen ? 'flex' : 'hidden'}`}
+        >
+          <nav className="flex flex-col gap-3">
+            {navItems.map((item, idx) => (
               <a
-                href="#contact"
-                onClick={(e) => handleNavClick(e, '#contact')}
-                className="relative group overflow-hidden w-full py-2.5 px-4 rounded-full text-center text-sm font-bold text-slate-950 bg-cyan-400 transition-colors duration-300 active:scale-[0.98]"
+                key={idx}
+                href={item.href}
+                onClick={(e) => handleNavClick(e, item.href)}
+                className="flex min-h-11 items-center px-3 py-2 text-sm font-medium text-slate-200 hover:text-cyan-400 hover:bg-white/5 rounded-lg transition-colors"
               >
-                <span className="absolute inset-0 bg-white rounded-full -translate-x-full group-hover:translate-x-0 transition-transform duration-300 ease-out pointer-events-none" />
-                <span className="relative z-10 flex items-center justify-center gap-1.5">
-                  <span>{t.header.cta}</span>
-                  <ArrowUpRight className="w-3.5 h-3.5 transition-transform duration-200 group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
-                </span>
+                {item.label}
               </a>
-            </div>
+            ))}
+          </nav>
+          <div className="pt-3 border-t border-white/10 flex flex-col gap-3">
+            <a
+              href="#contact"
+              onClick={(e) => handleNavClick(e, '#contact')}
+              className="relative group overflow-hidden w-full min-h-11 py-2.5 px-4 rounded-full text-center text-sm font-bold text-slate-950 bg-cyan-400 transition-colors duration-300 active:scale-[0.98]"
+            >
+              <span className="absolute inset-0 bg-white rounded-full -translate-x-full group-hover:translate-x-0 transition-transform duration-300 ease-out pointer-events-none" />
+              <span className="relative z-10 flex items-center justify-center gap-1.5">
+                <span>{t.header.cta}</span>
+                <ArrowUpRight className="w-3.5 h-3.5 transition-transform duration-200 group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
+              </span>
+            </a>
           </div>
-        )}
+        </div>
       </div>
     </header>
   );

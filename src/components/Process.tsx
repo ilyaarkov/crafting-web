@@ -169,7 +169,7 @@ export const Process: React.FC = () => {
   }, [totalLength, updateRouteGeometry]);
 
   return (
-    <section id="process" className="py-14 sm:py-18 lg:py-22 relative overflow-hidden isolate z-0 bg-[#06080c]">
+    <section id="process" className="py-14 sm:py-18 lg:py-22 relative overflow-hidden isolate z-0 bg-site">
       {/* ========================================================= */}
       {/* ФОН СЕКЦИИ: Планшеты и ПК (на телефонах скрыт для чистого черного фона) */}
       {/* Плавный градиент в чистый черный сверху и снизу для 100% бесшовности */}

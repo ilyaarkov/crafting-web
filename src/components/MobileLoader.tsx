@@ -5,7 +5,7 @@ export const MobileLoader: React.FC = () => {
   const { lang } = useLanguage();
   const isEn = lang === 'en';
 
-  const [isMobile, setIsMobile] = useState<boolean>(() => {
+  const [isMobile] = useState<boolean>(() => {
     if (typeof window === 'undefined') return false;
     return (
       window.innerWidth <= 768 ||
@@ -17,62 +17,19 @@ export const MobileLoader: React.FC = () => {
   const [isDone, setIsDone] = useState<boolean>(false);
   const [isVisible, setIsVisible] = useState<boolean>(true);
 
-  const startTimeRef = useRef<number>(Date.now());
-  const assetsReadyRef = useRef<boolean>(false);
+  const startTimeRef = useRef<number>(0);
+  const loaderRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     if (typeof window === 'undefined') return;
 
-    const checkMobile =
-      window.innerWidth <= 768 ||
-      /Android|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+    if (!isMobile) return;
 
-    if (!checkMobile) {
-      setIsMobile(false);
-      setIsVisible(false);
-      return;
-    }
-
-    setIsMobile(true);
     startTimeRef.current = Date.now();
 
     // Prevent body scroll during loading cleanly without touching touchAction
     const originalBodyOverflow = document.body.style.overflow;
     document.body.style.overflow = 'hidden';
-
-    // Preload critical images non-blockingly
-    const criticalImages = [
-      '/images/earth.png',
-      '/images/before-chaos.webp',
-      '/images/ilya.webp',
-      '/projects/portfolio.webp',
-      '/projects/nonprofit.webp',
-      '/projects/intuitivo.webp',
-      '/projects/driftet.webp',
-    ];
-
-    let loadedCount = 0;
-    const onImgDone = () => {
-      loadedCount++;
-      if (loadedCount >= criticalImages.length) {
-        assetsReadyRef.current = true;
-      }
-    };
-
-    criticalImages.forEach((src) => {
-      const img = new Image();
-      img.src = src;
-      if (img.complete && img.naturalWidth > 0) {
-        onImgDone();
-      } else {
-        img.onload = onImgDone;
-        img.onerror = onImgDone;
-      }
-    });
-
-    if (document.fonts && document.fonts.ready) {
-      document.fonts.ready.catch(() => {});
-    }
 
     // Smooth, consistent ~1.7s progress animation
     const TARGET_DURATION = 1700; // ms
@@ -118,7 +75,60 @@ export const MobileLoader: React.FC = () => {
       clearInterval(timer);
       document.body.style.overflow = originalBodyOverflow;
     };
-  }, []);
+  }, [isMobile]);
+
+  useEffect(() => {
+    if (!isMobile || !isVisible) return;
+
+    const loader = loaderRef.current;
+    if (!loader) return;
+
+    const root = document.getElementById('root');
+    const background = Array.from(root?.children ?? [])
+      .filter((element) => element !== loader) as HTMLElement[];
+    const previousInert = background.map((element) => element.inert);
+    background.forEach((element) => {
+      element.inert = true;
+    });
+
+    const previouslyFocused = document.activeElement instanceof HTMLElement
+      ? document.activeElement
+      : null;
+    loader.focus();
+
+    const handleTab = (event: KeyboardEvent) => {
+      if (event.key !== 'Tab') return;
+
+      const focusable = Array.from(
+        loader.querySelectorAll<HTMLElement>('a[href], button:not([disabled]), [tabindex]:not([tabindex="-1"])')
+      ).filter((element) => !element.hasAttribute('hidden'));
+      if (focusable.length === 0) {
+        event.preventDefault();
+        loader.focus();
+        return;
+      }
+
+      const first = focusable[0];
+      const last = focusable[focusable.length - 1];
+      const active = document.activeElement;
+      if (event.shiftKey && (active === first || active === loader || !loader.contains(active))) {
+        event.preventDefault();
+        last.focus();
+      } else if (!event.shiftKey && (active === last || active === loader || !loader.contains(active))) {
+        event.preventDefault();
+        first.focus();
+      }
+    };
+
+    document.addEventListener('keydown', handleTab);
+    return () => {
+      document.removeEventListener('keydown', handleTab);
+      background.forEach((element, index) => {
+        element.inert = previousInert[index];
+      });
+      if (previouslyFocused?.isConnected) previouslyFocused.focus();
+    };
+  }, [isMobile, isVisible]);
 
   if (!isMobile || !isVisible) {
     return null;
@@ -138,11 +148,13 @@ export const MobileLoader: React.FC = () => {
 
   return (
     <div
+      ref={loaderRef}
+      tabIndex={-1}
       role="dialog"
       aria-modal="true"
       aria-label={isEn ? 'Loading page' : 'Загрузка страницы'}
       onTouchMove={(e) => e.stopPropagation()}
-      className={`fixed inset-0 z-[99999] bg-[#06080c] flex flex-col justify-between items-center px-6 py-10 sm:py-12 select-none touch-none overscroll-none transition-opacity duration-400 ease-out ${
+      className={`fixed inset-0 z-[99999] bg-site flex flex-col justify-between items-center px-6 py-10 sm:py-12 select-none touch-none overscroll-none transition-opacity duration-400 ease-out motion-reduce:transition-none ${
         isDone ? 'opacity-0 pointer-events-none' : 'opacity-100'
       }`}
     >
@@ -166,9 +178,16 @@ export const MobileLoader: React.FC = () => {
 
         {/* Progress Bar Container */}
         <div className="w-full max-w-[270px] flex flex-col items-center gap-3">
-          <div className="w-full h-1.5 rounded-full bg-white/10 overflow-hidden relative shadow-[inset_0_1px_2px_rgba(0,0,0,0.6)]">
+          <div
+            className="w-full h-1.5 rounded-full bg-white/10 overflow-hidden relative shadow-[inset_0_1px_2px_rgba(0,0,0,0.6)]"
+            role="progressbar"
+            aria-label={isEn ? 'Page loading progress' : 'Загрузка страницы'}
+            aria-valuemin={0}
+            aria-valuemax={100}
+            aria-valuenow={progress}
+          >
             <div
-              className="h-full rounded-full bg-gradient-to-r from-cyan-400 via-sky-400 to-emerald-400 transition-[width] duration-150 ease-out shadow-[0_0_10px_rgba(34,211,238,0.4)]"
+              className="h-full rounded-full bg-gradient-to-r from-cyan-400 via-sky-400 to-emerald-400 transition-[width] duration-150 ease-out motion-reduce:transition-none shadow-[0_0_10px_rgba(34,211,238,0.4)]"
               style={{ width: `${progress}%` }}
             />
           </div>

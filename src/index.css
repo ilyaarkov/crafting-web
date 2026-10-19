@@ -1,13 +1,24 @@
 @import "tailwindcss";
 
+@theme {
+  --color-site: #06080c;
+  --color-site-raised: #0c1017;
+  --color-focus-ring: #67e8f9;
+}
+
 @layer base {
   html, body {
     font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-    background-color: #06080c;
+    background-color: var(--color-site);
     color: #f1f5f9;
     overflow-x: clip;
     max-width: 100vw;
   }
+}
+
+:where(a, button, input, select, textarea, [tabindex]):focus-visible {
+  outline: 2px solid var(--color-focus-ring);
+  outline-offset: 3px;
 }
 
 .glass-panel {
@@ -101,16 +112,6 @@
   }
 }
 
-/* Анимация пульсации надписи "ПОСМОТРЕТЬ" на сенсорных экранах раз в 5 секунд на 0.5 сек */
-@keyframes touchPreviewPulse {
-  0%, 88%, 100% {
-    opacity: 0;
-  }
-  92%, 96% {
-    opacity: 1;
-  }
-}
-
 /* Базовое состояние: оверлей всегда скрыт по умолчанию */
 .project-preview-overlay {
   opacity: 0;
@@ -127,11 +128,10 @@
   }
 }
 
-/* На чисто сенсорных экранах (без мыши): деликатное появление раз в 5 сек */
+/* На сенсорных экранах действие постоянно видно без ожидания hover или анимации. */
 @media (hover: none) and (pointer: coarse) {
   .project-preview-overlay {
-    opacity: 0;
-    animation: touchPreviewPulse 5s infinite ease-in-out;
+    opacity: 1;
   }
 }
 
@@ -140,7 +140,7 @@
   width: 7px;
 }
 ::-webkit-scrollbar-track {
-  background: #06080c;
+  background: var(--color-site);
 }
 ::-webkit-scrollbar-thumb {
   background: #1e293b;
