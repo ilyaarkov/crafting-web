@@ -16,6 +16,8 @@ import { PortfolioPage } from './pages/PortfolioPage';
 import { ProjectDetailPage } from './pages/ProjectDetailPage';
 import { ServiceDetailPage } from './pages/ServiceDetailPage';
 import { MobileLoader } from './components/MobileLoader';
+import { CursorTrail } from './components/CursorTrail';
+import { ScrollReveal } from './components/ScrollReveal';
 
 type RouteState =
   | { type: 'home' }
@@ -105,16 +107,31 @@ export default function App() {
         />
       ) : (
         <div className="min-h-screen bg-[#06080c] text-slate-100 flex flex-col font-sans selection:bg-cyan-500/20 selection:text-cyan-200">
+          <CursorTrail />
           <Header />
           <main className="flex-1">
             <Hero />
-            <About />
-            <Specialization />
-            <Process />
-            <Projects />
-            <Pricing />
-            <Guarantees />
-            <ContactForm />
+            <ScrollReveal direction="up" delay={0.1}>
+              <About />
+            </ScrollReveal>
+            <ScrollReveal direction="up" delay={0.1}>
+              <Specialization />
+            </ScrollReveal>
+            <ScrollReveal direction="up" delay={0.1}>
+              <Process />
+            </ScrollReveal>
+            <ScrollReveal direction="up" delay={0.1}>
+              <Projects />
+            </ScrollReveal>
+            <ScrollReveal direction="scale" delay={0.2}>
+              <Pricing />
+            </ScrollReveal>
+            <ScrollReveal direction="up" delay={0.1}>
+              <Guarantees />
+            </ScrollReveal>
+            <ScrollReveal direction="up" delay={0.1}>
+              <ContactForm />
+            </ScrollReveal>
           </main>
           <Footer />
           <ScrollToTop />

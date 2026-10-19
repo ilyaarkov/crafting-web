@@ -1,18 +1,38 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { useLanguage } from '../context/LanguageContext';
 import {
   ArrowRight,
   ChevronDown,
 } from 'lucide-react';
+import { Scene3D } from './Scene3D';
+import { MagneticButton } from './MagneticButton';
 
 export const Hero: React.FC = () => {
   const { t } = useLanguage();
   const heroRef = React.useRef<HTMLElement>(null);
+  const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
+  const [scrollProgress, setScrollProgress] = useState(0);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      const scrolled = window.scrollY;
+      const maxScroll = window.innerHeight;
+      setScrollProgress(Math.min(scrolled / maxScroll, 1));
+    };
+
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
 
   const handlePointerMove = (e: React.PointerEvent<HTMLElement>) => {
     if (e.pointerType !== 'mouse') return;
 
     const bounds = e.currentTarget.getBoundingClientRect();
+    const x = (e.clientX - bounds.left - bounds.width / 2) / (bounds.width / 2);
+    const y = (e.clientY - bounds.top - bounds.height / 2) / (bounds.height / 2);
+
+    setMousePosition({ x, y });
+
     heroRef.current?.style.setProperty(
       '--pointer-x',
       `${e.clientX - bounds.left - bounds.width / 2}px`,
@@ -89,6 +109,7 @@ export const Hero: React.FC = () => {
 
       <div className="hero-ambient absolute inset-0 pointer-events-none" aria-hidden="true">
         <div className="hero-cursor-glow" />
+        <Scene3D mousePosition={mousePosition} scrollProgress={scrollProgress} />
       </div>
 
       {/* ========================================================= */}
@@ -152,29 +173,31 @@ export const Hero: React.FC = () => {
           <div className="shrink-0 flex flex-col items-center w-full pb-2 px-4 z-20">
             <div className="flex flex-col sm:flex-row items-center justify-center gap-2 max-w-xs sm:max-w-none w-full mb-1.5">
               {/* Главная кнопка */}
-              <a
+              <MagneticButton
                 href="#contact"
                 onClick={(e) => handleScrollTo(e, '#contact')}
                 className="relative group overflow-hidden w-full sm:w-auto px-6 py-2.5 rounded-full font-bold text-slate-950 bg-cyan-400 transition-colors duration-300 active:scale-[0.98] text-xs flex items-center justify-center gap-2 cursor-pointer shadow-lg shadow-cyan-400/20"
+                strength={0.2}
               >
                 <span className="absolute inset-0 bg-white rounded-full -translate-x-full group-hover:translate-x-0 transition-transform duration-300 ease-out pointer-events-none" />
                 <span className="relative z-10 flex items-center gap-2">
                   <span>{t.hero.ctaPrimary}</span>
                   <ArrowRight className="w-3.5 h-3.5 transition-transform duration-200 group-hover:translate-x-1" />
                 </span>
-              </a>
+              </MagneticButton>
 
               {/* Второстепенная кнопка */}
-              <a
+              <MagneticButton
                 href="#projects"
                 onClick={(e) => handleScrollTo(e, '#projects')}
                 className="relative group overflow-hidden w-full sm:w-auto px-6 py-2.5 rounded-full font-semibold text-slate-200 transition-colors duration-300 active:scale-[0.98] text-xs flex items-center justify-center gap-2 cursor-pointer bg-white/5 border border-white/10 hover:border-white/30"
+                strength={0.2}
               >
                 <span className="absolute inset-0 bg-white rounded-full -translate-x-full group-hover:translate-x-0 transition-transform duration-300 ease-out pointer-events-none" />
                 <span className="relative z-10 transition-colors duration-300 group-hover:text-slate-950 font-semibold">
                   {t.hero.ctaSecondary}
                 </span>
-              </a>
+              </MagneticButton>
             </div>
 
             {/* Галочка в самом низу */}
@@ -254,7 +277,7 @@ export const Hero: React.FC = () => {
           </div>
 
           <div className="flex flex-row items-center justify-center gap-4 mx-auto w-full mb-4 px-3">
-            <a
+            <MagneticButton
               href="#contact"
               onClick={(e) => handleScrollTo(e, '#contact')}
               className="relative group overflow-hidden px-8 py-3.5 rounded-full font-bold text-slate-950 bg-cyan-400 transition-colors duration-300 active:scale-[0.98] text-sm md:text-base flex items-center justify-center gap-2 cursor-pointer shadow-lg shadow-cyan-400/20"
@@ -264,9 +287,9 @@ export const Hero: React.FC = () => {
                 <span>{t.hero.ctaPrimary}</span>
                 <ArrowRight className="w-4 h-4 transition-transform duration-200 group-hover:translate-x-1" />
               </span>
-            </a>
+            </MagneticButton>
 
-            <a
+            <MagneticButton
               href="#projects"
               onClick={(e) => handleScrollTo(e, '#projects')}
               className="relative group overflow-hidden px-8 py-3.5 rounded-full font-semibold text-slate-200 transition-colors duration-300 active:scale-[0.98] text-sm md:text-base flex items-center justify-center gap-2 cursor-pointer bg-white/5 border border-white/10 hover:border-white/30"
@@ -275,7 +298,7 @@ export const Hero: React.FC = () => {
               <span className="relative z-10 transition-colors duration-300 group-hover:text-slate-950 font-semibold">
                 {t.hero.ctaSecondary}
               </span>
-            </a>
+            </MagneticButton>
           </div>
 
           <div className="flex justify-center pb-1">
