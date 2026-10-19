@@ -145,6 +145,168 @@ function Globe() {
   );
 }
 
+const SHAPE_COUNT = 980;
+const CYCLE_SECONDS = 10.5;
+const EXPLOSION_SECONDS = 0.85;
+
+function makeShapeTargets(count: number, centerX: number) {
+  const targets = [new Float32Array(count * 3), new Float32Array(count * 3), new Float32Array(count * 3)];
+  let seed = 271828;
+  const random = () => {
+    seed = (seed * 1664525 + 1013904223) % 4294967296;
+    return seed / 4294967296;
+  };
+
+  for (let i = 0; i < count; i += 1) {
+    const offset = i * 3;
+    const u = random() * 2 - 1;
+    const v = random() * 2 - 1;
+    const w = random() * 2 - 1;
+    const face = i % 6;
+    const cube = [u, v, w];
+    cube[Math.floor(face / 2)] = face % 2 === 0 ? 1 : -1;
+    targets[0].set([centerX + cube[0] * 1.45, cube[1] * 1.45, cube[2] * 1.45], offset);
+
+    const longitude = random() * Math.PI * 2;
+    const latitude = Math.acos(random() * 2 - 1);
+    targets[1].set([
+      centerX + 1.72 * Math.sin(latitude) * Math.cos(longitude),
+      1.72 * Math.cos(latitude),
+      1.72 * Math.sin(latitude) * Math.sin(longitude),
+    ], offset);
+
+    const angle = random() * Math.PI * 2;
+    const tube = (random() * 2 - 1) * 0.3;
+    const ring = 1.08 + tube;
+    targets[2].set([
+      centerX + ring * Math.cos(angle),
+      tube * 1.8,
+      ring * Math.sin(angle),
+    ], offset);
+  }
+  return targets;
+}
+
+function ParticleField() {
+  const points = useRef<THREE.Points>(null);
+  const ambientPoints = useRef<THREE.Points>(null);
+  const positionAttribute = useRef<THREE.BufferAttribute>(null);
+  const pointer = useRef({ x: 0, y: 0, active: false });
+  const reducedMotion = useRef(false);
+  const centerX = typeof window !== "undefined" && window.innerWidth < 760 ? 0.1 : 2.05;
+  const targets = useMemo(() => makeShapeTargets(SHAPE_COUNT, centerX), [centerX]);
+  const positions = useMemo(() => {
+    const values = new Float32Array(SHAPE_COUNT * 3);
+    values.set(targets[0]);
+    return values;
+  }, [targets]);
+  const colors = useMemo(() => {
+    const values = new Float32Array(SHAPE_COUNT * 3);
+    const color = new THREE.Color();
+    for (let i = 0; i < SHAPE_COUNT; i += 1) {
+      color.setHSL(0.52 + (i % 7) * 0.006, 0.82, 0.54 + (i % 5) * 0.045);
+      color.toArray(values, i * 3);
+    }
+    return values;
+  }, []);
+  const ambientPositions = useMemo(() => {
+    const values = new Float32Array(260 * 3);
+    let seed = 314159;
+    const random = () => {
+      seed = (seed * 1664525 + 1013904223) % 4294967296;
+      return seed / 4294967296;
+    };
+    const halfWidth = Math.max(4.5, (typeof window !== "undefined" ? window.innerWidth / window.innerHeight : 1.8) * 3.5);
+    for (let i = 0; i < 260; i += 1) {
+      values[i * 3] = (random() * 2 - 1) * halfWidth;
+      values[i * 3 + 1] = (random() * 2 - 1) * 3.4;
+      values[i * 3 + 2] = -1.5 + random() * 2;
+    }
+    return values;
+  }, []);
+
+  useEffect(() => {
+    const preference = window.matchMedia("(prefers-reduced-motion: reduce)");
+    const updateMotionPreference = () => { reducedMotion.current = preference.matches; };
+    updateMotionPreference();
+    preference.addEventListener("change", updateMotionPreference);
+    const move = (event: PointerEvent) => {
+      pointer.current.x = (event.clientX / window.innerWidth - 0.5) * 2;
+      pointer.current.y = -(event.clientY / window.innerHeight - 0.5) * 2;
+      pointer.current.active = true;
+    };
+    const leave = () => { pointer.current.active = false; };
+    window.addEventListener("pointermove", move, { passive: true });
+    window.addEventListener("blur", leave);
+    return () => {
+      window.removeEventListener("pointermove", move);
+      window.removeEventListener("blur", leave);
+      preference.removeEventListener("change", updateMotionPreference);
+    };
+  }, []);
+
+  useFrame((state, delta) => {
+    const attribute = positionAttribute.current;
+    const object = points.current;
+    if (!attribute || !object) return;
+    const frameDelta = reducedMotion.current ? 0 : delta;
+    const elapsed = reducedMotion.current ? 4 : state.clock.elapsedTime;
+    const cycle = (elapsed % CYCLE_SECONDS) / CYCLE_SECONDS;
+    const shapeIndex = Math.floor(elapsed / CYCLE_SECONDS) % targets.length;
+    const nextIndex = (shapeIndex + 1) % targets.length;
+    const stageTime = cycle * CYCLE_SECONDS;
+    const assembly = THREE.MathUtils.smoothstep(stageTime, EXPLOSION_SECONDS, EXPLOSION_SECONDS + 2.2);
+    const hold = THREE.MathUtils.smoothstep(stageTime, EXPLOSION_SECONDS + 2.2, CYCLE_SECONDS);
+    const burst = stageTime < EXPLOSION_SECONDS ? Math.sin((stageTime / EXPLOSION_SECONDS) * Math.PI) : 0;
+    const array = attribute.array as Float32Array;
+    const target = targets[shapeIndex];
+    const next = targets[nextIndex];
+    const drift = 0.025 * Math.sin(elapsed * 0.65);
+    const blend = Math.max(assembly, hold);
+    const aspect = state.size.width / Math.max(1, state.size.height);
+    const pointerX = pointer.current.x * Math.min(aspect * 3.5, 6);
+    const pointerY = pointer.current.y * 3.5;
+
+    for (let i = 0; i < SHAPE_COUNT; i += 1) {
+      const j = i * 3;
+      const baseX = THREE.MathUtils.lerp(target[j], next[j], blend);
+      const baseY = THREE.MathUtils.lerp(target[j + 1], next[j + 1], blend);
+      const baseZ = THREE.MathUtils.lerp(target[j + 2], next[j + 2], blend);
+      const dx = baseX - pointerX;
+      const dy = baseY - pointerY;
+      const distance = Math.sqrt(dx * dx + dy * dy + baseZ * baseZ) + 0.001;
+      const repel = pointer.current.active ? Math.max(0, 1 - distance / 1.6) * 0.5 : 0;
+      const outward = 1 + burst * (0.8 + (i % 13) / 16);
+      const amount = Math.min(1, frameDelta * 5);
+      array[j] += ((baseX * outward + drift - dx / distance * repel) - array[j]) * amount;
+      array[j + 1] += ((baseY * outward + Math.sin(elapsed * 0.55 + i) * 0.025 - dy / distance * repel) - array[j + 1]) * amount;
+      array[j + 2] += ((baseZ * outward) - array[j + 2]) * amount;
+    }
+    attribute.needsUpdate = true;
+    object.rotation.y += frameDelta * 0.08;
+    object.rotation.x = THREE.MathUtils.damp(object.rotation.x, pointer.current.y * -0.08, 2, frameDelta);
+    if (ambientPoints.current) ambientPoints.current.rotation.y += frameDelta * 0.006;
+  });
+
+  return (
+    <>
+      <points ref={ambientPoints} position={[0, 0, -1]} frustumCulled={false}>
+        <bufferGeometry>
+          <bufferAttribute attach="attributes-position" args={[ambientPositions, 3]} />
+        </bufferGeometry>
+        <pointsMaterial color="#64c9ee" size={0.018} transparent opacity={0.48} sizeAttenuation depthWrite={false} blending={THREE.AdditiveBlending} />
+      </points>
+      <points ref={points} frustumCulled={false}>
+        <bufferGeometry>
+          <bufferAttribute ref={positionAttribute} attach="attributes-position" args={[positions, 3]} />
+          <bufferAttribute attach="attributes-color" args={[colors, 3]} />
+        </bufferGeometry>
+        <pointsMaterial size={0.035} vertexColors transparent opacity={0.88} sizeAttenuation depthWrite={false} blending={THREE.AdditiveBlending} />
+      </points>
+    </>
+  );
+}
+
 export default function EarthHero() {
   return (
     <div className="earth-hero" aria-hidden="true">
@@ -160,7 +322,7 @@ export default function EarthHero() {
           <ambientLight intensity={0.42} />
           <directionalLight color="#c4eaff" intensity={2.2} position={[-3, 2, 4]} />
           <directionalLight color="#0877c4" intensity={1.15} position={[3, -1, -2]} />
-          <Globe />
+          <ParticleField />
         </Canvas>
       </div>
       <div className="earth-hero__vignette" />

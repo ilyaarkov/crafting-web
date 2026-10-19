@@ -5,19 +5,17 @@
   overflow: hidden;
   pointer-events: none;
   isolation: isolate;
+  background:
+    radial-gradient(ellipse at 73% 43%, rgba(9, 91, 135, 0.18), transparent 35%),
+    radial-gradient(ellipse at 18% 20%, rgba(25, 74, 123, 0.12), transparent 31%),
+    #080b12;
 }
 
 .earth-hero__canvas-wrap {
   position: absolute;
-  width: min(52vw, 680px);
-  aspect-ratio: 1;
-  right: clamp(-8rem, -5vw, -2rem);
-  top: 47%;
-  transform: translateY(-50%);
-  pointer-events: auto;
-  opacity: 0.88;
-  -webkit-mask-image: radial-gradient(circle, #000 54%, rgba(0,0,0,.88) 66%, transparent 75%);
-  mask-image: radial-gradient(circle, #000 54%, rgba(0,0,0,.88) 66%, transparent 75%);
+  inset: 0;
+  pointer-events: none;
+  opacity: 0.92;
 }
 
 .earth-hero__canvas-wrap canvas {
@@ -29,20 +27,29 @@
 .earth-hero__vignette {
   position: absolute;
   inset: 0;
-  background: linear-gradient(90deg, var(--hero-bg, #080b12) 0%, rgba(8,11,18,.78) 31%, transparent 61%),
-              linear-gradient(0deg, var(--hero-bg, #080b12) 0%, transparent 22%, transparent 82%, var(--hero-bg, #080b12) 100%);
+  background: linear-gradient(90deg, rgba(8,11,18,.24), transparent 50%, rgba(8,11,18,.06)),
+              linear-gradient(0deg, var(--hero-bg, #080b12) 0%, transparent 18%, transparent 82%, rgba(8,11,18,.58));
   pointer-events: none;
 }
 
-@media (max-width: 760px) {
-  .earth-hero__canvas-wrap {
-    width: min(100vw, 520px);
-    right: -28vw;
-    top: 51%;
-    opacity: 0.42;
-  }
-  .earth-hero__vignette {
-    background: linear-gradient(90deg, rgba(8,11,18,.42), transparent 70%),
-                linear-gradient(0deg, var(--hero-bg, #080b12) 0%, transparent 30%, transparent 75%, var(--hero-bg, #080b12) 100%);
-  }
+.hero-scene {
+  --hero-bg: #080b12;
+}
+
+.hero-enter {
+  animation: heroEnter 850ms cubic-bezier(.2,.75,.25,1) both;
+}
+
+.hero-enter-delay-1 { animation-delay: 120ms; }
+.hero-enter-delay-2 { animation-delay: 260ms; }
+.hero-enter-delay-3 { animation-delay: 400ms; }
+.hero-enter-delay-4 { animation-delay: 540ms; }
+
+@keyframes heroEnter {
+  from { opacity: 0; transform: translate3d(0, 20px, 0) scale(.985); filter: blur(7px); }
+  to { opacity: 1; transform: translate3d(0, 0, 0) scale(1); filter: blur(0); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hero-enter { animation: none; }
 }

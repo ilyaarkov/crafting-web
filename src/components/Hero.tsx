@@ -27,7 +27,7 @@ export const Hero: React.FC = () => {
 
   return (
     <section
-      className="relative overflow-hidden isolate h-[100dvh] max-h-[100dvh] flex flex-col justify-between bg-[#080b12]"
+      className="hero-scene relative overflow-hidden isolate h-[100dvh] max-h-[100dvh] flex flex-col justify-between bg-[#080b12]"
     >
       <style>{`
         @keyframes continuousMarquee {
@@ -58,7 +58,7 @@ export const Hero: React.FC = () => {
       <div className="flex lg:hidden flex-col h-full w-full relative z-10">
         {/* Верхняя половина (0 - 50dvh): Заголовок упирается низом точно в середину экрана */}
         <div className="h-[50dvh] flex flex-col justify-end items-center px-4 pb-2 sm:pb-3 text-center">
-          <h1 className="text-[26px] sm:text-3xl font-black tracking-tight leading-[1.14] max-w-md mx-auto">
+          <h1 className="hero-enter text-[26px] sm:text-3xl font-black tracking-tight leading-[1.14] max-w-md mx-auto">
             <span className="block text-white mb-0.5">
               {t.hero.titlePrefix}
             </span>
@@ -73,7 +73,7 @@ export const Hero: React.FC = () => {
           {/* Пространство между 50dvh и верхней кнопкой в естественном flex-потоке */}
           <div className="flex-1 w-full flex flex-col justify-between items-center min-h-0 py-1">
             {/* 1. Верхний слот: Бегущая строка (непрерывный бесшовный цикл без прерываний) */}
-            <div className="flex-1 w-full flex items-center min-h-[30px] overflow-hidden pointer-events-none">
+            <div className="hero-enter hero-enter-delay-1 flex-1 w-full flex items-center min-h-[30px] overflow-hidden pointer-events-none">
               <div className="w-full overflow-hidden py-0.5 sm:py-1">
                 <div className="marquee-track flex whitespace-nowrap">
                   <div className="flex items-center shrink-0">
@@ -99,7 +99,7 @@ export const Hero: React.FC = () => {
             </div>
 
             {/* 2. Центральный слот: Описание (ровно посередине между 50dvh и кнопками) */}
-            <div className="shrink-0 px-4 text-center max-w-sm mx-auto my-auto">
+            <div className="hero-enter hero-enter-delay-2 shrink-0 px-4 text-center max-w-sm mx-auto my-auto">
               <p className="text-sm sm:text-[15px] md:text-base text-slate-300 leading-relaxed text-balance font-bold">
                 {t.hero.description}
               </p>
@@ -110,7 +110,7 @@ export const Hero: React.FC = () => {
           </div>
 
           {/* Нижняя группа: Кнопки + Галочка */}
-          <div className="shrink-0 flex flex-col items-center w-full pb-2 px-4 z-20">
+          <div className="hero-enter hero-enter-delay-3 shrink-0 flex flex-col items-center w-full pb-2 px-4 z-20">
             <div className="flex flex-col sm:flex-row items-center justify-center gap-2 max-w-xs sm:max-w-none w-full mb-1.5">
               {/* Главная кнопка */}
               <a
@@ -162,7 +162,7 @@ export const Hero: React.FC = () => {
 
         {/* Смысловой центр */}
         <div className="my-auto py-2 flex flex-col items-center justify-center -translate-y-4">
-          <h1 className="text-5xl xl:text-6xl font-black tracking-tight leading-[1.10] mb-3 max-w-4xl mx-auto">
+          <h1 className="hero-enter text-5xl xl:text-6xl font-black tracking-tight leading-[1.10] mb-3 max-w-4xl mx-auto">
             <span className="block text-white mb-1">
               {t.hero.titlePrefix}
             </span>
@@ -172,20 +172,20 @@ export const Hero: React.FC = () => {
           </h1>
 
           {/* Строка специализаций на ПК: ГАРАНТИРОВАННО В ОДНУ СТРОКУ, БЕЗ ПЕРЕНОСОВ */}
-          <div className="flex flex-nowrap items-center justify-center gap-x-6 text-xs font-sans font-bold text-slate-300 uppercase tracking-[0.16em] my-3.5 w-full max-w-5xl mx-auto whitespace-nowrap">
+          <div className="hero-enter hero-enter-delay-1 flex flex-nowrap items-center justify-center gap-x-6 text-xs font-sans font-bold text-slate-300 uppercase tracking-[0.16em] my-3.5 w-full max-w-5xl mx-auto whitespace-nowrap">
             {t.hero.tags.map((tag, idx) => (
               <span key={idx} className="hover:text-cyan-300 transition-colors whitespace-nowrap shrink-0">{tag}</span>
             ))}
           </div>
 
-          <p className="text-base lg:text-lg text-slate-300 leading-relaxed max-w-2xl mx-auto text-balance font-bold px-3 mt-2">
+          <p className="hero-enter hero-enter-delay-2 text-base lg:text-lg text-slate-300 leading-relaxed max-w-2xl mx-auto text-balance font-bold px-3 mt-2">
             {t.hero.description}
           </p>
         </div>
 
         {/* Низ экрана на ПК: Метрики + Кнопки + Галочка */}
         <div className="mt-auto flex flex-col items-center w-full z-20 shrink-0">
-          <div className="grid grid-cols-3 gap-4 max-w-3xl mx-auto text-center mb-5 w-full">
+          <div className="hero-enter hero-enter-delay-2 grid grid-cols-3 gap-4 max-w-3xl mx-auto text-center mb-5 w-full">
             <div className="p-3.5 rounded-2xl bg-white/[0.04] backdrop-blur-sm border border-white/10 hover:border-cyan-400/30 transition-colors flex flex-col items-center justify-center text-center">
               <div className="text-white font-extrabold text-base tracking-tight mb-0.5">
                 {t.hero.metrics.days}
@@ -214,7 +214,7 @@ export const Hero: React.FC = () => {
             </div>
           </div>
 
-          <div className="flex flex-row items-center justify-center gap-4 mx-auto w-full mb-4 px-3">
+          <div className="hero-enter hero-enter-delay-3 flex flex-row items-center justify-center gap-4 mx-auto w-full mb-4 px-3">
             <a
               href="#contact"
               onClick={(e) => handleScrollTo(e, '#contact')}
