@@ -146,8 +146,10 @@ function Globe() {
 }
 
 const SHAPE_COUNT = 980;
-const CYCLE_SECONDS = 7.2;
-const EXPLOSION_SECONDS = 0.85;
+const CYCLE_SECONDS = 16;
+const EXPLOSION_SECONDS = 1.6;
+const SCATTER_HOLD_SECONDS = 3;
+const ASSEMBLY_SECONDS = 5;
 const glassVertexShader = `
   attribute vec3 color;
   varying vec3 vColor;
@@ -188,19 +190,19 @@ function makeShapeTargets(count: number, centerX: number) {
     const face = i % 6;
     const cube = [u, v, w];
     cube[Math.floor(face / 2)] = face % 2 === 0 ? 1 : -1;
-    targets[0].set([centerX + cube[0] * 0.82, cube[1] * 0.82, cube[2] * 0.82], offset);
+    targets[0].set([centerX + cube[0] * 0.58, cube[1] * 0.58, cube[2] * 0.58], offset);
 
     const longitude = random() * Math.PI * 2;
     const latitude = Math.acos(random() * 2 - 1);
     targets[1].set([
-      centerX + 0.96 * Math.sin(latitude) * Math.cos(longitude),
-      0.96 * Math.cos(latitude),
-      0.96 * Math.sin(latitude) * Math.sin(longitude),
+      centerX + 0.68 * Math.sin(latitude) * Math.cos(longitude),
+      0.68 * Math.cos(latitude),
+      0.68 * Math.sin(latitude) * Math.sin(longitude),
     ], offset);
 
     const angle = random() * Math.PI * 2;
-    const tube = (random() * 2 - 1) * 0.16;
-    const ring = 0.66 + tube;
+    const tube = (random() * 2 - 1) * 0.11;
+    const ring = 0.45 + tube;
     targets[2].set([
       centerX + ring * Math.cos(angle), tube * 1.8, ring * Math.sin(angle),
     ], offset);
@@ -209,14 +211,14 @@ function makeShapeTargets(count: number, centerX: number) {
     const pyramidFace = i % 4;
     const sideU = Math.sqrt(random());
     const sideV = random();
-    const baseCorners = [[-0.82, -0.62], [0.82, -0.62], [0.82, 0.62], [-0.82, 0.62]];
+    const baseCorners = [[-0.58, -0.44], [0.58, -0.44], [0.58, 0.44], [-0.58, 0.44]];
     const [cornerAX, cornerAZ] = baseCorners[pyramidFace];
     const [cornerBX, cornerBZ] = baseCorners[(pyramidFace + 1) % 4];
     const baseX = THREE.MathUtils.lerp(cornerAX, cornerBX, sideV);
     const baseZ = THREE.MathUtils.lerp(cornerAZ, cornerBZ, sideV);
     targets[3].set([
       centerX + baseX * sideU,
-      -0.68 + 1.38 * (1 - sideU),
+      -0.48 + 0.96 * (1 - sideU),
       baseZ * sideU,
     ], offset);
 
@@ -228,13 +230,13 @@ function makeShapeTargets(count: number, centerX: number) {
     const [signX, signZ] = crystalSigns[crystalFace % 4];
     const topFace = crystalFace < 4;
     targets[4].set([
-      centerX + signX * (0.94 * crystalU - 0.03 * crystalV),
-      topFace ? 0.9 - 0.86 * crystalU : -0.9 + 0.86 * crystalU,
-      signZ * 0.56 * crystalV,
+      centerX + signX * (0.66 * crystalU - 0.02 * crystalV),
+      topFace ? 0.64 - 0.61 * crystalU : -0.64 + 0.61 * crystalU,
+      signZ * 0.4 * crystalV,
     ], offset);
 
     // A zig-zag bolt, distributed along six connected strokes with a glassy body.
-    const boltPath = [[-0.34, 0.92], [0.18, 0.28], [-0.22, 0.28], [0.42, -0.42], [0.02, -0.42], [0.32, -0.92]];
+    const boltPath = [[-0.24, 0.66], [0.13, 0.2], [-0.15, 0.2], [0.29, -0.3], [0.02, -0.3], [0.22, -0.66]];
     const segment = Math.floor(random() * (boltPath.length - 1));
     const along = random();
     const [startX, startY] = boltPath[segment];
@@ -312,34 +314,42 @@ function ParticleField() {
     const object = points.current;
     if (!attribute || !object) return;
     const frameDelta = reducedMotion.current ? 0 : delta;
-    const elapsed = reducedMotion.current ? 4 : state.clock.elapsedTime;
+    const elapsed = reducedMotion.current ? 12 : state.clock.elapsedTime;
     const cycle = (elapsed % CYCLE_SECONDS) / CYCLE_SECONDS;
     const shapeIndex = Math.floor(elapsed / CYCLE_SECONDS) % targets.length;
     const nextIndex = (shapeIndex + 1) % targets.length;
     const stageTime = cycle * CYCLE_SECONDS;
-    const assembly = THREE.MathUtils.smoothstep(stageTime, EXPLOSION_SECONDS, EXPLOSION_SECONDS + 2.2);
-    const hold = THREE.MathUtils.smoothstep(stageTime, EXPLOSION_SECONDS + 2.2, CYCLE_SECONDS);
-    const burst = stageTime < EXPLOSION_SECONDS ? Math.sin((stageTime / EXPLOSION_SECONDS) * Math.PI) : 0;
+    const assemblyStart = EXPLOSION_SECONDS + SCATTER_HOLD_SECONDS;
+    const assembly = THREE.MathUtils.smoothstep(stageTime, assemblyStart, assemblyStart + ASSEMBLY_SECONDS);
+    const burst = stageTime < EXPLOSION_SECONDS
+      ? THREE.MathUtils.smoothstep(stageTime, 0, EXPLOSION_SECONDS)
+      : stageTime < assemblyStart ? 1 : 0;
     const array = attribute.array as Float32Array;
     const target = targets[shapeIndex];
     const next = targets[nextIndex];
     const drift = 0.025 * Math.sin(elapsed * 0.65);
-    const blend = Math.max(assembly, hold);
+    const blend = assembly;
+    const spin = elapsed * 0.065;
+    const spinCos = Math.cos(spin);
+    const spinSin = Math.sin(spin);
     const aspect = state.size.width / Math.max(1, state.size.height);
     const pointerX = pointer.current.x * Math.min(aspect * 3.5, 6);
     const pointerY = pointer.current.y * 3.5;
 
     for (let i = 0; i < SHAPE_COUNT; i += 1) {
       const j = i * 3;
-      const baseX = THREE.MathUtils.lerp(target[j], next[j], blend);
+      const morphedX = THREE.MathUtils.lerp(target[j], next[j], blend);
       const baseY = THREE.MathUtils.lerp(target[j + 1], next[j + 1], blend);
-      const baseZ = THREE.MathUtils.lerp(target[j + 2], next[j + 2], blend);
+      const morphedZ = THREE.MathUtils.lerp(target[j + 2], next[j + 2], blend);
+      const localX = morphedX - centerX;
+      const baseX = centerX + localX * spinCos - morphedZ * spinSin;
+      const baseZ = localX * spinSin + morphedZ * spinCos;
       const dx = baseX - pointerX;
       const dy = baseY - pointerY;
       const distance = Math.sqrt(dx * dx + dy * dy + baseZ * baseZ) + 0.001;
       const repel = pointer.current.active ? Math.max(0, 1 - distance / 1.6) * 0.5 : 0;
-      const scatterX = (((i * 0.754877666) % 1) * 2 - 1) * Math.max(3.5, aspect * 2.15);
-      const scatterY = (((i * 0.569840291 + 0.3) % 1) * 2 - 1) * 2.25;
+      const scatterX = (((i * 0.754877666) % 1) * 2 - 1) * aspect * 3;
+      const scatterY = (((i * 0.569840291 + 0.3) % 1) * 2 - 1) * 3;
       const scatterZ = (((i * 0.43857921 + 0.7) % 1) * 2 - 1) * 1.4;
       const amount = Math.min(1, frameDelta * 5);
       array[j] += (THREE.MathUtils.lerp(baseX, scatterX, burst) + drift - dx / distance * repel - array[j]) * amount;
@@ -347,8 +357,6 @@ function ParticleField() {
       array[j + 2] += (THREE.MathUtils.lerp(baseZ, scatterZ, burst) - array[j + 2]) * amount;
     }
     attribute.needsUpdate = true;
-    object.rotation.y += frameDelta * 0.08;
-    object.rotation.x = THREE.MathUtils.damp(object.rotation.x, pointer.current.y * -0.08, 2, frameDelta);
     if (ambientPoints.current) ambientPoints.current.rotation.y += frameDelta * 0.006;
   });
 
