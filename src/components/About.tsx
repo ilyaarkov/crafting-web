@@ -109,10 +109,10 @@ export const About: React.FC = () => {
         </div>
 
         {/* Главный блок: Фотография с эффектом темной материи (слева) + Авторский текст (справа) */}
-        <div className="grid grid-cols-1 md:grid-cols-12 gap-8 lg:gap-14 items-center mb-12 sm:mb-16">
+        <div className="grid grid-cols-1 md:grid-cols-12 gap-8 lg:gap-14 items-start mb-12 sm:mb-16">
           {/* Фото слева: органический изменяющийся контур «темная материя» без двойных коробок */}
-          <div className="md:col-span-5 flex justify-center">
-            <div className="relative w-64 h-64 sm:w-72 sm:h-72">
+          <div className="md:col-span-4 flex justify-center">
+            <div className="relative w-64 h-64 sm:w-72 sm:h-72 lg:w-80 lg:h-80">
               {/* Сияющий ореол темной материи вокруг контура */}
               <div className="morph-aura absolute -inset-2 bg-gradient-to-tr from-cyan-500/30 via-sky-500/20 to-blue-600/30 blur-xl pointer-events-none" />
 
@@ -146,7 +146,7 @@ export const About: React.FC = () => {
           </div>
 
           {/* Текст справа: искреннее обращение без слопов и шаблонных списков */}
-          <div className="md:col-span-7 space-y-4 text-slate-200 text-sm sm:text-base leading-relaxed">
+          <div className="md:col-span-8 space-y-4 text-slate-200 text-sm sm:text-base leading-relaxed">
             <p className="text-white font-semibold text-base sm:text-lg">
               {t.about.bioParagraph1}
             </p>

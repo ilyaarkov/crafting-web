@@ -190,7 +190,7 @@ function makeTunnelParticles(count: number) {
     const ring = Math.floor(random() * 40);
     const depth = 8 + ring * 4.05 + (random() - 0.5) * 0.7;
     const radiusOffset = (random() - 0.5) * depth * 0.009;
-    const radius = depth * (0.2 + 0.035 * Math.sin(depth * 0.019) + 0.015 * Math.sin(depth * 0.043)) + radiusOffset;
+    const radius = (depth * (0.2 + 0.035 * Math.sin(depth * 0.019) + 0.015 * Math.sin(depth * 0.043)) + radiusOffset) * 1.2;
 
     angles[i] = angle;
     radiusOffsets[i] = radiusOffset;
@@ -255,7 +255,7 @@ function ParticleField() {
       const wave = 0.2
         + 0.035 * Math.sin(depth * 0.019 - elapsed * 0.34)
         + 0.015 * Math.sin(depth * 0.043 + elapsed * 0.2);
-      const radius = depth * wave + tunnel.radiusOffsets[i];
+      const radius = (depth * wave + tunnel.radiusOffsets[i]) * 1.2;
       const x = Math.cos(angle) * radius;
       const y = Math.sin(angle) * radius;
       const amount = Math.min(1, frameDelta * 3);
