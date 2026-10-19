@@ -1,0 +1,48 @@
+.earth-hero {
+  position: absolute;
+  z-index: 0;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+  isolation: isolate;
+}
+
+.earth-hero__canvas-wrap {
+  position: absolute;
+  width: min(52vw, 680px);
+  aspect-ratio: 1;
+  right: clamp(-8rem, -5vw, -2rem);
+  top: 47%;
+  transform: translateY(-50%);
+  pointer-events: auto;
+  opacity: 0.88;
+  -webkit-mask-image: radial-gradient(circle, #000 54%, rgba(0,0,0,.88) 66%, transparent 75%);
+  mask-image: radial-gradient(circle, #000 54%, rgba(0,0,0,.88) 66%, transparent 75%);
+}
+
+.earth-hero__canvas-wrap canvas {
+  display: block;
+  width: 100% !important;
+  height: 100% !important;
+}
+
+.earth-hero__vignette {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(90deg, var(--hero-bg, #080b12) 0%, rgba(8,11,18,.78) 31%, transparent 61%),
+              linear-gradient(0deg, var(--hero-bg, #080b12) 0%, transparent 22%, transparent 82%, var(--hero-bg, #080b12) 100%);
+  pointer-events: none;
+}
+
+@media (max-width: 760px) {
+  .earth-hero__canvas-wrap {
+    width: min(100vw, 520px);
+    right: -28vw;
+    top: 51%;
+    opacity: 0.42;
+  }
+  .earth-hero__vignette {
+    background: linear-gradient(90deg, rgba(8,11,18,.42), transparent 70%),
+                linear-gradient(0deg, var(--hero-bg, #080b12) 0%, transparent 30%, transparent 75%, var(--hero-bg, #080b12) 100%);
+  }
+}

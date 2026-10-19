@@ -12,6 +12,7 @@ dist
 dist-ssr
 *.local
 pricing-niche-analysis.local.md
+/ilyaarkov-earth-hero/
 
 # Editor directories and files
 .vscode/*
