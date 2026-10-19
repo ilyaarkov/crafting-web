@@ -42,6 +42,56 @@
   border: 1px solid rgba(255, 255, 255, 0.1);
 }
 
+[data-scroll-reveal] {
+  opacity: 0;
+  filter: blur(3px);
+  transition:
+    opacity 720ms cubic-bezier(.2, .7, .2, 1),
+    transform 820ms cubic-bezier(.2, .75, .25, 1),
+    filter 720ms cubic-bezier(.2, .7, .2, 1);
+  transition-delay: var(--scroll-reveal-delay, 0ms);
+}
+
+[data-scroll-reveal="section"],
+[data-scroll-reveal="rise"] {
+  transform: translate3d(0, 26px, 0) scale(.992);
+}
+
+[data-scroll-reveal="soft"] {
+  transform: translate3d(0, 15px, 0);
+}
+
+[data-scroll-reveal="scale"] {
+  transform: translate3d(0, 18px, 0) scale(.975);
+}
+
+[data-scroll-reveal-state="visible"] {
+  opacity: 1;
+  filter: blur(0);
+  transform: none;
+  transition-delay: 0ms;
+}
+
+[data-scroll-reveal-state="pending"] {
+  will-change: opacity, transform, filter;
+}
+
+[data-scroll-reveal-state="visible"] {
+  will-change: auto;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  [data-scroll-reveal],
+  [data-scroll-reveal-state="pending"],
+  [data-scroll-reveal-state="visible"] {
+    opacity: 1;
+    filter: none;
+    transform: none;
+    transition: none;
+    will-change: auto;
+  }
+}
+
 @keyframes fillProgress {
   from {
     width: 0%;

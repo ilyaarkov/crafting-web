@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useLayoutEffect } from 'react';
 import { LanguageProvider } from './context/LanguageContext';
 import { Header } from './components/Header';
 import { Hero } from './components/Hero';
@@ -58,6 +58,51 @@ function parseRoute(pathname: string): RouteState {
   return { type: 'home' };
 }
 
+function ScrollRevealObserver({ routeKey }: { routeKey: string }) {
+  useLayoutEffect(() => {
+    const candidates = Array.from(document.querySelectorAll<HTMLElement>(
+      'main section, main article, main .grid > div, main [class*="glass-panel"], main > div[class*="max-w-"] > div:not(.absolute), footer'
+    )).filter((element) =>
+      !element.closest('.hero-scene, [aria-hidden="true"]') &&
+      !element.classList.contains('absolute')
+    );
+
+    if (!('IntersectionObserver' in window)) {
+      candidates.forEach((element) => {
+        element.dataset.scrollRevealState = 'visible';
+      });
+      return;
+    }
+
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach((entry) => {
+        if (!entry.isIntersecting) return;
+        (entry.target as HTMLElement).dataset.scrollRevealState = 'visible';
+        observer.unobserve(entry.target);
+      });
+    }, {
+      threshold: 0.12,
+      rootMargin: '0px 0px -7% 0px',
+    });
+
+    candidates.forEach((element, index) => {
+      const siblings = element.parentElement ? Array.from(element.parentElement.children) : [];
+      const siblingIndex = Math.max(0, siblings.indexOf(element));
+      const variant = element.tagName === 'SECTION' || element.tagName === 'FOOTER'
+        ? 'section'
+        : ['rise', 'soft', 'scale'][(siblingIndex + index) % 3];
+      element.dataset.scrollReveal = variant;
+      element.dataset.scrollRevealState = 'pending';
+      element.style.setProperty('--scroll-reveal-delay', `${Math.min(siblingIndex, 4) * 80}ms`);
+      observer.observe(element);
+    });
+
+    return () => observer.disconnect();
+  }, [routeKey]);
+
+  return null;
+}
+
 export default function App() {
   const [route, setRoute] = useState<RouteState>(() =>
     parseRoute(typeof window !== 'undefined' ? window.location.pathname : '/')
@@ -81,6 +126,11 @@ export default function App() {
   const navigateHome = () => navigateTo('/');
   const navigatePortfolio = () => navigateTo('/portfolio');
   const navigateProject = (id: string) => navigateTo(`/portfolio/${id}`);
+  const revealRouteKey = route.type === 'project'
+    ? `${route.type}:${route.projectId}`
+    : route.type === 'service'
+      ? `${route.type}:${route.serviceId}`
+      : route.type;
 
   return (
     <LanguageProvider>
@@ -120,6 +170,7 @@ export default function App() {
           <ScrollToTop />
         </div>
       )}
+      <ScrollRevealObserver routeKey={revealRouteKey} />
     </LanguageProvider>
   );
 }
