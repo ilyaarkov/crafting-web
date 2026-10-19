@@ -161,7 +161,7 @@ export const Hero: React.FC = () => {
         <div className="shrink-0 h-1" />
 
         {/* Смысловой центр */}
-        <div className="my-auto py-2 flex flex-col items-center justify-center -translate-y-4">
+        <div className="my-auto py-2 flex flex-col items-center justify-center">
           <h1 className="hero-enter text-5xl xl:text-6xl font-black tracking-tight leading-[1.10] mb-3 max-w-4xl mx-auto">
             <span className="block text-white mb-1">
               {t.hero.titlePrefix}
@@ -184,31 +184,31 @@ export const Hero: React.FC = () => {
         </div>
 
         {/* Низ экрана на ПК: Метрики + Кнопки + Галочка */}
-        <div className="mt-auto flex flex-col items-center w-full z-20 shrink-0">
-          <div className="hero-enter hero-enter-delay-2 grid grid-cols-3 gap-4 max-w-3xl mx-auto text-center mb-5 w-full">
-            <div className="p-3.5 rounded-2xl bg-white/[0.04] backdrop-blur-sm border border-white/10 hover:border-cyan-400/30 transition-colors flex flex-col items-center justify-center text-center">
-              <div className="text-white font-extrabold text-base tracking-tight mb-0.5">
+          <div className="mt-auto -translate-y-5 pb-6 flex flex-col items-center w-full z-20 shrink-0">
+          <div className="hero-enter hero-enter-delay-2 grid grid-cols-3 gap-4 max-w-4xl mx-auto text-center mb-5 w-full">
+            <div className="hero-metric p-4 rounded-2xl backdrop-blur-sm border hover:border-cyan-300/40 transition-colors flex flex-col items-center justify-center text-center">
+              <div className="text-white font-extrabold text-lg tracking-tight mb-0.5">
                 {t.hero.metrics.days}
               </div>
-              <div className="text-xs text-slate-400">
+              <div className="text-[13px] text-slate-300/75">
                 {t.hero.metrics.daysLabel}
               </div>
             </div>
 
-            <div className="p-3.5 rounded-2xl bg-white/[0.04] backdrop-blur-sm border border-white/10 hover:border-cyan-400/30 transition-colors flex flex-col items-center justify-center text-center">
-              <div className="text-white font-extrabold text-base tracking-tight mb-0.5">
+            <div className="hero-metric p-4 rounded-2xl backdrop-blur-sm border hover:border-cyan-300/40 transition-colors flex flex-col items-center justify-center text-center">
+              <div className="text-white font-extrabold text-lg tracking-tight mb-0.5">
                 {t.hero.metrics.price}
               </div>
-              <div className="text-xs text-slate-400">
+              <div className="text-[13px] text-slate-300/75">
                 {t.hero.metrics.priceLabel}
               </div>
             </div>
 
-            <div className="p-3.5 rounded-2xl bg-white/[0.04] backdrop-blur-sm border border-white/10 hover:border-cyan-400/30 transition-colors flex flex-col items-center justify-center text-center">
-              <div className="text-white font-extrabold text-base tracking-tight mb-0.5">
+            <div className="hero-metric p-4 rounded-2xl backdrop-blur-sm border hover:border-cyan-300/40 transition-colors flex flex-col items-center justify-center text-center">
+              <div className="text-white font-extrabold text-lg tracking-tight mb-0.5">
                 {t.hero.metrics.direct}
               </div>
-              <div className="text-xs text-slate-400">
+              <div className="text-[13px] text-slate-300/75">
                 {t.hero.metrics.directLabel}
               </div>
             </div>
@@ -218,7 +218,7 @@ export const Hero: React.FC = () => {
             <a
               href="#contact"
               onClick={(e) => handleScrollTo(e, '#contact')}
-              className="relative group overflow-hidden px-8 py-3.5 rounded-full font-bold text-slate-950 bg-cyan-400 transition-colors duration-300 active:scale-[0.98] text-sm md:text-base flex items-center justify-center gap-2 cursor-pointer shadow-lg shadow-cyan-400/20"
+              className="relative group overflow-hidden px-9 py-4 rounded-full font-bold text-slate-950 bg-cyan-400 transition-colors duration-300 active:scale-[0.98] text-base flex items-center justify-center gap-2 cursor-pointer shadow-lg shadow-cyan-400/20"
             >
               <span className="absolute inset-0 bg-white rounded-full -translate-x-full group-hover:translate-x-0 transition-transform duration-300 ease-out pointer-events-none" />
               <span className="relative z-10 flex items-center gap-2">
@@ -230,7 +230,7 @@ export const Hero: React.FC = () => {
             <a
               href="#projects"
               onClick={(e) => handleScrollTo(e, '#projects')}
-              className="relative group overflow-hidden px-8 py-3.5 rounded-full font-semibold text-slate-200 transition-colors duration-300 active:scale-[0.98] text-sm md:text-base flex items-center justify-center gap-2 cursor-pointer bg-white/5 border border-white/10 hover:border-white/30"
+              className="relative group overflow-hidden px-9 py-4 rounded-full font-semibold text-slate-200 transition-colors duration-300 active:scale-[0.98] text-base flex items-center justify-center gap-2 cursor-pointer bg-white/5 border border-white/10 hover:border-white/30"
             >
               <span className="absolute inset-0 bg-white rounded-full -translate-x-full group-hover:translate-x-0 transition-transform duration-300 ease-out pointer-events-none" />
               <span className="relative z-10 transition-colors duration-300 group-hover:text-slate-950 font-semibold">

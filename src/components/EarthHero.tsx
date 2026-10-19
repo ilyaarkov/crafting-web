@@ -146,11 +146,34 @@ function Globe() {
 }
 
 const SHAPE_COUNT = 980;
-const CYCLE_SECONDS = 10.5;
+const CYCLE_SECONDS = 7.2;
 const EXPLOSION_SECONDS = 0.85;
+const glassVertexShader = `
+  attribute vec3 color;
+  varying vec3 vColor;
+  void main() {
+    vColor = color;
+    vec4 viewPosition = modelViewMatrix * vec4(position, 1.0);
+    gl_Position = projectionMatrix * viewPosition;
+    gl_PointSize = 4.8 * (6.2 / max(1.0, -viewPosition.z));
+  }
+`;
+const glassFragmentShader = `
+  varying vec3 vColor;
+  void main() {
+    vec2 uv = gl_PointCoord - 0.5;
+    float radius = length(uv);
+    float disc = 1.0 - smoothstep(0.32, 0.5, radius);
+    float rim = smoothstep(0.22, 0.34, radius) * (1.0 - smoothstep(0.38, 0.49, radius));
+    vec2 highlightOffset = uv - vec2(-0.13, 0.16);
+    float shine = exp(-dot(highlightOffset * 13.0, highlightOffset * 13.0));
+    vec3 glass = mix(vColor * 0.62, vec3(0.92, 0.98, 1.0), rim * 0.68 + shine * 0.72);
+    gl_FragColor = vec4(glass, disc * (0.46 + rim * 0.42 + shine * 0.32));
+  }
+`;
 
 function makeShapeTargets(count: number, centerX: number) {
-  const targets = [new Float32Array(count * 3), new Float32Array(count * 3), new Float32Array(count * 3)];
+  const targets = Array.from({ length: 6 }, () => new Float32Array(count * 3));
   let seed = 271828;
   const random = () => {
     seed = (seed * 1664525 + 1013904223) % 4294967296;
@@ -165,23 +188,61 @@ function makeShapeTargets(count: number, centerX: number) {
     const face = i % 6;
     const cube = [u, v, w];
     cube[Math.floor(face / 2)] = face % 2 === 0 ? 1 : -1;
-    targets[0].set([centerX + cube[0] * 1.45, cube[1] * 1.45, cube[2] * 1.45], offset);
+    targets[0].set([centerX + cube[0] * 0.82, cube[1] * 0.82, cube[2] * 0.82], offset);
 
     const longitude = random() * Math.PI * 2;
     const latitude = Math.acos(random() * 2 - 1);
     targets[1].set([
-      centerX + 1.72 * Math.sin(latitude) * Math.cos(longitude),
-      1.72 * Math.cos(latitude),
-      1.72 * Math.sin(latitude) * Math.sin(longitude),
+      centerX + 0.96 * Math.sin(latitude) * Math.cos(longitude),
+      0.96 * Math.cos(latitude),
+      0.96 * Math.sin(latitude) * Math.sin(longitude),
     ], offset);
 
     const angle = random() * Math.PI * 2;
-    const tube = (random() * 2 - 1) * 0.3;
-    const ring = 1.08 + tube;
+    const tube = (random() * 2 - 1) * 0.16;
+    const ring = 0.66 + tube;
     targets[2].set([
-      centerX + ring * Math.cos(angle),
-      tube * 1.8,
-      ring * Math.sin(angle),
+      centerX + ring * Math.cos(angle), tube * 1.8, ring * Math.sin(angle),
+    ], offset);
+
+    // Four triangular faces meeting at the apex create a recognizable pyramid.
+    const pyramidFace = i % 4;
+    const sideU = Math.sqrt(random());
+    const sideV = random();
+    const baseCorners = [[-0.82, -0.62], [0.82, -0.62], [0.82, 0.62], [-0.82, 0.62]];
+    const [cornerAX, cornerAZ] = baseCorners[pyramidFace];
+    const [cornerBX, cornerBZ] = baseCorners[(pyramidFace + 1) % 4];
+    const baseX = THREE.MathUtils.lerp(cornerAX, cornerBX, sideV);
+    const baseZ = THREE.MathUtils.lerp(cornerAZ, cornerBZ, sideV);
+    targets[3].set([
+      centerX + baseX * sideU,
+      -0.68 + 1.38 * (1 - sideU),
+      baseZ * sideU,
+    ], offset);
+
+    // An elongated octahedral crystal with sharp shoulders and a pointed base.
+    const crystalFace = i % 8;
+    const crystalU = Math.sqrt(random());
+    const crystalV = random() * crystalU;
+    const crystalSigns = [[1, 1], [-1, 1], [-1, -1], [1, -1]];
+    const [signX, signZ] = crystalSigns[crystalFace % 4];
+    const topFace = crystalFace < 4;
+    targets[4].set([
+      centerX + signX * (0.94 * crystalU - 0.03 * crystalV),
+      topFace ? 0.9 - 0.86 * crystalU : -0.9 + 0.86 * crystalU,
+      signZ * 0.56 * crystalV,
+    ], offset);
+
+    // A zig-zag bolt, distributed along six connected strokes with a glassy body.
+    const boltPath = [[-0.34, 0.92], [0.18, 0.28], [-0.22, 0.28], [0.42, -0.42], [0.02, -0.42], [0.32, -0.92]];
+    const segment = Math.floor(random() * (boltPath.length - 1));
+    const along = random();
+    const [startX, startY] = boltPath[segment];
+    const [endX, endY] = boltPath[segment + 1];
+    targets[5].set([
+      centerX + THREE.MathUtils.lerp(startX, endX, along) + (random() - 0.5) * 0.08,
+      THREE.MathUtils.lerp(startY, endY, along) + (random() - 0.5) * 0.08,
+      (random() - 0.5) * 0.2,
     ], offset);
   }
   return targets;
@@ -204,7 +265,8 @@ function ParticleField() {
     const values = new Float32Array(SHAPE_COUNT * 3);
     const color = new THREE.Color();
     for (let i = 0; i < SHAPE_COUNT; i += 1) {
-      color.setHSL(0.52 + (i % 7) * 0.006, 0.82, 0.54 + (i % 5) * 0.045);
+      const palette = [0.49, 0.52, 0.57, 0.64, 0.72];
+      color.setHSL(palette[i % palette.length], 0.7 + (i % 3) * 0.1, 0.62 + (i % 4) * 0.055);
       color.toArray(values, i * 3);
     }
     return values;
@@ -276,11 +338,13 @@ function ParticleField() {
       const dy = baseY - pointerY;
       const distance = Math.sqrt(dx * dx + dy * dy + baseZ * baseZ) + 0.001;
       const repel = pointer.current.active ? Math.max(0, 1 - distance / 1.6) * 0.5 : 0;
-      const outward = 1 + burst * (0.8 + (i % 13) / 16);
+      const scatterX = (((i * 0.754877666) % 1) * 2 - 1) * Math.max(3.5, aspect * 2.15);
+      const scatterY = (((i * 0.569840291 + 0.3) % 1) * 2 - 1) * 2.25;
+      const scatterZ = (((i * 0.43857921 + 0.7) % 1) * 2 - 1) * 1.4;
       const amount = Math.min(1, frameDelta * 5);
-      array[j] += ((baseX * outward + drift - dx / distance * repel) - array[j]) * amount;
-      array[j + 1] += ((baseY * outward + Math.sin(elapsed * 0.55 + i) * 0.025 - dy / distance * repel) - array[j + 1]) * amount;
-      array[j + 2] += ((baseZ * outward) - array[j + 2]) * amount;
+      array[j] += (THREE.MathUtils.lerp(baseX, scatterX, burst) + drift - dx / distance * repel - array[j]) * amount;
+      array[j + 1] += (THREE.MathUtils.lerp(baseY, scatterY, burst) + Math.sin(elapsed * 0.55 + i) * 0.025 - dy / distance * repel - array[j + 1]) * amount;
+      array[j + 2] += (THREE.MathUtils.lerp(baseZ, scatterZ, burst) - array[j + 2]) * amount;
     }
     attribute.needsUpdate = true;
     object.rotation.y += frameDelta * 0.08;
@@ -301,7 +365,14 @@ function ParticleField() {
           <bufferAttribute ref={positionAttribute} attach="attributes-position" args={[positions, 3]} />
           <bufferAttribute attach="attributes-color" args={[colors, 3]} />
         </bufferGeometry>
-        <pointsMaterial size={0.035} vertexColors transparent opacity={0.88} sizeAttenuation depthWrite={false} blending={THREE.AdditiveBlending} />
+        <shaderMaterial
+          vertexShader={glassVertexShader}
+          fragmentShader={glassFragmentShader}
+          transparent
+          depthWrite={false}
+          blending={THREE.AdditiveBlending}
+          toneMapped={false}
+        />
       </points>
     </>
   );
@@ -313,7 +384,7 @@ export default function EarthHero() {
       <div className="earth-hero__canvas-wrap">
         <Canvas
           dpr={[1, 1.6]}
-          camera={{ position: [0, 0, 3.15], fov: 38 }}
+          camera={{ position: [0, 0, 6.2], fov: 42 }}
           gl={{ antialias: true, alpha: true, powerPreference: "high-performance" }}
           onCreated={({ gl }) => {
             gl.setClearColor("#000000", 0);
