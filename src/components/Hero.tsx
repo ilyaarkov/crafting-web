@@ -4,7 +4,7 @@ import {
   ArrowRight,
   ChevronDown,
 } from 'lucide-react';
-import { Scene3D } from './Scene3D';
+import { HeroScene3D } from './HeroScene3D';
 import { MagneticButton } from './MagneticButton';
 
 export const Hero: React.FC = () => {
@@ -109,7 +109,7 @@ export const Hero: React.FC = () => {
 
       <div className="hero-ambient absolute inset-0 pointer-events-none" aria-hidden="true">
         <div className="hero-cursor-glow" />
-        <Scene3D mousePosition={mousePosition} scrollProgress={scrollProgress} />
+        <HeroScene3D mousePosition={mousePosition} scrollProgress={scrollProgress} />
       </div>
 
       {/* ========================================================= */}
