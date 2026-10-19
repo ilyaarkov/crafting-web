@@ -246,7 +246,7 @@ export const TechStackPage: React.FC<TechStackPageProps> = ({ onNavigateHome }) 
               <Code2 className="w-3.5 h-3.5" />
               <span>{t.tools.badge}</span>
             </div>
-            <h1 className="text-3xl sm:text-5xl font-extrabold text-white tracking-tight leading-tight mb-5">
+            <h1 className="text-[clamp(22px,6.9vw,27px)] sm:text-5xl font-extrabold text-white tracking-tight leading-tight mb-5">
               {t.tools.title}
             </h1>
             <p className="text-slate-300 text-base sm:text-xl leading-relaxed">

@@ -479,7 +479,7 @@ export const translations: Record<Language, Translations> = {
     },
     tools: {
       badge: 'Tech Stack',
-      title: 'Передовые инструменты в разработке',
+      title: 'Передовые инструменты в\u00a0разработке',
       intro: 'Я использую технологии, которые позволяют создавать быстрые, адаптивные и удобные сайты. Вам необязательно разбираться в программировании – я объясню всё простыми словами.',
       officialLabel: 'official',
       items: [
@@ -1196,7 +1196,7 @@ export const translations: Record<Language, Translations> = {
     },
     tools: {
       badge: 'Tech Stack',
-      title: 'Advanced tools for web development',
+      title: 'Advanced tools for\u00a0web\u00a0development',
       intro: 'I utilize proven technologies that yield ultra-fast, responsive, and reliable websites. You do not need to understand code – I explain everything in simple, clear terms.',
       officialLabel: 'official',
       items: [
