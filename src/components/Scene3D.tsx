@@ -91,16 +91,14 @@ const ParticleField: React.FC<ParticleFieldProps> = ({ mousePosition }) => {
     pointsRef.current.rotation.x = mousePosition.y * 0.1;
   });
 
+  const geometry = useMemo(() => {
+    const geo = new THREE.BufferGeometry();
+    geo.setAttribute('position', new THREE.BufferAttribute(particles, 3));
+    return geo;
+  }, [particles]);
+
   return (
-    <points ref={pointsRef}>
-      <bufferGeometry>
-        <bufferAttribute
-          attach="attributes-position"
-          count={particles.length / 3}
-          array={particles}
-          itemSize={3}
-        />
-      </bufferGeometry>
+    <points ref={pointsRef} geometry={geometry}>
       <pointsMaterial
         size={0.02}
         color="#38bdf8"
