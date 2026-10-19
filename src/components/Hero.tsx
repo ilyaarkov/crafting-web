@@ -6,6 +6,8 @@ import {
 } from 'lucide-react';
 import { HeroScene3D } from './HeroScene3D';
 import { MagneticButton } from './MagneticButton';
+import { FloatingTechIcons } from './FloatingTechIcons';
+import { AnimatedCounter, FloatingBadge } from './AnimatedElements';
 
 export const Hero: React.FC = () => {
   const { t } = useLanguage();
@@ -109,7 +111,10 @@ export const Hero: React.FC = () => {
 
       <div className="hero-ambient absolute inset-0 pointer-events-none" aria-hidden="true">
         <div className="hero-cursor-glow" />
-        <HeroScene3D mousePosition={mousePosition} scrollProgress={scrollProgress} />
+        <FloatingTechIcons />
+        <div className="absolute inset-0 z-10">
+          <HeroScene3D mousePosition={mousePosition} scrollProgress={scrollProgress} />
+        </div>
       </div>
 
       {/* ========================================================= */}
@@ -118,6 +123,12 @@ export const Hero: React.FC = () => {
       <div className="flex lg:hidden flex-col h-full w-full relative z-10">
         {/* Верхняя половина (0 - 50dvh): Заголовок упирается низом точно в середину экрана */}
         <div className="h-[50dvh] flex flex-col justify-end items-center px-4 pb-2 sm:pb-3 text-center">
+          <div className="mb-3">
+            <FloatingBadge
+              text="✨ Доступен"
+              delay={0.3}
+            />
+          </div>
           <h1 className="text-[26px] sm:text-3xl font-black tracking-tight leading-[1.14] max-w-md mx-auto">
             <span className="block text-white mb-0.5">
               {t.hero.titlePrefix}
@@ -224,6 +235,16 @@ export const Hero: React.FC = () => {
 
         {/* Смысловой центр */}
         <div className="my-auto py-2 flex flex-col items-center justify-center -translate-y-4">
+          <div className="mb-4">
+            <FloatingBadge
+              text="✨ Доступен для новых проектов"
+              icon={
+                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                </svg>
+              }
+            />
+          </div>
           <h1 className="text-5xl xl:text-6xl font-black tracking-tight leading-[1.10] mb-3 max-w-4xl mx-auto">
             <span className="block text-white mb-1">
               {t.hero.titlePrefix}
@@ -248,32 +269,9 @@ export const Hero: React.FC = () => {
         {/* Низ экрана на ПК: Метрики + Кнопки + Галочка */}
         <div className="mt-auto flex flex-col items-center w-full z-20 shrink-0">
           <div className="grid grid-cols-3 gap-4 max-w-3xl mx-auto text-center mb-5 w-full">
-            <div className="p-3.5 rounded-2xl bg-white/[0.04] backdrop-blur-sm border border-white/10 hover:border-cyan-400/30 transition-colors flex flex-col items-center justify-center text-center">
-              <div className="text-white font-extrabold text-base tracking-tight mb-0.5">
-                {t.hero.metrics.days}
-              </div>
-              <div className="text-xs text-slate-400">
-                {t.hero.metrics.daysLabel}
-              </div>
-            </div>
-
-            <div className="p-3.5 rounded-2xl bg-white/[0.04] backdrop-blur-sm border border-white/10 hover:border-cyan-400/30 transition-colors flex flex-col items-center justify-center text-center">
-              <div className="text-white font-extrabold text-base tracking-tight mb-0.5">
-                {t.hero.metrics.price}
-              </div>
-              <div className="text-xs text-slate-400">
-                {t.hero.metrics.priceLabel}
-              </div>
-            </div>
-
-            <div className="p-3.5 rounded-2xl bg-white/[0.04] backdrop-blur-sm border border-white/10 hover:border-cyan-400/30 transition-colors flex flex-col items-center justify-center text-center">
-              <div className="text-white font-extrabold text-base tracking-tight mb-0.5">
-                {t.hero.metrics.direct}
-              </div>
-              <div className="text-xs text-slate-400">
-                {t.hero.metrics.directLabel}
-              </div>
-            </div>
+            <AnimatedCounter value={t.hero.metrics.days} label={t.hero.metrics.daysLabel} />
+            <AnimatedCounter value={t.hero.metrics.price} label={t.hero.metrics.priceLabel} />
+            <AnimatedCounter value={t.hero.metrics.direct} label={t.hero.metrics.directLabel} />
           </div>
 
           <div className="flex flex-row items-center justify-center gap-4 mx-auto w-full mb-4 px-3">
