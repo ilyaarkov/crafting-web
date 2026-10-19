@@ -419,15 +419,47 @@ function FlightCamera() {
   return null;
 }
 
+const starVertexShader = `
+  attribute vec3 color;
+  attribute float aSize;
+  varying vec3 vColor;
+  void main() {
+    vColor = color;
+    vec4 viewPosition = modelViewMatrix * vec4(position, 1.0);
+    gl_Position = projectionMatrix * viewPosition;
+    gl_PointSize = aSize * (22.0 / max(5.0, -viewPosition.z));
+  }
+`;
+const starFragmentShader = `
+  varying vec3 vColor;
+  void main() {
+    vec2 uv = gl_PointCoord - 0.5;
+    float radius = length(uv);
+    float disc = 1.0 - smoothstep(0.31, 0.5, radius);
+    float rim = smoothstep(0.2, 0.34, radius) * (1.0 - smoothstep(0.39, 0.49, radius));
+    vec2 highlightOffset = uv - vec2(-0.13, 0.15);
+    float shine = exp(-dot(highlightOffset * 12.0, highlightOffset * 12.0));
+    float core = exp(-dot(uv, uv) * 150.0);
+    float rayX = exp(-abs(uv.y) * 75.0) * (1.0 - smoothstep(0.012, 0.036, abs(uv.x))) * (1.0 - smoothstep(0.12, 0.48, abs(uv.x)));
+    float rayY = exp(-abs(uv.x) * 75.0) * (1.0 - smoothstep(0.012, 0.036, abs(uv.y))) * (1.0 - smoothstep(0.12, 0.48, abs(uv.y)));
+    float rays = max(rayX, rayY);
+    vec3 glass = mix(vColor * 0.45, vec3(0.94, 0.98, 1.0), clamp(rim * 0.66 + shine * 0.68 + core * 0.72, 0.0, 1.0));
+    float alpha = disc * (0.22 + rim * 0.62 + shine * 0.38 + core * 0.3) + rays * 0.35;
+    if (radius > 0.5 && rays < 0.03) discard;
+    gl_FragColor = vec4(glass, clamp(alpha, 0.0, 1.0));
+  }
+`;
+
 function Starfield() {
   const positionAttribute = useRef<THREE.BufferAttribute>(null);
   const colorAttribute = useRef<THREE.BufferAttribute>(null);
   const pointer = useRef({ x: 0, y: 0 });
   const starCount = 1450;
-  const { positions, homePositions, colors, baseColors } = useMemo(() => {
+  const { positions, homePositions, colors, baseColors, sizes } = useMemo(() => {
     const positions = new Float32Array(starCount * 3);
     const colors = new Float32Array(starCount * 3);
     const baseColors = new Float32Array(starCount * 3);
+    const sizes = new Float32Array(starCount);
     let seed = 198407;
     const random = () => {
       seed = (seed * 1664525 + 1013904223) % 4294967296;
@@ -443,12 +475,13 @@ function Starfield() {
       positions[offset] = (random() * 2 - 1) * halfHeight * aspect * 1.2;
       positions[offset + 1] = (random() * 2 - 1) * halfHeight * 1.2;
       positions[offset + 2] = -depth;
+      sizes[i] = i % 53 === 0 ? 3.1 + random() * 1.4 : 1.5 + random() * 1.8;
       const hue = random() > 0.88 ? 0.12 : 0.53 + random() * 0.12;
       color.setHSL(hue, 0.36 + random() * 0.3, 0.68 + random() * 0.28);
       color.toArray(baseColors, offset);
       color.toArray(colors, offset);
     }
-    return { positions, homePositions: positions.slice(), colors, baseColors };
+    return { positions, homePositions: positions.slice(), colors, baseColors, sizes };
   }, []);
 
   useEffect(() => {
@@ -513,114 +546,17 @@ function Starfield() {
       <bufferGeometry>
         <bufferAttribute ref={positionAttribute} attach="attributes-position" args={[positions, 3]} />
         <bufferAttribute ref={colorAttribute} attach="attributes-color" args={[colors, 3]} />
+        <bufferAttribute attach="attributes-aSize" args={[sizes, 1]} />
       </bufferGeometry>
-      <pointsMaterial vertexColors size={0.12} transparent opacity={0.9} sizeAttenuation depthWrite={false} />
+      <shaderMaterial
+        vertexShader={starVertexShader}
+        fragmentShader={starFragmentShader}
+        transparent
+        depthWrite={false}
+        blending={THREE.AdditiveBlending}
+        toneMapped={false}
+      />
     </points>
-  );
-}
-
-type CosmicBodyDefinition = {
-  kind: "planet" | "black-hole";
-  screenX: number;
-  screenY: number;
-  depth: number;
-  scale: number;
-  color: string;
-  ring?: boolean;
-};
-
-const cosmicBodies: CosmicBodyDefinition[] = [
-  { kind: "planet", screenX: -0.79, screenY: 0.48, depth: 22, scale: 1.38, color: "#d49b73" },
-  { kind: "planet", screenX: 0.84, screenY: -0.5, depth: 31, scale: 1.62, color: "#428cb4", ring: true },
-  { kind: "black-hole", screenX: 0.82, screenY: 0.48, depth: 47, scale: 1.18, color: "#a57bff" },
-  { kind: "planet", screenX: -0.83, screenY: -0.42, depth: 61, scale: 2.15, color: "#8b78ce", ring: true },
-  { kind: "black-hole", screenX: -0.8, screenY: 0.52, depth: 83, scale: 1.52, color: "#48b8e7" },
-  { kind: "planet", screenX: 0.81, screenY: 0.48, depth: 112, scale: 1.72, color: "#c58b68" },
-];
-
-function CosmicBody({ definition, index }: { definition: CosmicBodyDefinition; index: number }) {
-  const group = useRef<THREE.Group>(null);
-  const material = useRef<THREE.MeshStandardMaterial>(null);
-  const initialHeight = definition.depth * Math.tan(THREE.MathUtils.degToRad(22));
-
-  useFrame((state, delta) => {
-    if (!group.current) return;
-    const camera = state.camera as THREE.PerspectiveCamera;
-    const depth = camera.position.z - group.current.position.z;
-    if (depth < 5) {
-      group.current.position.z = camera.position.z - 105 - (index % 3) * 24;
-    }
-    const nextDepth = camera.position.z - group.current.position.z;
-    const halfHeight = nextDepth * Math.tan(THREE.MathUtils.degToRad(camera.fov / 2));
-    group.current.position.x = camera.position.x + definition.screenX * halfHeight * camera.aspect;
-    group.current.position.y = camera.position.y + definition.screenY * halfHeight;
-    if (definition.kind === "black-hole") {
-      group.current.rotation.z += delta * 0.025;
-      group.current.rotation.y += delta * 0.012;
-    } else {
-      group.current.rotation.y += delta * 0.018;
-    }
-    if (material.current) material.current.emissiveIntensity = 0.08 + (Math.sin(state.clock.elapsedTime * 0.22 + index) + 1) * 0.025;
-  });
-
-  return (
-    <group
-      ref={group}
-      position={[
-        definition.screenX * initialHeight * (typeof window === "undefined" ? 1.8 : window.innerWidth / window.innerHeight),
-        definition.screenY * initialHeight,
-        -definition.depth,
-      ]}
-      scale={definition.scale}
-    >
-      {definition.kind === "planet" ? (
-        <>
-          <mesh>
-            <sphereGeometry args={[1, 48, 48]} />
-            <meshStandardMaterial ref={material} color={definition.color} roughness={0.72} metalness={0.08} emissive={definition.color} emissiveIntensity={0.1} />
-          </mesh>
-          <mesh scale={1.045}>
-            <sphereGeometry args={[1, 36, 36]} />
-            <meshBasicMaterial color={definition.color} transparent opacity={0.12} side={THREE.BackSide} />
-          </mesh>
-          {definition.ring && (
-            <mesh rotation={[Math.PI * 0.38, 0.12, 0.18]}>
-              <torusGeometry args={[1.55, 0.018, 6, 96]} />
-              <meshBasicMaterial color="#b9dbf8" transparent opacity={0.64} />
-            </mesh>
-          )}
-        </>
-      ) : (
-        <group rotation={[1.12, 0.12, 0]}>
-          <mesh>
-            <sphereGeometry args={[0.58, 40, 40]} />
-            <meshBasicMaterial color="#010208" />
-          </mesh>
-          <mesh>
-            <torusGeometry args={[0.94, 0.045, 10, 112]} />
-            <meshBasicMaterial color={definition.color} transparent opacity={0.88} blending={THREE.AdditiveBlending} />
-          </mesh>
-          <mesh>
-            <torusGeometry args={[1.14, 0.022, 8, 112]} />
-            <meshBasicMaterial color="#ffcf9b" transparent opacity={0.46} blending={THREE.AdditiveBlending} />
-          </mesh>
-          <mesh>
-            <torusGeometry args={[1.36, 0.012, 8, 112]} />
-            <meshBasicMaterial color={definition.color} transparent opacity={0.26} blending={THREE.AdditiveBlending} />
-          </mesh>
-        </group>
-      )}
-    </group>
-  );
-}
-
-function CosmicObjects() {
-  return (
-    <>
-      {cosmicBodies.map((definition, index) => (
-        <CosmicBody key={`${definition.kind}-${index}`} definition={definition} index={index} />
-      ))}
-    </>
   );
 }
 
@@ -637,11 +573,8 @@ export default function EarthHero() {
           }}
         >
           <ambientLight intensity={0.32} />
-          <pointLight color="#93dfff" intensity={18} distance={45} position={[-7, 5, -12]} />
-          <pointLight color="#a88bff" intensity={22} distance={60} position={[9, -3, -45]} />
           <FlightCamera />
           <Starfield />
-          <CosmicObjects />
         </Canvas>
       </div>
       <div className="earth-hero__vignette" />
