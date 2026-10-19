@@ -11,6 +11,14 @@
     #080b12;
 }
 
+.earth-hero--cosmic {
+  background:
+    radial-gradient(ellipse at 12% 28%, rgba(37, 86, 145, .2), transparent 28%),
+    radial-gradient(ellipse at 84% 66%, rgba(82, 39, 139, .17), transparent 32%),
+    radial-gradient(ellipse at 50% 45%, rgba(8, 20, 38, .7), transparent 62%),
+    #03050b;
+}
+
 .earth-hero__canvas-wrap {
   position: absolute;
   inset: 0;
@@ -30,6 +38,12 @@
   background: linear-gradient(90deg, rgba(8,11,18,.24), transparent 50%, rgba(8,11,18,.06)),
               linear-gradient(0deg, var(--hero-bg, #080b12) 0%, transparent 18%, transparent 82%, rgba(8,11,18,.58));
   pointer-events: none;
+}
+
+.earth-hero--cosmic .earth-hero__vignette {
+  background:
+    radial-gradient(ellipse 59% 64% at 50% 48%, rgba(5, 8, 14, .78) 0%, rgba(5, 8, 14, .56) 57%, rgba(5, 8, 14, .08) 100%),
+    linear-gradient(0deg, rgba(5, 7, 12, .68), transparent 24%, transparent 78%, rgba(5, 7, 12, .5));
 }
 
 .hero-scene {
@@ -65,4 +79,12 @@
 @media (prefers-reduced-motion: reduce) {
   .hero-enter { animation: none; }
   .hero-metric { transition: none; }
+}
+
+@media (max-width: 760px) {
+  .earth-hero--cosmic .earth-hero__vignette {
+    background:
+      radial-gradient(ellipse 78% 58% at 50% 48%, rgba(5, 8, 14, .86) 0%, rgba(5, 8, 14, .64) 62%, rgba(5, 8, 14, .12) 100%),
+      linear-gradient(0deg, rgba(5, 7, 12, .76), transparent 26%, transparent 76%, rgba(5, 7, 12, .56));
+  }
 }

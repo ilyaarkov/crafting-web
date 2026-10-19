@@ -386,22 +386,262 @@ function ParticleField() {
   );
 }
 
+function FlightCamera() {
+  const pointer = useRef({ x: 0, y: 0 });
+  const reducedMotion = useRef(false);
+
+  useEffect(() => {
+    const preference = window.matchMedia("(prefers-reduced-motion: reduce)");
+    const updatePreference = () => { reducedMotion.current = preference.matches; };
+    const move = (event: PointerEvent) => {
+      pointer.current.x = (event.clientX / window.innerWidth - 0.5) * 2;
+      pointer.current.y = -(event.clientY / window.innerHeight - 0.5) * 2;
+    };
+    updatePreference();
+    preference.addEventListener("change", updatePreference);
+    window.addEventListener("pointermove", move, { passive: true });
+    return () => {
+      preference.removeEventListener("change", updatePreference);
+      window.removeEventListener("pointermove", move);
+    };
+  }, []);
+
+  useFrame((state, delta) => {
+    const camera = state.camera as THREE.PerspectiveCamera;
+    const motion = reducedMotion.current ? 0 : delta;
+    camera.position.z -= motion * 0.52;
+    camera.position.x = THREE.MathUtils.damp(camera.position.x, pointer.current.x * 0.42, 1.3, delta);
+    camera.position.y = THREE.MathUtils.damp(camera.position.y, pointer.current.y * 0.28, 1.3, delta);
+    camera.rotation.y = THREE.MathUtils.damp(camera.rotation.y, -pointer.current.x * 0.018, 1.5, delta);
+    camera.rotation.x = THREE.MathUtils.damp(camera.rotation.x, pointer.current.y * 0.014, 1.5, delta);
+  });
+
+  return null;
+}
+
+function Starfield() {
+  const positionAttribute = useRef<THREE.BufferAttribute>(null);
+  const colorAttribute = useRef<THREE.BufferAttribute>(null);
+  const pointer = useRef({ x: 0, y: 0 });
+  const starCount = 1450;
+  const { positions, homePositions, colors, baseColors } = useMemo(() => {
+    const positions = new Float32Array(starCount * 3);
+    const colors = new Float32Array(starCount * 3);
+    const baseColors = new Float32Array(starCount * 3);
+    let seed = 198407;
+    const random = () => {
+      seed = (seed * 1664525 + 1013904223) % 4294967296;
+      return seed / 4294967296;
+    };
+    const aspect = typeof window === "undefined" ? 1.8 : window.innerWidth / window.innerHeight;
+    const color = new THREE.Color();
+
+    for (let i = 0; i < starCount; i += 1) {
+      const offset = i * 3;
+      const depth = 8 + random() * 150;
+      const halfHeight = depth * Math.tan(THREE.MathUtils.degToRad(22));
+      positions[offset] = (random() * 2 - 1) * halfHeight * aspect * 1.2;
+      positions[offset + 1] = (random() * 2 - 1) * halfHeight * 1.2;
+      positions[offset + 2] = -depth;
+      const hue = random() > 0.88 ? 0.12 : 0.53 + random() * 0.12;
+      color.setHSL(hue, 0.36 + random() * 0.3, 0.68 + random() * 0.28);
+      color.toArray(baseColors, offset);
+      color.toArray(colors, offset);
+    }
+    return { positions, homePositions: positions.slice(), colors, baseColors };
+  }, []);
+
+  useEffect(() => {
+    const move = (event: PointerEvent) => {
+      pointer.current.x = (event.clientX / window.innerWidth - 0.5) * 2;
+      pointer.current.y = -(event.clientY / window.innerHeight - 0.5) * 2;
+    };
+    window.addEventListener("pointermove", move, { passive: true });
+    return () => window.removeEventListener("pointermove", move);
+  }, []);
+
+  useFrame((state, delta) => {
+    const position = positionAttribute.current;
+    const color = colorAttribute.current;
+    const camera = state.camera as THREE.PerspectiveCamera;
+    if (!position || !color) return;
+    const p = position.array as Float32Array;
+    const c = color.array as Float32Array;
+    const elapsed = state.clock.elapsedTime;
+    const viewAspect = state.size.width / Math.max(1, state.size.height);
+    const cameraDepth = Math.tan(THREE.MathUtils.degToRad(camera.fov / 2));
+
+    for (let i = 0; i < starCount; i += 1) {
+      const j = i * 3;
+      if (p[j + 2] > camera.position.z - 3) {
+        const depth = 118 + ((i * 47) % 65);
+        const halfHeight = depth * cameraDepth;
+        homePositions[j] = camera.position.x + (((i * 0.754877666) % 1) * 2 - 1) * halfHeight * viewAspect * 1.2;
+        homePositions[j + 1] = camera.position.y + (((i * 0.569840291 + 0.3) % 1) * 2 - 1) * halfHeight * 1.2;
+        p[j] = homePositions[j];
+        p[j + 1] = homePositions[j + 1];
+        p[j + 2] = camera.position.z - depth;
+      }
+
+      const depth = camera.position.z - p[j + 2];
+      const halfHeight = depth * cameraDepth;
+      const cursorX = camera.position.x + pointer.current.x * halfHeight * viewAspect;
+      const cursorY = camera.position.y + pointer.current.y * halfHeight;
+      const homeX = homePositions[j];
+      const homeY = homePositions[j + 1];
+      const dx = homeX - cursorX;
+      const dy = homeY - cursorY;
+      const distance = Math.sqrt(dx * dx + dy * dy) + 0.001;
+      const radius = depth * 0.075;
+      const force = Math.max(0, 1 - distance / radius) * 0.16;
+      const targetX = homeX + dx / distance * force;
+      const targetY = homeY + dy / distance * force;
+      const blend = Math.min(1, delta * 3);
+      p[j] += (targetX - p[j]) * blend;
+      p[j + 1] += (targetY - p[j + 1]) * blend;
+      const twinkle = 0.78 + (Math.sin(elapsed * (0.7 + (i % 9) * 0.08) + i * 1.7) + 1) * 0.11;
+      c[j] = baseColors[j] * twinkle;
+      c[j + 1] = baseColors[j + 1] * twinkle;
+      c[j + 2] = baseColors[j + 2] * twinkle;
+    }
+    position.needsUpdate = true;
+    color.needsUpdate = true;
+  });
+
+  return (
+    <points frustumCulled={false}>
+      <bufferGeometry>
+        <bufferAttribute ref={positionAttribute} attach="attributes-position" args={[positions, 3]} />
+        <bufferAttribute ref={colorAttribute} attach="attributes-color" args={[colors, 3]} />
+      </bufferGeometry>
+      <pointsMaterial vertexColors size={0.12} transparent opacity={0.9} sizeAttenuation depthWrite={false} />
+    </points>
+  );
+}
+
+type CosmicBodyDefinition = {
+  kind: "planet" | "black-hole";
+  screenX: number;
+  screenY: number;
+  depth: number;
+  scale: number;
+  color: string;
+  ring?: boolean;
+};
+
+const cosmicBodies: CosmicBodyDefinition[] = [
+  { kind: "planet", screenX: -0.79, screenY: 0.48, depth: 22, scale: 1.38, color: "#d49b73" },
+  { kind: "planet", screenX: 0.84, screenY: -0.5, depth: 31, scale: 1.62, color: "#428cb4", ring: true },
+  { kind: "black-hole", screenX: 0.82, screenY: 0.48, depth: 47, scale: 1.18, color: "#a57bff" },
+  { kind: "planet", screenX: -0.83, screenY: -0.42, depth: 61, scale: 2.15, color: "#8b78ce", ring: true },
+  { kind: "black-hole", screenX: -0.8, screenY: 0.52, depth: 83, scale: 1.52, color: "#48b8e7" },
+  { kind: "planet", screenX: 0.81, screenY: 0.48, depth: 112, scale: 1.72, color: "#c58b68" },
+];
+
+function CosmicBody({ definition, index }: { definition: CosmicBodyDefinition; index: number }) {
+  const group = useRef<THREE.Group>(null);
+  const material = useRef<THREE.MeshStandardMaterial>(null);
+  const initialHeight = definition.depth * Math.tan(THREE.MathUtils.degToRad(22));
+
+  useFrame((state, delta) => {
+    if (!group.current) return;
+    const camera = state.camera as THREE.PerspectiveCamera;
+    const depth = camera.position.z - group.current.position.z;
+    if (depth < 5) {
+      group.current.position.z = camera.position.z - 105 - (index % 3) * 24;
+    }
+    const nextDepth = camera.position.z - group.current.position.z;
+    const halfHeight = nextDepth * Math.tan(THREE.MathUtils.degToRad(camera.fov / 2));
+    group.current.position.x = camera.position.x + definition.screenX * halfHeight * camera.aspect;
+    group.current.position.y = camera.position.y + definition.screenY * halfHeight;
+    if (definition.kind === "black-hole") {
+      group.current.rotation.z += delta * 0.025;
+      group.current.rotation.y += delta * 0.012;
+    } else {
+      group.current.rotation.y += delta * 0.018;
+    }
+    if (material.current) material.current.emissiveIntensity = 0.08 + (Math.sin(state.clock.elapsedTime * 0.22 + index) + 1) * 0.025;
+  });
+
+  return (
+    <group
+      ref={group}
+      position={[
+        definition.screenX * initialHeight * (typeof window === "undefined" ? 1.8 : window.innerWidth / window.innerHeight),
+        definition.screenY * initialHeight,
+        -definition.depth,
+      ]}
+      scale={definition.scale}
+    >
+      {definition.kind === "planet" ? (
+        <>
+          <mesh>
+            <sphereGeometry args={[1, 48, 48]} />
+            <meshStandardMaterial ref={material} color={definition.color} roughness={0.72} metalness={0.08} emissive={definition.color} emissiveIntensity={0.1} />
+          </mesh>
+          <mesh scale={1.045}>
+            <sphereGeometry args={[1, 36, 36]} />
+            <meshBasicMaterial color={definition.color} transparent opacity={0.12} side={THREE.BackSide} />
+          </mesh>
+          {definition.ring && (
+            <mesh rotation={[Math.PI * 0.38, 0.12, 0.18]}>
+              <torusGeometry args={[1.55, 0.018, 6, 96]} />
+              <meshBasicMaterial color="#b9dbf8" transparent opacity={0.64} />
+            </mesh>
+          )}
+        </>
+      ) : (
+        <group rotation={[1.12, 0.12, 0]}>
+          <mesh>
+            <sphereGeometry args={[0.58, 40, 40]} />
+            <meshBasicMaterial color="#010208" />
+          </mesh>
+          <mesh>
+            <torusGeometry args={[0.94, 0.045, 10, 112]} />
+            <meshBasicMaterial color={definition.color} transparent opacity={0.88} blending={THREE.AdditiveBlending} />
+          </mesh>
+          <mesh>
+            <torusGeometry args={[1.14, 0.022, 8, 112]} />
+            <meshBasicMaterial color="#ffcf9b" transparent opacity={0.46} blending={THREE.AdditiveBlending} />
+          </mesh>
+          <mesh>
+            <torusGeometry args={[1.36, 0.012, 8, 112]} />
+            <meshBasicMaterial color={definition.color} transparent opacity={0.26} blending={THREE.AdditiveBlending} />
+          </mesh>
+        </group>
+      )}
+    </group>
+  );
+}
+
+function CosmicObjects() {
+  return (
+    <>
+      {cosmicBodies.map((definition, index) => (
+        <CosmicBody key={`${definition.kind}-${index}`} definition={definition} index={index} />
+      ))}
+    </>
+  );
+}
+
 export default function EarthHero() {
   return (
-    <div className="earth-hero" aria-hidden="true">
+    <div className="earth-hero earth-hero--cosmic" aria-hidden="true">
       <div className="earth-hero__canvas-wrap">
         <Canvas
           dpr={[1, 1.6]}
-          camera={{ position: [0, 0, 6.2], fov: 42 }}
+          camera={{ position: [0, 0, 0], fov: 44, near: 0.1, far: 240 }}
           gl={{ antialias: true, alpha: true, powerPreference: "high-performance" }}
           onCreated={({ gl }) => {
             gl.setClearColor("#000000", 0);
           }}
         >
-          <ambientLight intensity={0.42} />
-          <directionalLight color="#c4eaff" intensity={2.2} position={[-3, 2, 4]} />
-          <directionalLight color="#0877c4" intensity={1.15} position={[3, -1, -2]} />
-          <ParticleField />
+          <ambientLight intensity={0.32} />
+          <pointLight color="#93dfff" intensity={18} distance={45} position={[-7, 5, -12]} />
+          <pointLight color="#a88bff" intensity={22} distance={60} position={[9, -3, -45]} />
+          <FlightCamera />
+          <Starfield />
+          <CosmicObjects />
         </Canvas>
       </div>
       <div className="earth-hero__vignette" />
