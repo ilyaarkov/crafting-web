@@ -1,0 +1,8 @@
+/techstack /techstack/index.html 200
+/tech-stack /techstack/index.html 200
+/portfolio /portfolio/index.html 200
+/portfolio/:project /portfolio/:project/index.html 200
+/services/:service /services/:service/index.html 200
+/service/:service /services/:service/index.html 200
+/project/:project /portfolio/:project/index.html 200
+/policy /policy/index.html 200

@@ -145,19 +145,17 @@ function Globe() {
   );
 }
 
-const SHAPE_COUNT = 980;
-const CYCLE_SECONDS = 16;
-const EXPLOSION_SECONDS = 1.6;
-const SCATTER_HOLD_SECONDS = 3;
-const ASSEMBLY_SECONDS = 5;
+const TUNNEL_PARTICLE_COUNT = 2400;
+const TUNNEL_FAR_DEPTH = 172;
 const glassVertexShader = `
   attribute vec3 color;
+  attribute float aSize;
   varying vec3 vColor;
   void main() {
     vColor = color;
     vec4 viewPosition = modelViewMatrix * vec4(position, 1.0);
     gl_Position = projectionMatrix * viewPosition;
-    gl_PointSize = 4.8 * (6.2 / max(1.0, -viewPosition.z));
+    gl_PointSize = aSize * (42.0 / max(4.0, -viewPosition.z));
   }
 `;
 const glassFragmentShader = `
@@ -169,13 +167,15 @@ const glassFragmentShader = `
     float rim = smoothstep(0.22, 0.34, radius) * (1.0 - smoothstep(0.38, 0.49, radius));
     vec2 highlightOffset = uv - vec2(-0.13, 0.16);
     float shine = exp(-dot(highlightOffset * 13.0, highlightOffset * 13.0));
-    vec3 glass = mix(vColor * 0.62, vec3(0.92, 0.98, 1.0), rim * 0.68 + shine * 0.72);
-    gl_FragColor = vec4(glass, disc * (0.46 + rim * 0.42 + shine * 0.32));
+    vec3 glass = mix(vColor * 0.58, vec3(0.92, 0.98, 1.0), rim * 0.7 + shine * 0.72);
+    gl_FragColor = vec4(glass, disc * (0.38 + rim * 0.48 + shine * 0.34));
   }
 `;
 
-function makeShapeTargets(count: number, centerX: number) {
-  const targets = Array.from({ length: 6 }, () => new Float32Array(count * 3));
+function makeTunnelParticles(count: number) {
+  const positions = new Float32Array(count * 3);
+  const angles = new Float32Array(count);
+  const radiusOffsets = new Float32Array(count);
   let seed = 271828;
   const random = () => {
     seed = (seed * 1664525 + 1013904223) % 4294967296;
@@ -184,107 +184,44 @@ function makeShapeTargets(count: number, centerX: number) {
 
   for (let i = 0; i < count; i += 1) {
     const offset = i * 3;
-    const u = random() * 2 - 1;
-    const v = random() * 2 - 1;
-    const w = random() * 2 - 1;
-    const face = i % 6;
-    const cube = [u, v, w];
-    cube[Math.floor(face / 2)] = face % 2 === 0 ? 1 : -1;
-    targets[0].set([centerX + cube[0] * 0.58, cube[1] * 0.58, cube[2] * 0.58], offset);
+    const segmentCount = 24;
+    const segment = Math.floor(random() * segmentCount);
+    const angle = (segment / segmentCount + (random() - 0.5) * 0.035) * Math.PI * 2;
+    const ring = Math.floor(random() * 40);
+    const depth = 8 + ring * 4.05 + (random() - 0.5) * 0.7;
+    const radiusOffset = (random() - 0.5) * depth * 0.009;
+    const radius = depth * (0.2 + 0.035 * Math.sin(depth * 0.019) + 0.015 * Math.sin(depth * 0.043)) + radiusOffset;
 
-    const longitude = random() * Math.PI * 2;
-    const latitude = Math.acos(random() * 2 - 1);
-    targets[1].set([
-      centerX + 0.68 * Math.sin(latitude) * Math.cos(longitude),
-      0.68 * Math.cos(latitude),
-      0.68 * Math.sin(latitude) * Math.sin(longitude),
-    ], offset);
-
-    const angle = random() * Math.PI * 2;
-    const tube = (random() * 2 - 1) * 0.11;
-    const ring = 0.45 + tube;
-    targets[2].set([
-      centerX + ring * Math.cos(angle), tube * 1.8, ring * Math.sin(angle),
-    ], offset);
-
-    // Four triangular faces meeting at the apex create a recognizable pyramid.
-    const pyramidFace = i % 4;
-    const sideU = Math.sqrt(random());
-    const sideV = random();
-    const baseCorners = [[-0.58, -0.44], [0.58, -0.44], [0.58, 0.44], [-0.58, 0.44]];
-    const [cornerAX, cornerAZ] = baseCorners[pyramidFace];
-    const [cornerBX, cornerBZ] = baseCorners[(pyramidFace + 1) % 4];
-    const baseX = THREE.MathUtils.lerp(cornerAX, cornerBX, sideV);
-    const baseZ = THREE.MathUtils.lerp(cornerAZ, cornerBZ, sideV);
-    targets[3].set([
-      centerX + baseX * sideU,
-      -0.48 + 0.96 * (1 - sideU),
-      baseZ * sideU,
-    ], offset);
-
-    // An elongated octahedral crystal with sharp shoulders and a pointed base.
-    const crystalFace = i % 8;
-    const crystalU = Math.sqrt(random());
-    const crystalV = random() * crystalU;
-    const crystalSigns = [[1, 1], [-1, 1], [-1, -1], [1, -1]];
-    const [signX, signZ] = crystalSigns[crystalFace % 4];
-    const topFace = crystalFace < 4;
-    targets[4].set([
-      centerX + signX * (0.66 * crystalU - 0.02 * crystalV),
-      topFace ? 0.64 - 0.61 * crystalU : -0.64 + 0.61 * crystalU,
-      signZ * 0.4 * crystalV,
-    ], offset);
-
-    // A zig-zag bolt, distributed along six connected strokes with a glassy body.
-    const boltPath = [[-0.24, 0.66], [0.13, 0.2], [-0.15, 0.2], [0.29, -0.3], [0.02, -0.3], [0.22, -0.66]];
-    const segment = Math.floor(random() * (boltPath.length - 1));
-    const along = random();
-    const [startX, startY] = boltPath[segment];
-    const [endX, endY] = boltPath[segment + 1];
-    targets[5].set([
-      centerX + THREE.MathUtils.lerp(startX, endX, along) + (random() - 0.5) * 0.08,
-      THREE.MathUtils.lerp(startY, endY, along) + (random() - 0.5) * 0.08,
-      (random() - 0.5) * 0.2,
-    ], offset);
+    angles[i] = angle;
+    radiusOffsets[i] = radiusOffset;
+    positions[offset] = Math.cos(angle) * radius;
+    positions[offset + 1] = Math.sin(angle) * radius;
+    positions[offset + 2] = -depth;
   }
-  return targets;
+  return { positions, angles, radiusOffsets };
 }
 
 function ParticleField() {
   const points = useRef<THREE.Points>(null);
-  const ambientPoints = useRef<THREE.Points>(null);
   const positionAttribute = useRef<THREE.BufferAttribute>(null);
-  const pointer = useRef({ x: 0, y: 0, active: false });
   const reducedMotion = useRef(false);
-  const centerX = typeof window !== "undefined" && window.innerWidth < 760 ? 0.1 : 2.05;
-  const targets = useMemo(() => makeShapeTargets(SHAPE_COUNT, centerX), [centerX]);
-  const positions = useMemo(() => {
-    const values = new Float32Array(SHAPE_COUNT * 3);
-    values.set(targets[0]);
-    return values;
-  }, [targets]);
-  const colors = useMemo(() => {
-    const values = new Float32Array(SHAPE_COUNT * 3);
-    const color = new THREE.Color();
-    for (let i = 0; i < SHAPE_COUNT; i += 1) {
-      const palette = [0.49, 0.52, 0.57, 0.64, 0.72];
-      color.setHSL(palette[i % palette.length], 0.7 + (i % 3) * 0.1, 0.62 + (i % 4) * 0.055);
-      color.toArray(values, i * 3);
+  const tunnel = useMemo(() => makeTunnelParticles(TUNNEL_PARTICLE_COUNT), []);
+  const sizes = useMemo(() => {
+    const values = new Float32Array(TUNNEL_PARTICLE_COUNT);
+    let seed = 917231;
+    for (let i = 0; i < values.length; i += 1) {
+      seed = (seed * 1664525 + 1013904223) % 4294967296;
+      values[i] = 1.8 + (seed / 4294967296) * 2.2;
     }
     return values;
   }, []);
-  const ambientPositions = useMemo(() => {
-    const values = new Float32Array(260 * 3);
-    let seed = 314159;
-    const random = () => {
-      seed = (seed * 1664525 + 1013904223) % 4294967296;
-      return seed / 4294967296;
-    };
-    const halfWidth = Math.max(4.5, (typeof window !== "undefined" ? window.innerWidth / window.innerHeight : 1.8) * 3.5);
-    for (let i = 0; i < 260; i += 1) {
-      values[i * 3] = (random() * 2 - 1) * halfWidth;
-      values[i * 3 + 1] = (random() * 2 - 1) * 3.4;
-      values[i * 3 + 2] = -1.5 + random() * 2;
+  const colors = useMemo(() => {
+    const values = new Float32Array(TUNNEL_PARTICLE_COUNT * 3);
+    const color = new THREE.Color();
+    const palette = [0.51, 0.55, 0.58, 0.62, 0.7];
+    for (let i = 0; i < TUNNEL_PARTICLE_COUNT; i += 1) {
+      color.setHSL(palette[i % palette.length], 0.72, 0.64 + (i % 4) * 0.045);
+      color.toArray(values, i * 3);
     }
     return values;
   }, []);
@@ -294,95 +231,56 @@ function ParticleField() {
     const updateMotionPreference = () => { reducedMotion.current = preference.matches; };
     updateMotionPreference();
     preference.addEventListener("change", updateMotionPreference);
-    const move = (event: PointerEvent) => {
-      pointer.current.x = (event.clientX / window.innerWidth - 0.5) * 2;
-      pointer.current.y = -(event.clientY / window.innerHeight - 0.5) * 2;
-      pointer.current.active = true;
-    };
-    const leave = () => { pointer.current.active = false; };
-    window.addEventListener("pointermove", move, { passive: true });
-    window.addEventListener("blur", leave);
-    return () => {
-      window.removeEventListener("pointermove", move);
-      window.removeEventListener("blur", leave);
-      preference.removeEventListener("change", updateMotionPreference);
-    };
+    return () => preference.removeEventListener("change", updateMotionPreference);
   }, []);
 
   useFrame((state, delta) => {
     const attribute = positionAttribute.current;
-    const object = points.current;
-    if (!attribute || !object) return;
+    if (!attribute || !points.current) return;
+    const camera = state.camera as THREE.PerspectiveCamera;
+    const elapsed = reducedMotion.current ? 0 : state.clock.elapsedTime;
     const frameDelta = reducedMotion.current ? 0 : delta;
-    const elapsed = reducedMotion.current ? 12 : state.clock.elapsedTime;
-    const cycle = (elapsed % CYCLE_SECONDS) / CYCLE_SECONDS;
-    const shapeIndex = Math.floor(elapsed / CYCLE_SECONDS) % targets.length;
-    const nextIndex = (shapeIndex + 1) % targets.length;
-    const stageTime = cycle * CYCLE_SECONDS;
-    const assemblyStart = EXPLOSION_SECONDS + SCATTER_HOLD_SECONDS;
-    const assembly = THREE.MathUtils.smoothstep(stageTime, assemblyStart, assemblyStart + ASSEMBLY_SECONDS);
-    const burst = stageTime < EXPLOSION_SECONDS
-      ? THREE.MathUtils.smoothstep(stageTime, 0, EXPLOSION_SECONDS)
-      : stageTime < assemblyStart ? 1 : 0;
     const array = attribute.array as Float32Array;
-    const target = targets[shapeIndex];
-    const next = targets[nextIndex];
-    const drift = 0.025 * Math.sin(elapsed * 0.65);
-    const blend = assembly;
-    const spin = elapsed * 0.065;
-    const spinCos = Math.cos(spin);
-    const spinSin = Math.sin(spin);
-    const aspect = state.size.width / Math.max(1, state.size.height);
-    const pointerX = pointer.current.x * Math.min(aspect * 3.5, 6);
-    const pointerY = pointer.current.y * 3.5;
+    const rotation = elapsed * 0.12;
 
-    for (let i = 0; i < SHAPE_COUNT; i += 1) {
+    for (let i = 0; i < TUNNEL_PARTICLE_COUNT; i += 1) {
       const j = i * 3;
-      const morphedX = THREE.MathUtils.lerp(target[j], next[j], blend);
-      const baseY = THREE.MathUtils.lerp(target[j + 1], next[j + 1], blend);
-      const morphedZ = THREE.MathUtils.lerp(target[j + 2], next[j + 2], blend);
-      const localX = morphedX - centerX;
-      const baseX = centerX + localX * spinCos - morphedZ * spinSin;
-      const baseZ = localX * spinSin + morphedZ * spinCos;
-      const dx = baseX - pointerX;
-      const dy = baseY - pointerY;
-      const distance = Math.sqrt(dx * dx + dy * dy + baseZ * baseZ) + 0.001;
-      const repel = pointer.current.active ? Math.max(0, 1 - distance / 1.6) * 0.5 : 0;
-      const scatterX = (((i * 0.754877666) % 1) * 2 - 1) * aspect * 3;
-      const scatterY = (((i * 0.569840291 + 0.3) % 1) * 2 - 1) * 3;
-      const scatterZ = (((i * 0.43857921 + 0.7) % 1) * 2 - 1) * 1.4;
-      const amount = Math.min(1, frameDelta * 5);
-      array[j] += (THREE.MathUtils.lerp(baseX, scatterX, burst) + drift - dx / distance * repel - array[j]) * amount;
-      array[j + 1] += (THREE.MathUtils.lerp(baseY, scatterY, burst) + Math.sin(elapsed * 0.55 + i) * 0.025 - dy / distance * repel - array[j + 1]) * amount;
-      array[j + 2] += (THREE.MathUtils.lerp(baseZ, scatterZ, burst) - array[j + 2]) * amount;
+      let depth = camera.position.z - array[j + 2];
+      if (depth < 4) {
+        depth = 132 + ((i * 37) % 40);
+        array[j + 2] = camera.position.z - depth;
+      }
+
+      const angle = tunnel.angles[i] + rotation + depth * 0.003;
+      const wave = 0.2
+        + 0.035 * Math.sin(depth * 0.019 - elapsed * 0.34)
+        + 0.015 * Math.sin(depth * 0.043 + elapsed * 0.2);
+      const radius = depth * wave + tunnel.radiusOffsets[i];
+      const x = Math.cos(angle) * radius;
+      const y = Math.sin(angle) * radius;
+      const amount = Math.min(1, frameDelta * 3);
+      array[j] += (x - array[j]) * amount;
+      array[j + 1] += (y - array[j + 1]) * amount;
     }
     attribute.needsUpdate = true;
-    if (ambientPoints.current) ambientPoints.current.rotation.y += frameDelta * 0.006;
   });
 
   return (
-    <>
-      <points ref={ambientPoints} position={[0, 0, -1]} frustumCulled={false}>
-        <bufferGeometry>
-          <bufferAttribute attach="attributes-position" args={[ambientPositions, 3]} />
-        </bufferGeometry>
-        <pointsMaterial color="#64c9ee" size={0.018} transparent opacity={0.48} sizeAttenuation depthWrite={false} blending={THREE.AdditiveBlending} />
-      </points>
-      <points ref={points} frustumCulled={false}>
-        <bufferGeometry>
-          <bufferAttribute ref={positionAttribute} attach="attributes-position" args={[positions, 3]} />
-          <bufferAttribute attach="attributes-color" args={[colors, 3]} />
-        </bufferGeometry>
-        <shaderMaterial
-          vertexShader={glassVertexShader}
-          fragmentShader={glassFragmentShader}
-          transparent
-          depthWrite={false}
-          blending={THREE.AdditiveBlending}
-          toneMapped={false}
-        />
-      </points>
-    </>
+    <points ref={points} frustumCulled={false}>
+      <bufferGeometry>
+        <bufferAttribute ref={positionAttribute} attach="attributes-position" args={[tunnel.positions, 3]} />
+        <bufferAttribute attach="attributes-color" args={[colors, 3]} />
+        <bufferAttribute attach="attributes-aSize" args={[sizes, 1]} />
+      </bufferGeometry>
+      <shaderMaterial
+        vertexShader={glassVertexShader}
+        fragmentShader={glassFragmentShader}
+        transparent
+        depthWrite={false}
+        blending={THREE.AdditiveBlending}
+        toneMapped={false}
+      />
+    </points>
   );
 }
 
@@ -409,7 +307,7 @@ function FlightCamera() {
   useFrame((state, delta) => {
     const camera = state.camera as THREE.PerspectiveCamera;
     const motion = reducedMotion.current ? 0 : delta;
-    camera.position.z -= motion * 0.52;
+    camera.position.z -= motion * 1.15;
     camera.position.x = THREE.MathUtils.damp(camera.position.x, pointer.current.x * 0.42, 1.3, delta);
     camera.position.y = THREE.MathUtils.damp(camera.position.y, pointer.current.y * 0.28, 1.3, delta);
     camera.rotation.y = THREE.MathUtils.damp(camera.rotation.y, -pointer.current.x * 0.018, 1.5, delta);
@@ -450,6 +348,13 @@ const starFragmentShader = `
   }
 `;
 
+function keepStarOutsideTunnel(x: number, y: number, seed: number) {
+  if (Math.hypot(x, y) >= 0.48) return { x, y };
+  const angle = seed * 2.3999632297;
+  const radius = 0.55 + (seed % 17) / 100;
+  return { x: Math.cos(angle) * radius, y: Math.sin(angle) * radius };
+}
+
 function Starfield() {
   const positionAttribute = useRef<THREE.BufferAttribute>(null);
   const colorAttribute = useRef<THREE.BufferAttribute>(null);
@@ -472,8 +377,9 @@ function Starfield() {
       const offset = i * 3;
       const depth = 8 + random() * 150;
       const halfHeight = depth * Math.tan(THREE.MathUtils.degToRad(22));
-      positions[offset] = (random() * 2 - 1) * halfHeight * aspect * 1.2;
-      positions[offset + 1] = (random() * 2 - 1) * halfHeight * 1.2;
+      const projected = keepStarOutsideTunnel(random() * 2 - 1, random() * 2 - 1, i);
+      positions[offset] = projected.x * halfHeight * aspect * 1.2;
+      positions[offset + 1] = projected.y * halfHeight * 1.2;
       positions[offset + 2] = -depth;
       sizes[i] = i % 53 === 0 ? 3.1 + random() * 1.4 : 1.5 + random() * 1.8;
       const hue = random() > 0.88 ? 0.12 : 0.53 + random() * 0.12;
@@ -509,8 +415,13 @@ function Starfield() {
       if (p[j + 2] > camera.position.z - 3) {
         const depth = 118 + ((i * 47) % 65);
         const halfHeight = depth * cameraDepth;
-        homePositions[j] = camera.position.x + (((i * 0.754877666) % 1) * 2 - 1) * halfHeight * viewAspect * 1.2;
-        homePositions[j + 1] = camera.position.y + (((i * 0.569840291 + 0.3) % 1) * 2 - 1) * halfHeight * 1.2;
+        const projected = keepStarOutsideTunnel(
+          ((i * 0.754877666) % 1) * 2 - 1,
+          ((i * 0.569840291 + 0.3) % 1) * 2 - 1,
+          i,
+        );
+        homePositions[j] = camera.position.x + projected.x * halfHeight * viewAspect * 1.2;
+        homePositions[j + 1] = camera.position.y + projected.y * halfHeight * 1.2;
         p[j] = homePositions[j];
         p[j + 1] = homePositions[j + 1];
         p[j + 2] = camera.position.z - depth;
@@ -574,6 +485,7 @@ export default function EarthHero() {
         >
           <ambientLight intensity={0.32} />
           <FlightCamera />
+          <ParticleField />
           <Starfield />
         </Canvas>
       </div>

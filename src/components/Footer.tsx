@@ -1,12 +1,9 @@
-import React, { useState, Suspense, lazy } from 'react';
+import React from 'react';
 import { useLanguage } from '../context/LanguageContext';
 import { Send, Mail, Shield, Code2 } from 'lucide-react';
 
-const PrivacyModal = lazy(() => import('./PrivacyModal').then((m) => ({ default: m.PrivacyModal })));
-
 export const Footer: React.FC = () => {
   const { t } = useLanguage();
-  const [privacyOpen, setPrivacyOpen] = useState(false);
 
   const handleTechStackClick = (e: React.MouseEvent<HTMLAnchorElement>) => {
     e.preventDefault();
@@ -62,13 +59,13 @@ export const Footer: React.FC = () => {
               <span>{t.footer.techStack}</span>
             </a>
 
-            <button
-              onClick={() => setPrivacyOpen(true)}
-              className="flex items-center gap-1.5 hover:text-cyan-400 transition-colors cursor-pointer"
+            <a
+              href="/policy"
+              className="flex items-center gap-1.5 hover:text-cyan-400 transition-colors"
             >
               <Shield className="w-4 h-4 text-slate-400" />
               <span>{t.footer.privacy}</span>
-            </button>
+            </a>
           </div>
         </div>
 
@@ -80,12 +77,6 @@ export const Footer: React.FC = () => {
           </div>
         </div>
       </div>
-
-      {privacyOpen && (
-        <Suspense fallback={null}>
-          <PrivacyModal isOpen={privacyOpen} onClose={() => setPrivacyOpen(false)} />
-        </Suspense>
-      )}
     </footer>
   );
 };

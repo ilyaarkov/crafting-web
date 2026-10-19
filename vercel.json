@@ -1,0 +1,13 @@
+{
+  "$schema": "https://openapi.vercel.sh/vercel.json",
+  "rewrites": [
+    { "source": "/techstack", "destination": "/techstack/index.html" },
+    { "source": "/tech-stack", "destination": "/techstack/index.html" },
+    { "source": "/portfolio", "destination": "/portfolio/index.html" },
+    { "source": "/portfolio/:project", "destination": "/portfolio/:project/index.html" },
+    { "source": "/services/:service", "destination": "/services/:service/index.html" },
+    { "source": "/service/:service", "destination": "/services/:service/index.html" },
+    { "source": "/project/:project", "destination": "/portfolio/:project/index.html" },
+    { "source": "/policy", "destination": "/policy/index.html" }
+  ]
+}
