@@ -70,7 +70,7 @@ export const ServiceDetailPage: React.FC<ServiceDetailPageProps> = ({
   const accentColor = isWeb ? 'cyan' : 'sky';
 
   return (
-    <div className="min-h-screen bg-[#06080c] text-slate-100 flex flex-col font-sans selection:bg-cyan-500/20 selection:text-cyan-200 relative overflow-hidden">
+    <div className="min-h-screen bg-site text-slate-100 flex flex-col font-sans selection:bg-cyan-500/20 selection:text-cyan-200 relative overflow-hidden">
       {/* Декоративные космические звезды */}
       <div className="absolute inset-0 pointer-events-none z-0 overflow-hidden">
         {cosmicStars.map((star, i) => (
@@ -95,7 +95,7 @@ export const ServiceDetailPage: React.FC<ServiceDetailPageProps> = ({
       <div className="absolute bottom-40 right-10 w-[500px] h-[500px] bg-sky-500/10 blur-[160px] rounded-full pointer-events-none -z-10" />
 
       {/* Верхняя навигационная панель */}
-      <header className="sticky top-0 z-50 backdrop-blur-xl bg-[#06080c]/80 border-b border-white/5">
+      <header className="sticky top-0 z-50 backdrop-blur-xl bg-site/80 border-b border-white/5">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 h-20 flex items-center justify-between">
           <button
             onClick={onNavigateHome}

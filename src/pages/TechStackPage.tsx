@@ -159,7 +159,7 @@ export const TechStackPage: React.FC<TechStackPageProps> = ({ onNavigateHome }) 
       {/* ========================================================= */}
       {/* HEADER НАВИГАЦИИ СТРАНИЦЫ */}
       {/* ========================================================= */}
-      <header className="sticky top-0 left-0 right-0 z-50 bg-[#06080c]/85 backdrop-blur-xl border-b border-white/10 transition-all duration-300">
+      <header className="sticky top-0 left-0 right-0 z-50 bg-site/85 backdrop-blur-xl border-b border-white/10 transition-all duration-300">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 h-20 flex items-center justify-between">
           {/* Бренд */}
           <button

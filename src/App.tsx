@@ -154,7 +154,7 @@ export default function App() {
           onNavigateHome={navigateHome}
         />
       ) : (
-        <div className="min-h-screen bg-[#06080c] text-slate-100 flex flex-col font-sans selection:bg-cyan-500/20 selection:text-cyan-200">
+        <div className="min-h-screen bg-site text-slate-100 flex flex-col font-sans selection:bg-cyan-500/20 selection:text-cyan-200">
           <Header />
           <main className="flex-1">
             <Hero />

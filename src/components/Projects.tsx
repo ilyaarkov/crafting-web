@@ -49,7 +49,7 @@ export const Projects: React.FC = () => {
     <section
       ref={sectionRef}
       id="projects"
-      className="py-16 sm:py-20 lg:py-24 relative overflow-hidden bg-[#06080c] z-10"
+      className="py-16 sm:py-20 lg:py-24 relative overflow-hidden bg-site z-10"
     >
       {/* Деликатные фоновые ореолы */}
       <div className="absolute top-1/4 -right-40 w-96 h-96 bg-cyan-500/10 blur-[150px] rounded-full pointer-events-none -z-10" />
@@ -71,6 +71,12 @@ export const Projects: React.FC = () => {
           {projects.map((project, idx) => {
             const meta = PROJECTS_DATA[project.id];
             const imageSrc = meta?.previewImage || project.image;
+            const projectHref = `/portfolio/${project.id}`;
+            const handleProjectClick = (event: React.MouseEvent<HTMLAnchorElement>) => {
+              if (event.metaKey || event.ctrlKey || event.shiftKey || event.altKey || event.button !== 0) return;
+              event.preventDefault();
+              navigateTo(projectHref);
+            };
 
             return (
               <div
@@ -78,37 +84,33 @@ export const Projects: React.FC = () => {
                 style={{
                   transitionDelay: `${idx * 120}ms`,
                 }}
-                className={`group flex flex-col justify-start transition-all duration-700 ease-out pb-8 md:pb-0 border-b border-white/10 md:border-b-0 last:border-b-0 last:pb-0 ${
+                className={`group flex flex-col justify-start transition-all duration-700 ease-out motion-reduce:transition-none pb-8 md:pb-0 border-b border-white/10 md:border-b-0 last:border-b-0 last:pb-0 ${
                   isVisible
                     ? 'opacity-100 translate-y-0'
                     : 'opacity-0 translate-y-8'
                 }`}
               >
                 {/* Окно браузера в стиле macOS с фото: кликабельно, курсор-указатель, оверлей "ПОСМОТРЕТЬ" */}
-                <div
-                  onClick={() => navigateTo(`/portfolio/${project.id}`)}
-                  className="mb-4 sm:mb-5 rounded-2xl overflow-hidden group-hover:shadow-[0_0_35px_rgba(34,211,238,0.25)] transition-all duration-300 cursor-pointer"
-                  role="button"
-                  tabIndex={0}
-                  onKeyDown={(e) => {
-                    if (e.key === 'Enter' || e.key === ' ') {
-                      navigateTo(`/portfolio/${project.id}`);
-                    }
-                  }}
+                <a
+                  href={projectHref}
+                  onClick={handleProjectClick}
+                  className="mb-4 sm:mb-5 block rounded-2xl overflow-hidden group-hover:shadow-[0_0_35px_rgba(34,211,238,0.25)] transition-all duration-300"
                 >
                   <MacBrowserFrame
                     imageSrc={imageSrc}
                     imageAlt={project.title}
                     overlayText={lang === 'ru' ? 'ПОСМОТРЕТЬ' : 'VIEW'}
                   />
-                </div>
+                </a>
 
-                {/* Заголовок проекта (также кликабелен) */}
-                <h3
-                  onClick={() => navigateTo(`/portfolio/${project.id}`)}
-                  className="text-xl sm:text-2xl font-bold text-white tracking-tight group-hover:text-cyan-300 transition-colors cursor-pointer"
-                >
-                  {project.title}
+                <h3 className="text-xl sm:text-2xl font-bold text-white tracking-tight">
+                  <a
+                    href={projectHref}
+                    onClick={handleProjectClick}
+                    className="rounded-sm text-white hover:text-cyan-300 transition-colors"
+                  >
+                    {project.title}
+                  </a>
                 </h3>
 
                 {/* Лаконичное описание проекта */}

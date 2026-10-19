@@ -11,15 +11,16 @@ export const Hero: React.FC = () => {
   const { t } = useLanguage();
 
   const handleScrollTo = (e: React.MouseEvent<HTMLAnchorElement>, id: string) => {
-    e.preventDefault();
+    if (e.metaKey || e.ctrlKey || e.shiftKey || e.altKey || e.button !== 0) return;
     const elem = document.querySelector(id);
-    if (elem) {
-      const offsetTop = elem.getBoundingClientRect().top + window.scrollY - 80;
-      window.scrollTo({
-        top: offsetTop,
-        behavior: 'smooth',
-      });
-    }
+    if (!elem) return;
+
+    e.preventDefault();
+    const offsetTop = elem.getBoundingClientRect().top + window.scrollY - 80;
+    window.scrollTo({
+      top: offsetTop,
+      behavior: window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth',
+    });
   };
 
   // Повторяем список тегов для 100% бесшовного бесконечного цикла бегущей строки
@@ -46,6 +47,27 @@ export const Hero: React.FC = () => {
           -webkit-backface-visibility: hidden;
           backface-visibility: hidden;
         }
+        @media (prefers-reduced-motion: reduce) {
+          .marquee-track {
+            width: 100%;
+            animation: none;
+            white-space: normal;
+            justify-content: center;
+          }
+          .marquee-track > div:first-child {
+            max-width: 100%;
+            flex-wrap: wrap;
+            justify-content: center;
+          }
+          .marquee-track > div[aria-hidden="true"] {
+            display: none;
+          }
+        }
+        @media (prefers-reduced-motion: reduce) {
+          .hero-enter {
+            animation: none;
+          }
+        }
       `}</style>
 
       <React.Suspense fallback={null}>
@@ -62,7 +84,7 @@ export const Hero: React.FC = () => {
             <span className="block text-white mb-0.5">
               {t.hero.titlePrefix}
             </span>
-            <span className="block text-transparent bg-clip-text bg-gradient-to-r from-cyan-300 via-sky-300 to-blue-300">
+            <span className="block text-cyan-300">
               {t.hero.titleHighlight}
             </span>
           </h1>
@@ -116,7 +138,7 @@ export const Hero: React.FC = () => {
               <a
                 href="#contact"
                 onClick={(e) => handleScrollTo(e, '#contact')}
-                className="relative group overflow-hidden w-full sm:w-auto px-6 py-2.5 rounded-full font-bold text-slate-950 bg-cyan-400 transition-colors duration-300 active:scale-[0.98] text-xs flex items-center justify-center gap-2 cursor-pointer shadow-lg shadow-cyan-400/20"
+                className="relative group overflow-hidden w-full sm:w-auto min-h-11 px-6 py-2.5 rounded-full font-bold text-slate-950 bg-cyan-400 transition-colors duration-300 active:scale-[0.98] text-xs flex items-center justify-center gap-2 cursor-pointer shadow-lg shadow-cyan-400/20"
               >
                 <span className="absolute inset-0 bg-white rounded-full -translate-x-full group-hover:translate-x-0 transition-transform duration-300 ease-out pointer-events-none" />
                 <span className="relative z-10 flex items-center gap-2">
@@ -129,7 +151,7 @@ export const Hero: React.FC = () => {
               <a
                 href="#projects"
                 onClick={(e) => handleScrollTo(e, '#projects')}
-                className="relative group overflow-hidden w-full sm:w-auto px-6 py-2.5 rounded-full font-semibold text-slate-200 transition-colors duration-300 active:scale-[0.98] text-xs flex items-center justify-center gap-2 cursor-pointer bg-white/5 border border-white/10 hover:border-white/30"
+                className="relative group overflow-hidden w-full sm:w-auto min-h-11 px-6 py-2.5 rounded-full font-semibold text-slate-200 transition-colors duration-300 active:scale-[0.98] text-xs flex items-center justify-center gap-2 cursor-pointer bg-white/5 border border-white/10 hover:border-white/30"
               >
                 <span className="absolute inset-0 bg-white rounded-full -translate-x-full group-hover:translate-x-0 transition-transform duration-300 ease-out pointer-events-none" />
                 <span className="relative z-10 transition-colors duration-300 group-hover:text-slate-950 font-semibold">
@@ -144,9 +166,9 @@ export const Hero: React.FC = () => {
                 href="#about"
                 onClick={(e) => handleScrollTo(e, '#about')}
                 aria-label="Перейти к разделу Обо мне"
-                className="p-1 rounded-full text-slate-400 hover:text-cyan-400 transition-colors cursor-pointer"
+                className="flex min-h-11 min-w-11 items-center justify-center rounded-full text-slate-400 hover:text-cyan-400 transition-colors cursor-pointer"
               >
-                <ChevronDown className="w-4 h-4 text-cyan-400 animate-bounce" />
+                <ChevronDown className="w-4 h-4 text-cyan-400" />
               </a>
             </div>
           </div>
@@ -166,7 +188,7 @@ export const Hero: React.FC = () => {
             <span className="block text-white mb-1">
               {t.hero.titlePrefix}
             </span>
-            <span className="block text-transparent bg-clip-text bg-gradient-to-r from-cyan-300 via-sky-300 to-blue-300">
+            <span className="block text-cyan-300">
               {t.hero.titleHighlight}
             </span>
           </h1>
@@ -244,9 +266,9 @@ export const Hero: React.FC = () => {
               href="#about"
               onClick={(e) => handleScrollTo(e, '#about')}
               aria-label="Перейти к разделу Обо мне"
-              className="p-1 rounded-full text-slate-400 hover:text-cyan-400 hover:bg-white/5 transition-colors cursor-pointer group"
+              className="flex min-h-11 min-w-11 items-center justify-center rounded-full text-slate-400 hover:text-cyan-400 hover:bg-white/5 transition-colors cursor-pointer group"
             >
-              <ChevronDown className="w-5 h-5 text-cyan-400 animate-bounce" />
+              <ChevronDown className="w-5 h-5 text-cyan-400" />
             </a>
           </div>
         </div>

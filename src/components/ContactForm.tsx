@@ -14,6 +14,7 @@ export const ContactForm: React.FC = () => {
   const [loading, setLoading] = useState(false);
   const [submitted, setSubmitted] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [validationAttempted, setValidationAttempted] = useState(false);
 
   useEffect(() => {
     const handleSelectPlan = (e: CustomEvent<string>) => {
@@ -27,8 +28,10 @@ export const ContactForm: React.FC = () => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    setValidationAttempted(true);
     if (!name.trim() || !contact.trim()) {
       setError(t.contact.form.validationError);
+      document.getElementById(!name.trim() ? 'contact-name' : 'contact-target')?.focus();
       return;
     }
 
@@ -46,10 +49,14 @@ export const ContactForm: React.FC = () => {
     const friendlyTariff = tariffLabels[tariff] || tariff || t.contact.form.tariffs.defaultEstimate;
     const normalizedUrl = projectUrl.trim();
 
+    const controller = new AbortController();
+    const requestTimeout = window.setTimeout(() => controller.abort(), 20000);
+
     try {
-      await fetch('/api/lead', {
+      const response = await fetch('/api/lead', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
+        signal: controller.signal,
         body: JSON.stringify({
           name: name.trim(),
           contact: contact.trim(),
@@ -60,18 +67,21 @@ export const ContactForm: React.FC = () => {
         }),
       });
 
+      if (!response.ok) {
+        throw new Error('Lead request failed');
+      }
+
       setSubmitted(true);
+      setValidationAttempted(false);
       setName('');
       setContact('');
       setProjectUrl('');
       setMessage('');
+      setTariff('');
     } catch {
-      setSubmitted(true);
-      setName('');
-      setContact('');
-      setProjectUrl('');
-      setMessage('');
+      setError(t.contact.form.errorMessage);
     } finally {
+      window.clearTimeout(requestTimeout);
       setLoading(false);
     }
   };
@@ -101,7 +111,7 @@ export const ContactForm: React.FC = () => {
   };
 
   return (
-    <section id="contact" className="py-20 lg:py-32 relative bg-[#06080c] z-10">
+    <section id="contact" className="py-20 lg:py-32 relative bg-site z-10">
       <div className="absolute top-1/2 right-1/4 w-[500px] h-[400px] bg-cyan-600/10 blur-[130px] rounded-full pointer-events-none -z-10" />
 
       <div className="max-w-5xl mx-auto px-4 sm:px-6">
@@ -121,7 +131,12 @@ export const ContactForm: React.FC = () => {
           </div>
 
           {submitted ? (
-            <div className="py-12 text-center animate-in fade-in duration-300">
+            <div
+              className="py-12 text-center animate-in fade-in duration-300"
+              role="status"
+              aria-live="polite"
+              aria-atomic="true"
+            >
               <div className="w-16 h-16 rounded-full bg-emerald-500/15 border border-emerald-500/30 flex items-center justify-center text-emerald-400 mx-auto mb-4">
                 <CheckCircle2 className="w-8 h-8" />
               </div>
@@ -142,7 +157,12 @@ export const ContactForm: React.FC = () => {
           ) : (
             <form onSubmit={handleSubmit} className="space-y-5" noValidate>
               {error && (
-                <div className="p-4 rounded-xl bg-rose-500/10 border border-rose-500/20 text-rose-300 text-sm flex items-center gap-3">
+                <div
+                  id="contact-form-error"
+                  role="alert"
+                  aria-live="assertive"
+                  className="p-4 rounded-xl bg-rose-500/10 border border-rose-500/20 text-rose-300 text-sm flex items-center gap-3"
+                >
                   <AlertCircle className="w-5 h-5 shrink-0" />
                   <span>{error}</span>
                 </div>
@@ -157,8 +177,16 @@ export const ContactForm: React.FC = () => {
                     id="contact-name"
                     type="text"
                     required
+                    autoComplete="name"
+                    maxLength={120}
+                    aria-invalid={validationAttempted && !name.trim()}
+                    aria-describedby={error ? 'contact-form-error' : undefined}
                     value={name}
-                    onChange={(e) => setName(e.target.value)}
+                    onChange={(e) => {
+                      setName(e.target.value);
+                      setError(null);
+                      setValidationAttempted(false);
+                    }}
                     placeholder={t.contact.form.namePlaceholder}
                     className="w-full px-4 py-3 rounded-xl bg-white/[0.04] border border-white/10 focus:border-cyan-400 focus:outline-none text-white text-base sm:text-sm placeholder:text-slate-500 transition-colors"
                   />
@@ -172,8 +200,15 @@ export const ContactForm: React.FC = () => {
                     id="contact-target"
                     type="text"
                     required
+                    maxLength={254}
+                    aria-invalid={validationAttempted && !contact.trim()}
+                    aria-describedby={error ? 'contact-form-error' : undefined}
                     value={contact}
-                    onChange={(e) => setContact(e.target.value)}
+                    onChange={(e) => {
+                      setContact(e.target.value);
+                      setError(null);
+                      setValidationAttempted(false);
+                    }}
                     placeholder={t.contact.form.contactPlaceholder}
                     className="w-full px-4 py-3 rounded-xl bg-white/[0.04] border border-white/10 focus:border-cyan-400 focus:outline-none text-white text-base sm:text-sm placeholder:text-slate-500 transition-colors"
                   />
@@ -188,7 +223,7 @@ export const ContactForm: React.FC = () => {
                   id="tariff-select"
                   value={tariff}
                   onChange={(e) => setTariff(e.target.value)}
-                  className="w-full px-4 py-3 rounded-xl bg-[#0c1017] border border-white/10 focus:border-cyan-400 focus:outline-none text-white text-base sm:text-sm transition-colors cursor-pointer"
+                  className="w-full px-4 py-3 rounded-xl bg-site-raised border border-white/10 focus:border-cyan-400 focus:outline-none text-white text-base sm:text-sm transition-colors cursor-pointer"
                 >
                   <option value="">{t.contact.form.tariffPlaceholder}</option>
                   <option value="start">
@@ -220,8 +255,12 @@ export const ContactForm: React.FC = () => {
                   autoCapitalize="none"
                   autoCorrect="off"
                   spellCheck={false}
+                  maxLength={2048}
                   value={projectUrl}
-                  onChange={(e) => setProjectUrl(e.target.value)}
+                  onChange={(e) => {
+                    setProjectUrl(e.target.value);
+                    setError(null);
+                  }}
                   placeholder={t.contact.form.projectUrlPlaceholder}
                   className="w-full px-4 py-3 rounded-xl bg-white/[0.04] border border-white/10 focus:border-cyan-400 focus:outline-none text-white text-base sm:text-sm placeholder:text-slate-500 transition-colors"
                 />
@@ -234,8 +273,12 @@ export const ContactForm: React.FC = () => {
                 <textarea
                   id="contact-message"
                   rows={4}
+                  maxLength={5000}
                   value={message}
-                  onChange={(e) => setMessage(e.target.value)}
+                  onChange={(e) => {
+                    setMessage(e.target.value);
+                    setError(null);
+                  }}
                   placeholder={t.contact.form.messagePlaceholder}
                   className="w-full px-4 py-3 rounded-xl bg-white/[0.04] border border-white/10 focus:border-cyan-400 focus:outline-none text-white text-base sm:text-sm placeholder:text-slate-500 transition-colors resize-y"
                 />
@@ -244,7 +287,8 @@ export const ContactForm: React.FC = () => {
               <button
                 type="submit"
                 disabled={loading}
-                className="w-full py-4 px-6 rounded-full font-semibold text-slate-950 bg-gradient-to-r from-cyan-300 via-cyan-400 to-sky-400 hover:from-cyan-200 hover:to-sky-300 shadow-xl shadow-cyan-500/20 transition-all flex items-center justify-center gap-2 cursor-pointer disabled:opacity-50 text-sm sm:text-base font-bold"
+                aria-busy={loading}
+                className="w-full min-h-11 py-4 px-6 rounded-full font-semibold text-slate-950 bg-gradient-to-r from-cyan-300 via-cyan-400 to-sky-400 hover:from-cyan-200 hover:to-sky-300 shadow-xl shadow-cyan-500/20 transition-all flex items-center justify-center gap-2 cursor-pointer disabled:opacity-50 text-sm sm:text-base font-bold"
               >
                 {loading ? (
                   <span>{t.contact.form.submittingBtn}</span>
