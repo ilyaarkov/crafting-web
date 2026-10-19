@@ -147,6 +147,7 @@ function Globe() {
 
 const TUNNEL_PARTICLE_COUNT = 2400;
 const TUNNEL_FAR_DEPTH = 172;
+const TUNNEL_RADIUS_SCALE = 1.44;
 const glassVertexShader = `
   attribute vec3 color;
   attribute float aSize;
@@ -190,7 +191,7 @@ function makeTunnelParticles(count: number) {
     const ring = Math.floor(random() * 40);
     const depth = 8 + ring * 4.05 + (random() - 0.5) * 0.7;
     const radiusOffset = (random() - 0.5) * depth * 0.009;
-    const radius = (depth * (0.2 + 0.035 * Math.sin(depth * 0.019) + 0.015 * Math.sin(depth * 0.043)) + radiusOffset) * 1.2;
+    const radius = (depth * (0.2 + 0.035 * Math.sin(depth * 0.019) + 0.015 * Math.sin(depth * 0.043)) + radiusOffset) * TUNNEL_RADIUS_SCALE;
 
     angles[i] = angle;
     radiusOffsets[i] = radiusOffset;
@@ -255,7 +256,7 @@ function ParticleField() {
       const wave = 0.2
         + 0.035 * Math.sin(depth * 0.019 - elapsed * 0.34)
         + 0.015 * Math.sin(depth * 0.043 + elapsed * 0.2);
-      const radius = (depth * wave + tunnel.radiusOffsets[i]) * 1.2;
+      const radius = (depth * wave + tunnel.radiusOffsets[i]) * TUNNEL_RADIUS_SCALE;
       const x = Math.cos(angle) * radius;
       const y = Math.sin(angle) * radius;
       const amount = Math.min(1, frameDelta * 3);

@@ -151,7 +151,7 @@ export const Hero: React.FC = () => {
               <a
                 href="#projects"
                 onClick={(e) => handleScrollTo(e, '#projects')}
-                className="relative group overflow-hidden w-full sm:w-auto min-h-11 px-6 py-2.5 rounded-full font-semibold text-slate-200 transition-colors duration-300 active:scale-[0.98] text-xs flex items-center justify-center gap-2 cursor-pointer bg-white/5 border border-white/10 hover:border-white/30"
+                className="relative group overflow-hidden w-full sm:w-auto min-h-11 px-6 py-2.5 rounded-full font-semibold text-slate-200 transition-colors duration-300 active:scale-[0.98] text-xs flex items-center justify-center gap-2 cursor-pointer bg-[#080b12] border border-white/10 hover:border-white/30"
               >
                 <span className="absolute inset-0 bg-white rounded-full -translate-x-full group-hover:translate-x-0 transition-transform duration-300 ease-out pointer-events-none" />
                 <span className="relative z-10 transition-colors duration-300 group-hover:text-slate-950 font-semibold">
@@ -252,7 +252,7 @@ export const Hero: React.FC = () => {
             <a
               href="#projects"
               onClick={(e) => handleScrollTo(e, '#projects')}
-              className="relative group overflow-hidden px-9 py-4 rounded-full font-semibold text-slate-200 transition-colors duration-300 active:scale-[0.98] text-base flex items-center justify-center gap-2 cursor-pointer bg-white/5 border border-white/10 hover:border-white/30"
+              className="relative group overflow-hidden px-9 py-4 rounded-full font-semibold text-slate-200 transition-colors duration-300 active:scale-[0.98] text-base flex items-center justify-center gap-2 cursor-pointer bg-[#080b12] border border-white/10 hover:border-white/30"
             >
               <span className="absolute inset-0 bg-white rounded-full -translate-x-full group-hover:translate-x-0 transition-transform duration-300 ease-out pointer-events-none" />
               <span className="relative z-10 transition-colors duration-300 group-hover:text-slate-950 font-semibold">
