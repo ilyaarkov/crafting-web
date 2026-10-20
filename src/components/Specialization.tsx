@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useLanguage } from '../context/LanguageContext';
-import { ArrowRight, Layers } from 'lucide-react';
+import { ArrowRight } from 'lucide-react';
 
 export const Specialization: React.FC = () => {
   const { t, lang } = useLanguage();
@@ -183,7 +183,6 @@ export const Specialization: React.FC = () => {
         {/* Элегантная нижняя строка с приглашением обсудить задачу под ключ */}
         <div className="mt-14 sm:mt-18 pt-8 border-t border-white/10 flex flex-col sm:flex-row items-center justify-between gap-4">
           <div className="flex items-center gap-3 text-xs sm:text-sm text-slate-400 text-center sm:text-left">
-            <Layers className="w-4 h-4 text-cyan-400 shrink-0" />
             <span>
               {isEn
                 ? 'Need a tailored custom solution or a combination of multiple formats?'

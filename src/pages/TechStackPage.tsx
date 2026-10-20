@@ -10,7 +10,6 @@ import {
   Send,
   Mail,
   Shield,
-  Code2,
   Zap,
   Layers,
   Cpu,
@@ -242,10 +241,6 @@ export const TechStackPage: React.FC<TechStackPageProps> = ({ onNavigateHome }) 
         <div className="max-w-6xl mx-auto px-4 sm:px-6 py-14 sm:py-20 lg:py-24 relative z-10">
           {/* Верхний заголовочный блок */}
           <div className="max-w-3xl mb-12 sm:mb-16">
-            <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full border border-cyan-500/30 bg-cyan-950/30 text-xs uppercase tracking-widest text-cyan-400 font-semibold mb-4">
-              <Code2 className="w-3.5 h-3.5" />
-              <span>{t.tools.badge}</span>
-            </div>
             <h1 className="text-[clamp(22px,6.9vw,27px)] sm:text-5xl font-extrabold text-white tracking-tight leading-tight mb-5">
               {t.tools.title}
             </h1>
@@ -422,7 +417,6 @@ export const TechStackPage: React.FC<TechStackPageProps> = ({ onNavigateHome }) 
         <div className="max-w-6xl mx-auto px-4 sm:px-6">
           <div className="flex flex-col sm:flex-row items-center justify-between gap-6">
             <div className="flex items-center gap-2">
-              <span className="w-2 h-2 rounded-full bg-cyan-400" />
               <span className="text-base font-bold text-white tracking-tight">
                 {t.footer.name}
               </span>

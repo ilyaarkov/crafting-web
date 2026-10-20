@@ -287,7 +287,6 @@ export const PortfolioPage: React.FC<PortfolioPageProps> = ({
         <div className="max-w-6xl mx-auto px-4 sm:px-6">
           <div className="flex flex-col sm:flex-row items-center justify-between gap-6">
             <div className="flex items-center gap-2">
-              <span className="w-2 h-2 rounded-full bg-cyan-400" />
               <span className="text-base font-bold text-white tracking-tight">
                 {t.footer.name}
               </span>

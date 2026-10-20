@@ -18,8 +18,7 @@ export const Footer: React.FC = () => {
         <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-8 mb-12">
           {/* Brand info */}
           <div className="max-w-md">
-            <div className="flex items-center gap-2 mb-3">
-              <span className="w-2 h-2 rounded-full bg-cyan-400" />
+            <div className="mb-3">
               <span className="text-xl font-bold text-white tracking-tight">
                 {t.footer.name}
               </span>

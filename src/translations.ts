@@ -312,7 +312,7 @@ export const translations: Record<Language, Translations> = {
     specialization: {
       badge: 'Направления работы',
       title: 'Моя специализация',
-      subtitle: 'Создаю веб-решения под\u00A0конкретные задачи вашего бизнеса: от\u00A0быстрого запуска до\u00A0глубокой автоматизации.',
+      subtitle: 'Создаю веб-решения под\u00A0конкретные задачи вашего бизнеса: от\u00A0быстрого запуска до\u00A0автоматизации и\u00A0повышения продаж.',
       orderCta: 'Заказать решение',
       scrollAria: 'Перейти к\u00A0специализации',
       categories: [
@@ -971,7 +971,7 @@ export const translations: Record<Language, Translations> = {
     },
     footer: {
       name: 'Илья Арьков',
-      tagline: 'Современные сайты для экспертов, малого бизнеса и организаций. Напрямую с разработчиком.',
+      tagline: 'Современные сайты для экспертов и малого бизнеса.',
       telegram: 'Telegram',
       email: 'hello@ilyaarkov.com',
       privacy: 'Политика конфиденциальности',
@@ -1029,7 +1029,7 @@ export const translations: Record<Language, Translations> = {
     specialization: {
       badge: 'Services & Focus',
       title: 'My Specialization',
-      subtitle: 'Crafting tailored web solutions for\u00A0your business goals: from\u00A0rapid launches to\u00A0deep process automation.',
+      subtitle: 'Crafting tailored web solutions for\u00A0your business goals: from\u00A0rapid launches to\u00A0automation and increased sales.',
       orderCta: 'Order Solution',
       scrollAria: 'View specialization',
       categories: [
@@ -1688,7 +1688,7 @@ export const translations: Record<Language, Translations> = {
     },
     footer: {
       name: 'Ilya Arkov',
-      tagline: 'Modern websites for experts, small businesses, and organizations. Direct collaboration with the developer.',
+      tagline: 'Modern websites for experts and small businesses.',
       telegram: 'Telegram',
       email: 'hello@ilyaarkov.com',
       privacy: 'Privacy Policy',
