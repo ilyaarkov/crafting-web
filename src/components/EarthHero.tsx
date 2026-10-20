@@ -54,8 +54,8 @@ const galaxyFragmentShader = `
   }
 `;
 
-const DESKTOP_PARTICLE_COUNT = 5600;
-const MOBILE_PARTICLE_COUNT = 3200;
+const DESKTOP_PARTICLE_COUNT = 7392;
+const MOBILE_PARTICLE_COUNT = 4224;
 
 function seededRandom(seed: number) {
   let value = seed >>> 0;
@@ -88,7 +88,7 @@ function createGalaxy(count: number) {
   for (let i = 0; i < count; i += 1) {
     const offset = i * 3;
     const orbitOffset = i * 4;
-    const isInnerRing = random() < 0.64;
+    const isInnerRing = random() < 8 / 11;
     const isOuterDisc = !isInnerRing && random() < 0.72;
     const isHalo = !isInnerRing && !isOuterDisc && random() < 0.7;
     const isCenterDust = !isInnerRing && !isOuterDisc && !isHalo;
@@ -169,7 +169,8 @@ function GalaxyField() {
   const pointerTarget = useRef({ x: 0, y: 0 });
   const pointerCurrent = useRef({ x: 0, y: 0 });
   const { size } = useThree();
-  const particleCount = size.width < 768 ? MOBILE_PARTICLE_COUNT : DESKTOP_PARTICLE_COUNT;
+  const isMobileLayout = size.width < 768;
+  const particleCount = isMobileLayout ? MOBILE_PARTICLE_COUNT : DESKTOP_PARTICLE_COUNT;
   const galaxy = useMemo(() => createGalaxy(particleCount), [particleCount]);
 
   useEffect(() => {
@@ -196,16 +197,17 @@ function GalaxyField() {
     const frameDelta = reducedMotion.current ? 0 : Math.min(delta, 0.1);
     const layoutDelta = frameDelta || 1 / 60;
     const aspect = state.size.width / Math.max(1, state.size.height);
-    const isPortrait = aspect < 0.9;
+    const isPortrait = isMobileLayout || aspect < 0.9;
     const targetScaleX = isPortrait ? 0.66 : Math.min(1.18, aspect * 0.74);
     const targetScaleY = isPortrait ? 1.3 : 1.0;
+    const basePositionX = isMobileLayout ? state.viewport.width / 2 : 0;
 
     pointerCurrent.current.x = THREE.MathUtils.damp(pointerCurrent.current.x, pointerTarget.current.x, 1.8, frameDelta);
     pointerCurrent.current.y = THREE.MathUtils.damp(pointerCurrent.current.y, pointerTarget.current.y, 1.8, frameDelta);
     field.current.rotation.x = THREE.MathUtils.damp(field.current.rotation.x, pointerCurrent.current.y * 0.018, 1.5, frameDelta);
     field.current.rotation.y = THREE.MathUtils.damp(field.current.rotation.y, pointerCurrent.current.x * 0.028, 1.5, frameDelta);
-    field.current.position.x = THREE.MathUtils.damp(field.current.position.x, pointerCurrent.current.x * 0.08, 1.2, frameDelta);
-    field.current.position.y = THREE.MathUtils.damp(field.current.position.y, (isPortrait ? -0.16 : -0.12) + pointerCurrent.current.y * 0.05, 1.2, frameDelta);
+    field.current.position.x = basePositionX + pointerCurrent.current.x * 0.08;
+    field.current.position.y = (isPortrait ? -0.16 : -0.12) + pointerCurrent.current.y * 0.05;
     field.current.scale.x = THREE.MathUtils.damp(field.current.scale.x, targetScaleX, 2.2, layoutDelta);
     field.current.scale.y = THREE.MathUtils.damp(field.current.scale.y, targetScaleY, 2.2, layoutDelta);
     material.current.uniforms.uTime.value += frameDelta;
