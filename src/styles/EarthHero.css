@@ -84,18 +84,18 @@
 @media (max-width: 760px) {
   .earth-hero--cosmic {
     background:
-      radial-gradient(ellipse 86% 58% at 50% 48%, rgba(31, 36, 47, 0.2), transparent 76%),
+      radial-gradient(ellipse 86% 58% at 62% 46%, rgba(31, 36, 47, 0.2), transparent 76%),
       #010204;
   }
 
   .earth-hero__canvas-wrap {
-    inset: -8% -38%;
+    inset: -8% -50% -8% -26%;
     opacity: 0.96;
   }
 
   .earth-hero--cosmic .earth-hero__vignette {
     background:
-      radial-gradient(ellipse 76% 54% at 50% 48%, rgba(1, 2, 4, 0.48) 0%, rgba(1, 2, 4, 0.14) 68%, transparent 100%),
+      radial-gradient(ellipse 76% 54% at 62% 46%, rgba(1, 2, 4, 0.36) 0%, rgba(1, 2, 4, 0.12) 68%, transparent 100%),
       linear-gradient(0deg, rgba(1, 2, 4, 0.7), transparent 25%, transparent 75%, rgba(1, 2, 4, 0.54));
   }
 }

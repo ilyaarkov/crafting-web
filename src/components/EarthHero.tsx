@@ -4,19 +4,30 @@ import * as THREE from "three";
 import "../styles/EarthHero.css";
 
 const galaxyVertexShader = `
+  uniform float uTime;
   attribute vec3 color;
   attribute float aSize;
   attribute float aIntensity;
   attribute float aSeed;
+  attribute vec4 aOrbit;
+  attribute vec4 aShape;
   varying vec3 vColor;
   varying float vIntensity;
   varying float vSeed;
 
   void main() {
+    float theta = aOrbit.z + uTime * aOrbit.w;
+    float wobble = 1.0 + aShape.z * sin(theta * 2.0 + aShape.w);
+    vec2 orbitPoint = vec2(cos(theta) * aOrbit.x, sin(theta) * aOrbit.y) * wobble;
+    vec2 tiltedPoint = vec2(
+      orbitPoint.x * aShape.x - orbitPoint.y * aShape.y,
+      orbitPoint.x * aShape.y + orbitPoint.y * aShape.x
+    );
+
     vColor = color;
-    vIntensity = aIntensity;
+    vIntensity = aIntensity * (0.92 - 0.08 * sin(theta));
     vSeed = aSeed;
-    vec4 viewPosition = modelViewMatrix * vec4(position, 1.0);
+    vec4 viewPosition = modelViewMatrix * vec4(tiltedPoint, position.z, 1.0);
     gl_Position = projectionMatrix * viewPosition;
     gl_PointSize = aSize * (38.0 / max(4.0, -viewPosition.z));
   }
@@ -54,36 +65,80 @@ function seededRandom(seed: number) {
   };
 }
 
+function gaussianRandom(random: () => number) {
+  const radius = Math.sqrt(-2 * Math.log(Math.max(0.0001, random())));
+  return radius * Math.cos(random() * Math.PI * 2);
+}
+
 function createGalaxy(count: number) {
   const positions = new Float32Array(count * 3);
   const colors = new Float32Array(count * 3);
   const sizes = new Float32Array(count);
   const intensities = new Float32Array(count);
   const seeds = new Float32Array(count);
+  const orbits = new Float32Array(count * 4);
+  const shapes = new Float32Array(count * 4);
   const random = seededRandom(0x1a4a7);
   const color = new THREE.Color();
+  const ringRadius = 0.62;
+  const orbitWidth = 4.9;
+  const orbitHeight = 1.55;
+  const baseSpeed = 0.028;
 
   for (let i = 0; i < count; i += 1) {
     const offset = i * 3;
-    const isHalo = random() < 0.16;
-    const radius = isHalo
-      ? 1.1 + Math.pow(random(), 0.48) * 0.95
-      : 0.23 + Math.pow(random(), 0.66) * 1.18;
-    const angle = random() * Math.PI * 2 + radius * 2.4;
-    const armWarp = Math.sin(angle * 2.0 + radius * 7.0) * 0.055 * radius;
-    const width = isHalo ? 1.35 : 0.96 + radius * 0.13;
-    const x = Math.cos(angle) * radius * 5.65 + (random() - 0.5) * width;
-    const y = Math.sin(angle) * radius * 1.68 + armWarp + (random() - 0.5) * (0.08 + radius * 0.2);
-    const z = (random() - 0.5) * (0.18 + radius * 0.34);
+    const orbitOffset = i * 4;
+    const isInnerRing = random() < 0.64;
+    const isOuterDisc = !isInnerRing && random() < 0.72;
+    const isHalo = !isInnerRing && !isOuterDisc && random() < 0.7;
+    const isCenterDust = !isInnerRing && !isOuterDisc && !isHalo;
+    let radius: number;
 
-    positions[offset] = x;
-    positions[offset + 1] = y;
-    positions[offset + 2] = z;
+    if (isInnerRing) {
+      const deviation = gaussianRandom(random);
+      radius = ringRadius + (deviation < 0 ? deviation * 0.045 : deviation * 0.11);
+    } else if (isOuterDisc) {
+      radius = 0.7 + Math.pow(random(), 1.7) * 0.85;
+    } else if (isHalo) {
+      radius = 1.15 + random() * 0.75;
+    } else {
+      radius = 0.16 + random() * 0.28;
+    }
+    radius = Math.max(0.12, radius);
 
-    const isHot = !isHalo && radius > 0.78 && random() < 0.13;
-    const isBrightStar = random() < (isHalo ? 0.035 : 0.012);
-    const brightness = isBrightStar ? 0.92 : isHot ? 0.72 + random() * 0.22 : 0.34 + random() * 0.34;
+    const eccentricity = isHalo
+      ? 0.75 + random() * 0.6
+      : 0.88 + random() * 0.24;
+    const semiMajor = radius * orbitWidth * (0.97 + random() * 0.06);
+    const semiMinor = radius * orbitHeight * eccentricity;
+    const phase = random() * Math.PI * 2;
+    const speed = baseSpeed
+      * Math.pow(Math.max(radius, 0.3) / ringRadius, -1.5)
+      * (0.85 + random() * 0.3);
+    const tilt = (random() - 0.5) * 0.09;
+    const wobbleAmount = 0.015 + random() * 0.035;
+    const wobblePhase = random() * Math.PI * 2;
+    const z = (random() - 0.5) * (0.12 + radius * 0.3);
+    const ringDistance = Math.abs(radius - ringRadius);
+    const ringBrightness = Math.exp(-((ringDistance / 0.14) ** 2));
+    const isBrightStar = random() < (isHalo ? 0.035 : isCenterDust ? 0.008 : 0.016);
+    const brightness = isCenterDust
+      ? 0.12 + random() * 0.13
+      : (isBrightStar ? 0.92 : 0.34 + random() * 0.34)
+        * (0.7 + ringBrightness * 0.42);
     const tint = random();
+
+    positions[offset] = 0;
+    positions[offset + 1] = 0;
+    positions[offset + 2] = z;
+    orbits[orbitOffset] = semiMajor;
+    orbits[orbitOffset + 1] = semiMinor;
+    orbits[orbitOffset + 2] = phase;
+    orbits[orbitOffset + 3] = speed;
+    shapes[orbitOffset] = Math.cos(tilt);
+    shapes[orbitOffset + 1] = Math.sin(tilt);
+    shapes[orbitOffset + 2] = wobbleAmount;
+    shapes[orbitOffset + 3] = wobblePhase;
 
     if (tint > 0.96) {
       color.setRGB(1.0, 0.82, 0.72);
@@ -95,12 +150,16 @@ function createGalaxy(count: number) {
     }
     color.toArray(colors, offset);
 
-    sizes[i] = isBrightStar ? 2.5 + random() * 2.4 : isHot ? 1.35 + random() * 1.55 : 0.7 + random() * 1.45;
+    sizes[i] = isCenterDust
+      ? 0.5 + random() * 0.4
+      : isBrightStar
+        ? 2.5 + random() * 2.4
+        : 0.7 + random() * 1.45;
     intensities[i] = brightness;
     seeds[i] = random();
   }
 
-  return { positions, colors, sizes, intensities, seeds };
+  return { positions, colors, sizes, intensities, seeds, orbits, shapes };
 }
 
 function GalaxyField() {
@@ -134,26 +193,26 @@ function GalaxyField() {
 
   useFrame((state, delta) => {
     if (!field.current || !material.current) return;
-    const frameDelta = reducedMotion.current ? 0 : delta;
+    const frameDelta = reducedMotion.current ? 0 : Math.min(delta, 0.1);
+    const layoutDelta = frameDelta || 1 / 60;
     const aspect = state.size.width / Math.max(1, state.size.height);
     const isPortrait = aspect < 0.9;
-    const targetScaleX = isPortrait ? 0.76 : Math.min(1.18, aspect * 0.74);
-    const targetScaleY = isPortrait ? 1.52 : 1.0;
+    const targetScaleX = isPortrait ? 0.66 : Math.min(1.18, aspect * 0.74);
+    const targetScaleY = isPortrait ? 1.3 : 1.0;
 
     pointerCurrent.current.x = THREE.MathUtils.damp(pointerCurrent.current.x, pointerTarget.current.x, 1.8, frameDelta);
     pointerCurrent.current.y = THREE.MathUtils.damp(pointerCurrent.current.y, pointerTarget.current.y, 1.8, frameDelta);
-    field.current.rotation.z += frameDelta * 0.012;
     field.current.rotation.x = THREE.MathUtils.damp(field.current.rotation.x, pointerCurrent.current.y * 0.018, 1.5, frameDelta);
     field.current.rotation.y = THREE.MathUtils.damp(field.current.rotation.y, pointerCurrent.current.x * 0.028, 1.5, frameDelta);
     field.current.position.x = THREE.MathUtils.damp(field.current.position.x, pointerCurrent.current.x * 0.08, 1.2, frameDelta);
     field.current.position.y = THREE.MathUtils.damp(field.current.position.y, (isPortrait ? -0.16 : -0.12) + pointerCurrent.current.y * 0.05, 1.2, frameDelta);
-    field.current.scale.x = THREE.MathUtils.damp(field.current.scale.x, targetScaleX, 2.2, frameDelta || 1 / 60);
-    field.current.scale.y = THREE.MathUtils.damp(field.current.scale.y, targetScaleY, 2.2, frameDelta || 1 / 60);
+    field.current.scale.x = THREE.MathUtils.damp(field.current.scale.x, targetScaleX, 2.2, layoutDelta);
+    field.current.scale.y = THREE.MathUtils.damp(field.current.scale.y, targetScaleY, 2.2, layoutDelta);
     material.current.uniforms.uTime.value += frameDelta;
   });
 
   return (
-    <group ref={field} rotation={[0, 0, -0.2]}>
+    <group ref={field} rotation={[0, 0, 0]}>
       <points frustumCulled={false}>
         <bufferGeometry>
           <bufferAttribute attach="attributes-position" args={[galaxy.positions, 3]} />
@@ -161,6 +220,8 @@ function GalaxyField() {
           <bufferAttribute attach="attributes-aSize" args={[galaxy.sizes, 1]} />
           <bufferAttribute attach="attributes-aIntensity" args={[galaxy.intensities, 1]} />
           <bufferAttribute attach="attributes-aSeed" args={[galaxy.seeds, 1]} />
+          <bufferAttribute attach="attributes-aOrbit" args={[galaxy.orbits, 4]} />
+          <bufferAttribute attach="attributes-aShape" args={[galaxy.shapes, 4]} />
         </bufferGeometry>
         <shaderMaterial
           ref={material}
