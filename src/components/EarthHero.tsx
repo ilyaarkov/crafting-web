@@ -89,8 +89,8 @@ function createGalaxy(count: number) {
     const offset = i * 3;
     const orbitOffset = i * 4;
     const isInnerRing = random() < 8 / 11;
-    const isOuterDisc = !isInnerRing && random() < 0.72;
-    const isHalo = !isInnerRing && !isOuterDisc && random() < 0.7;
+    const isOuterDisc = !isInnerRing && random() < 0.7;
+    const isHalo = !isInnerRing && !isOuterDisc && random() < 0.3;
     const isCenterDust = !isInnerRing && !isOuterDisc && !isHalo;
     let radius: number;
 
@@ -121,9 +121,9 @@ function createGalaxy(count: number) {
     const z = (random() - 0.5) * (0.12 + radius * 0.3);
     const ringDistance = Math.abs(radius - ringRadius);
     const ringBrightness = Math.exp(-((ringDistance / 0.14) ** 2));
-    const isBrightStar = random() < (isHalo ? 0.035 : isCenterDust ? 0.008 : 0.016);
+    const isBrightStar = random() < (isHalo ? 0.035 : isCenterDust ? 0.028 : 0.016);
     const brightness = isCenterDust
-      ? 0.12 + random() * 0.13
+      ? (isBrightStar ? 0.58 + random() * 0.28 : 0.12 + random() * 0.13)
       : (isBrightStar ? 0.92 : 0.34 + random() * 0.34)
         * (0.7 + ringBrightness * 0.42);
     const tint = random();
@@ -151,7 +151,9 @@ function createGalaxy(count: number) {
     color.toArray(colors, offset);
 
     sizes[i] = isCenterDust
-      ? 0.5 + random() * 0.4
+      ? isBrightStar
+        ? 1.6 + random() * 1.4
+        : 0.5 + random() * 0.4
       : isBrightStar
         ? 2.5 + random() * 2.4
         : 0.7 + random() * 1.45;
@@ -165,6 +167,7 @@ function createGalaxy(count: number) {
 function GalaxyField() {
   const field = useRef<THREE.Group>(null);
   const material = useRef<THREE.ShaderMaterial>(null);
+  const animationTime = useRef(0);
   const reducedMotion = useRef(false);
   const pointerTarget = useRef({ x: 0, y: 0 });
   const pointerCurrent = useRef({ x: 0, y: 0 });
@@ -172,6 +175,7 @@ function GalaxyField() {
   const isMobileLayout = size.width < 768;
   const particleCount = isMobileLayout ? MOBILE_PARTICLE_COUNT : DESKTOP_PARTICLE_COUNT;
   const galaxy = useMemo(() => createGalaxy(particleCount), [particleCount]);
+  const uniforms = useMemo(() => ({ uTime: { value: 0 } }), []);
 
   useEffect(() => {
     const preference = window.matchMedia("(prefers-reduced-motion: reduce)");
@@ -194,8 +198,9 @@ function GalaxyField() {
 
   useFrame((state, delta) => {
     if (!field.current || !material.current) return;
-    const frameDelta = reducedMotion.current ? 0 : Math.min(delta, 0.1);
-    const layoutDelta = frameDelta || 1 / 60;
+    const frameDelta = Number.isFinite(delta) ? Math.min(Math.max(delta, 0), 0.1) : 0;
+    const animationDelta = reducedMotion.current ? 0 : frameDelta;
+    const layoutDelta = reducedMotion.current ? 1 / 60 : frameDelta;
     const aspect = state.size.width / Math.max(1, state.size.height);
     const isPortrait = isMobileLayout || aspect < 0.9;
     const targetScaleX = isPortrait ? 0.66 : Math.min(1.18, aspect * 0.74);
@@ -210,7 +215,8 @@ function GalaxyField() {
     field.current.position.y = (isPortrait ? -0.16 : -0.12) + pointerCurrent.current.y * 0.05;
     field.current.scale.x = THREE.MathUtils.damp(field.current.scale.x, targetScaleX, 2.2, layoutDelta);
     field.current.scale.y = THREE.MathUtils.damp(field.current.scale.y, targetScaleY, 2.2, layoutDelta);
-    material.current.uniforms.uTime.value += frameDelta;
+    animationTime.current += animationDelta;
+    material.current.uniforms.uTime.value = animationTime.current;
   });
 
   return (
@@ -227,7 +233,7 @@ function GalaxyField() {
         </bufferGeometry>
         <shaderMaterial
           ref={material}
-          uniforms={{ uTime: { value: 0 } }}
+          uniforms={uniforms}
           vertexShader={galaxyVertexShader}
           fragmentShader={galaxyFragmentShader}
           transparent
