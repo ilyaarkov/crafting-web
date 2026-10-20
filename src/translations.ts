@@ -387,12 +387,11 @@ export const translations: Record<Language, Translations> = {
       businessNeedsTitle: 'Если вам нужно:',
       businessNeeds: ['Построить бренд с нуля.', 'Настроить базовые воронки.', 'Стать видимым в интернете.', 'Начать развивать SEO/GEO.', 'Создать продающие контентные страницы под товар или услугу.'],
       socials: [
-        { name: 'Telegram', url: 'https://t.me/ilyaarkovdotcom' },
-        { name: 'GitHub', url: 'https://github.com/ilyaarkov' },
-        { name: 'Instagram', url: 'https://instagram.com/ilyaarkovdotcom?vrfl=eHpjcnZrMDgzNThu&utm_source=qr' },
         { name: 'Threads', url: 'https://threads.net/@ilyaarkov' },
-        { name: 'X', url: 'https://x.com/ilyaarkov' },
+        { name: 'Instagram', url: 'https://instagram.com/ilyaarkovdotcom?vrfl=eHpjcnZrMDgzNThu&utm_source=qr' },
         { name: 'LinkedIn', url: 'https://www.linkedin.com/in/ilyaarkov' },
+        { name: 'GitHub', url: 'https://github.com/ilyaarkov' },
+        { name: 'Telegram', url: 'https://t.me/ilyaarkovdotcom' },
       ],
       whoIsItForTitle: 'Кому подойдёт сотрудничество',
       whoIsItForList: [
@@ -1104,12 +1103,11 @@ export const translations: Record<Language, Translations> = {
       businessNeedsTitle: 'If you want to:',
       businessNeeds: ['Build a brand from scratch.', 'Set up basic sales funnels.', 'Become visible online.', 'Start growing your SEO/GEO presence.', 'Create persuasive content pages for a product or service.'],
       socials: [
-        { name: 'Telegram', url: 'https://t.me/ilyaarkovdotcom' },
-        { name: 'GitHub', url: 'https://github.com/ilyaarkov' },
-        { name: 'Instagram', url: 'https://instagram.com/ilyaarkovdotcom?vrfl=eHpjcnZrMDgzNThu&utm_source=qr' },
         { name: 'Threads', url: 'https://threads.net/@ilyaarkov' },
-        { name: 'X', url: 'https://x.com/ilyaarkov' },
+        { name: 'Instagram', url: 'https://instagram.com/ilyaarkovdotcom?vrfl=eHpjcnZrMDgzNThu&utm_source=qr' },
         { name: 'LinkedIn', url: 'https://www.linkedin.com/in/ilyaarkov' },
+        { name: 'GitHub', url: 'https://github.com/ilyaarkov' },
+        { name: 'Telegram', url: 'https://t.me/ilyaarkovdotcom' },
       ],
       whoIsItForTitle: 'Who this collaboration is for',
       whoIsItForList: [
