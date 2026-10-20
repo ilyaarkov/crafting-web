@@ -22,6 +22,8 @@ const LAYERS: StarLayer[] = [
   { speed: 0.78, tile: 941, count: 26, radius: [0.95, 1.6], alpha: [0.6, 0.95], glowChance: 0.3, seed: 37 },
 ];
 
+const NEAR_LAYER = LAYERS.length - 1;
+
 // Детерминированный генератор, чтобы звёзды не «прыгали» между рендерами
 const mulberry32 = (seed: number) => () => {
   seed |= 0;
@@ -33,8 +35,32 @@ const mulberry32 = (seed: number) => () => {
 
 const STAR_TINTS = ['255,255,255', '255,255,255', '226,240,255', '207,250,254', '254,243,226'];
 
+const drawStar = (
+  ctx: CanvasRenderingContext2D,
+  x: number,
+  y: number,
+  r: number,
+  a: number,
+  tint: string,
+  glow: boolean,
+) => {
+  if (glow) {
+    const halo = ctx.createRadialGradient(x, y, 0, x, y, r * 5);
+    halo.addColorStop(0, `rgba(${tint},${a * 0.35})`);
+    halo.addColorStop(1, `rgba(${tint},0)`);
+    ctx.fillStyle = halo;
+    ctx.beginPath();
+    ctx.arc(x, y, r * 5, 0, Math.PI * 2);
+    ctx.fill();
+  }
+  ctx.fillStyle = `rgba(${tint},${a})`;
+  ctx.beginPath();
+  ctx.arc(x, y, r, 0, Math.PI * 2);
+  ctx.fill();
+};
+
 // Рисует плитку слоя на canvas и возвращает data URL для background-image
-const renderTile = (layer: StarLayer, dpr: number): string => {
+const renderTile = (layer: StarLayer, dpr: number, seed: number, constellations: number): string => {
   const canvas = document.createElement('canvas');
   const size = Math.round(layer.tile * dpr);
   canvas.width = size;
@@ -43,7 +69,7 @@ const renderTile = (layer: StarLayer, dpr: number): string => {
   if (!ctx) return '';
   ctx.scale(dpr, dpr);
 
-  const random = mulberry32(layer.seed);
+  const random = mulberry32(layer.seed + seed);
   const lerp = ([a, b]: [number, number]) => a + (b - a) * random();
 
   for (let i = 0; i < layer.count; i++) {
@@ -61,42 +87,80 @@ const renderTile = (layer: StarLayer, dpr: number): string => {
 
     for (const px of xs) {
       for (const py of ys) {
-        if (hasGlow) {
-          const halo = ctx.createRadialGradient(px, py, 0, px, py, r * 5);
-          halo.addColorStop(0, `rgba(${tint},${a * 0.35})`);
-          halo.addColorStop(1, `rgba(${tint},0)`);
-          ctx.fillStyle = halo;
-          ctx.beginPath();
-          ctx.arc(px, py, r * 5, 0, Math.PI * 2);
-          ctx.fill();
-        }
-        ctx.fillStyle = `rgba(${tint},${a})`;
-        ctx.beginPath();
-        ctx.arc(px, py, r, 0, Math.PI * 2);
-        ctx.fill();
+        drawStar(ctx, px, py, r, a, tint, hasGlow);
       }
     }
   }
 
+  // Созвездия: короткие ломаные из ярких звёзд. Держим их внутри плитки, чтобы линии не резались на стыках
+  for (let c = 0; c < constellations; c++) {
+    const margin = 160;
+    let x = margin + random() * (layer.tile - margin * 2);
+    let y = margin + random() * (layer.tile - margin * 2);
+    let angle = random() * Math.PI * 2;
+    const points = [{ x, y }];
+    const length = 4 + Math.floor(random() * 3);
+
+    for (let p = 1; p < length; p++) {
+      angle += (random() - 0.5) * 1.6;
+      const step = 45 + random() * 55;
+      x = Math.min(layer.tile - 30, Math.max(30, x + Math.cos(angle) * step));
+      y = Math.min(layer.tile - 30, Math.max(30, y + Math.sin(angle) * step));
+      points.push({ x, y });
+    }
+
+    ctx.strokeStyle = 'rgba(125,211,252,0.16)';
+    ctx.lineWidth = 0.7;
+    ctx.beginPath();
+    points.forEach((pt, p) => (p ? ctx.lineTo(pt.x, pt.y) : ctx.moveTo(pt.x, pt.y)));
+    ctx.stroke();
+
+    points.forEach((pt) => {
+      drawStar(ctx, pt.x, pt.y, 1.1 + random() * 0.5, 0.75 + random() * 0.2, '207,250,254', random() < 0.6);
+    });
+  }
+
   return canvas.toDataURL('image/png');
+};
+
+type ParallaxStarfieldProps = {
+  // Сдвиг раскладки звёзд, чтобы у разных секций не было одинакового узора
+  seed?: number;
+  // Количество созвездий на плитку ближнего слоя
+  constellations?: number;
+  // Высота растворения звёзд у верхней и нижней границы, в процентах высоты секции
+  fadeTop?: number;
+  fadeBottom?: number;
+  // Дополнительный декоративный слой поверх звёзд, движется со своей скоростью параллакса
+  accent?: React.ReactNode;
+  accentSpeed?: number;
 };
 
 /**
  * Равномерное звёздное поле с параллаксом по глубине.
  * Кладётся внутрь секции с `relative overflow-hidden`; занимает её целиком.
  */
-export const ParallaxStarfield: React.FC = () => {
+export const ParallaxStarfield: React.FC<ParallaxStarfieldProps> = ({
+  seed = 0,
+  constellations = 0,
+  fadeTop = 9,
+  fadeBottom = 9,
+  accent,
+  accentSpeed = 0.45,
+}) => {
   const rootRef = useRef<HTMLDivElement>(null);
   const layerRefs = useRef<(HTMLDivElement | null)[]>([]);
+  const accentRef = useRef<HTMLDivElement>(null);
+
   // Плитки рисуются один раз на клиенте и сразу назначаются слоям, без лишнего ре-рендера
   useEffect(() => {
     const dpr = Math.min(window.devicePixelRatio || 1, 2);
     LAYERS.forEach((layer, i) => {
       const el = layerRefs.current[i];
-      const tile = renderTile(layer, dpr);
+      const tile = renderTile(layer, dpr, seed, i === NEAR_LAYER ? constellations : 0);
       if (el && tile) el.style.backgroundImage = `url(${tile})`;
     });
-  }, []);
+  }, [seed, constellations]);
 
   useEffect(() => {
     const root = rootRef.current;
@@ -113,13 +177,15 @@ export const ParallaxStarfield: React.FC = () => {
       const viewportH = window.innerHeight;
       if (rect.bottom < -100 || rect.top > viewportH + 100) return;
 
-      const offset = rect.top + rect.height / 2 - viewportH / 2;
+      const offset = reducedMotion.matches ? 0 : rect.top + rect.height / 2 - viewportH / 2;
       LAYERS.forEach((layer, i) => {
         const el = layerRefs.current[i];
         if (!el) return;
-        const shift = reducedMotion.matches ? 0 : -offset * (1 - layer.speed);
-        el.style.transform = `translate3d(0, ${shift.toFixed(1)}px, 0)`;
+        el.style.transform = `translate3d(0, ${(-offset * (1 - layer.speed)).toFixed(1)}px, 0)`;
       });
+      if (accentRef.current) {
+        accentRef.current.style.transform = `translate3d(0, ${(-offset * (1 - accentSpeed)).toFixed(1)}px, 0)`;
+      }
     };
 
     // Запас высоты слоя сверху и снизу, чтобы при максимальном смещении не появлялись пустые края
@@ -153,14 +219,17 @@ export const ParallaxStarfield: React.FC = () => {
       reducedMotion.removeEventListener('change', update);
       if (frame) cancelAnimationFrame(frame);
     };
-  }, []);
+  }, [accentSpeed]);
+
+  // Маска только растворяет звёзды у верхней и нижней границы, чтобы не было шва с соседними блоками
+  const mask = `linear-gradient(to bottom, transparent 0%, black ${fadeTop}%, black ${100 - fadeBottom}%, transparent 100%)`;
 
   return (
     <div
       ref={rootRef}
       aria-hidden="true"
-      // Маска только растворяет звёзды у верхней и нижней границы, чтобы не было шва с соседними блоками
-      className="absolute inset-0 overflow-hidden pointer-events-none z-0 [mask-image:linear-gradient(to_bottom,transparent_0%,black_9%,black_91%,transparent_100%)]"
+      className="absolute inset-0 overflow-hidden pointer-events-none z-0"
+      style={{ maskImage: mask, WebkitMaskImage: mask }}
     >
       {LAYERS.map((layer, i) => (
         <div
@@ -175,6 +244,11 @@ export const ParallaxStarfield: React.FC = () => {
           }}
         />
       ))}
+      {accent && (
+        <div ref={accentRef} className="absolute inset-0 will-change-transform">
+          {accent}
+        </div>
+      )}
     </div>
   );
 };

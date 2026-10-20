@@ -1,6 +1,19 @@
 import React from 'react';
 import { useLanguage } from '../context/LanguageContext';
 import { Check, ArrowRight } from 'lucide-react';
+import { ParallaxStarfield } from './ParallaxStarfield';
+
+// Тонкие наклонные орбиты с «планетами» — без заливок и свечения, только контуры
+const PricingOrbits: React.FC = () => (
+  <svg className="absolute inset-0 w-full h-full" viewBox="0 0 1000 1000" preserveAspectRatio="xMidYMid slice">
+    <g fill="none" stroke="rgba(125,211,252,0.09)" strokeWidth="1" vectorEffect="non-scaling-stroke">
+      <ellipse cx="500" cy="520" rx="620" ry="170" transform="rotate(-12 500 520)" />
+      <ellipse cx="500" cy="520" rx="470" ry="120" transform="rotate(-12 500 520)" strokeDasharray="2 7" />
+    </g>
+    <circle cx="1100" cy="379" r="3" fill="rgba(165,243,252,0.6)" transform="rotate(-12 500 520)" />
+    <circle cx="225" cy="602" r="2.2" fill="rgba(186,230,253,0.55)" />
+  </svg>
+);
 
 export const Pricing: React.FC = () => {
   const { t } = useLanguage();
@@ -24,9 +37,10 @@ export const Pricing: React.FC = () => {
 
   return (
     <section id="pricing" className="py-16 sm:py-20 lg:py-32 relative overflow-hidden bg-site z-10">
-      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[500px] bg-gradient-to-tr from-cyan-600/15 via-blue-600/10 to-transparent blur-[140px] rounded-full pointer-events-none -z-10" />
+      {/* ФОН СЕКЦИИ: звёздное поле с созвездиями и наклонными орбитами на средней глубине */}
+      <ParallaxStarfield seed={101} constellations={2} fadeBottom={5} accent={<PricingOrbits />} accentSpeed={0.55} />
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 relative z-10">
         <div className="text-center max-w-4xl mx-auto mb-10 sm:mb-16">
           <div className="text-xs uppercase tracking-widest text-cyan-400 font-semibold mb-2.5">
             <span>{t.pricing.preTitle}</span>
