@@ -1,4 +1,4 @@
-.earth-hero {
+.galaxy-hero {
   position: absolute;
   z-index: 0;
   inset: 0;
@@ -8,14 +8,14 @@
   background: #010204;
 }
 
-.earth-hero--cosmic {
+.galaxy-hero--cosmic {
   background:
     radial-gradient(ellipse 58% 72% at 54% 48%, rgba(25, 31, 42, 0.22), transparent 72%),
     radial-gradient(ellipse 92% 52% at 50% 58%, rgba(83, 91, 105, 0.11), transparent 72%),
     #010204;
 }
 
-.earth-hero__canvas-wrap {
+.galaxy-hero__canvas-wrap {
   position: absolute;
   inset: -8% -10%;
   z-index: 0;
@@ -24,13 +24,13 @@
   contain: strict;
 }
 
-.earth-hero__canvas-wrap canvas {
+.galaxy-hero__canvas-wrap canvas {
   display: block;
   width: 100% !important;
   height: 100% !important;
 }
 
-.earth-hero__vignette {
+.galaxy-hero__vignette {
   position: absolute;
   inset: 0;
   pointer-events: none;
@@ -39,7 +39,7 @@
     linear-gradient(0deg, rgba(1, 2, 4, 0.72), transparent 22%, transparent 76%, rgba(1, 2, 4, 0.62));
 }
 
-.earth-hero--cosmic .earth-hero__vignette {
+.galaxy-hero--cosmic .galaxy-hero__vignette {
   background:
     radial-gradient(ellipse 52% 56% at 50% 48%, rgba(1, 2, 4, 0.54) 0%, rgba(1, 2, 4, 0.18) 64%, transparent 100%),
     linear-gradient(90deg, rgba(1, 2, 4, 0.32), transparent 34%, transparent 70%, rgba(1, 2, 4, 0.18)),
@@ -82,18 +82,18 @@
 }
 
 @media (max-width: 760px) {
-  .earth-hero--cosmic {
+  .galaxy-hero--cosmic {
     background:
       radial-gradient(ellipse 86% 58% at 100% 46%, rgba(31, 36, 47, 0.2), transparent 76%),
       #010204;
   }
 
-  .earth-hero__canvas-wrap {
+  .galaxy-hero__canvas-wrap {
     inset: -8% 0;
     opacity: 0.96;
   }
 
-  .earth-hero--cosmic .earth-hero__vignette {
+  .galaxy-hero--cosmic .galaxy-hero__vignette {
     background:
       radial-gradient(ellipse 76% 54% at 100% 46%, rgba(1, 2, 4, 0.36) 0%, rgba(1, 2, 4, 0.12) 68%, transparent 100%),
       linear-gradient(0deg, rgba(1, 2, 4, 0.7), transparent 25%, transparent 75%, rgba(1, 2, 4, 0.54));

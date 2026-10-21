@@ -5,7 +5,7 @@ import {
   ChevronDown,
 } from 'lucide-react';
 
-const EarthHero = React.lazy(() => import('./EarthHero'));
+const GalaxyHero = React.lazy(() => import('./GalaxyHero'));
 
 export const Hero: React.FC = () => {
   const { t } = useLanguage();
@@ -71,7 +71,7 @@ export const Hero: React.FC = () => {
       `}</style>
 
       <React.Suspense fallback={null}>
-        <EarthHero />
+        <GalaxyHero />
       </React.Suspense>
 
       {/* ========================================================= */}

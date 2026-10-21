@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useRef } from "react";
 import { Canvas, useFrame, useThree } from "@react-three/fiber";
 import * as THREE from "three";
-import "../styles/EarthHero.css";
+import "../styles/GalaxyHero.css";
 
 const galaxyVertexShader = `
   uniform float uTime;
@@ -246,10 +246,10 @@ function GalaxyField() {
   );
 }
 
-export default function EarthHero() {
+export default function GalaxyHero() {
   return (
-    <div className="earth-hero earth-hero--cosmic" aria-hidden="true">
-      <div className="earth-hero__canvas-wrap">
+    <div className="galaxy-hero galaxy-hero--cosmic" aria-hidden="true">
+      <div className="galaxy-hero__canvas-wrap">
         <Canvas
           dpr={[1, 1.35]}
           camera={{ position: [0, 0, 10], fov: 42, near: 0.1, far: 40 }}
@@ -261,7 +261,7 @@ export default function EarthHero() {
           <GalaxyField />
         </Canvas>
       </div>
-      <div className="earth-hero__vignette" />
+      <div className="galaxy-hero__vignette" />
     </div>
   );
 }
