@@ -1,12 +1,10 @@
 import React from 'react';
 import { useLanguage } from '../context/LanguageContext';
-import { CanvasErrorBoundary } from './CanvasErrorBoundary';
+import GalaxyHero from './GalaxyHero';
 import {
   ArrowRight,
   ChevronDown,
 } from 'lucide-react';
-
-const GalaxyHero = React.lazy(() => import('./GalaxyHero'));
 
 export const Hero: React.FC = () => {
   const { t } = useLanguage();
@@ -71,11 +69,7 @@ export const Hero: React.FC = () => {
         }
       `}</style>
 
-      <CanvasErrorBoundary>
-        <React.Suspense fallback={null}>
-          <GalaxyHero />
-        </React.Suspense>
-      </CanvasErrorBoundary>
+      <GalaxyHero />
 
       {/* ========================================================= */}
       {/* МОБИЛЬНАЯ ВЕРСИЯ */}
