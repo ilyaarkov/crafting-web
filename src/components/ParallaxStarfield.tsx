@@ -140,6 +140,9 @@ type ParallaxStarfieldProps = {
  * Равномерное звёздное поле с параллаксом по глубине.
  * Кладётся внутрь секции с `relative overflow-hidden`; занимает её целиком.
  */
+// TEMP (test/no-animations): set to true to restore scroll parallax
+const ANIMATIONS_ENABLED = false;
+
 export const ParallaxStarfield: React.FC<ParallaxStarfieldProps> = ({
   seed = 0,
   constellations = 0,
@@ -163,6 +166,7 @@ export const ParallaxStarfield: React.FC<ParallaxStarfieldProps> = ({
   }, [seed, constellations]);
 
   useEffect(() => {
+    if (!ANIMATIONS_ENABLED) return;
     const root = rootRef.current;
     if (!root) return;
 

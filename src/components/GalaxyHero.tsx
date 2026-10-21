@@ -251,6 +251,7 @@ export default function GalaxyHero() {
     <div className="galaxy-hero galaxy-hero--cosmic" aria-hidden="true">
       <div className="galaxy-hero__canvas-wrap">
         <Canvas
+          frameloop="demand" // TEMP (test/no-animations)
           dpr={[1, 1.35]}
           camera={{ position: [0, 0, 10], fov: 42, near: 0.1, far: 40 }}
           gl={{ antialias: false, alpha: true, powerPreference: "high-performance" }}

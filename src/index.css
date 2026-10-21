@@ -228,3 +228,16 @@
     transform: none;
   }
 }
+
+/* TEMP (test/no-animations): disable all CSS animations and transitions */
+*,
+*::before,
+*::after {
+  animation: none !important;
+  transition: none !important;
+  scroll-behavior: auto !important;
+}
+
+[data-scroll-reveal] {
+  transform: none !important;
+}

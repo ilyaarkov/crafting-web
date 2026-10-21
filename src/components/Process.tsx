@@ -152,7 +152,8 @@ export const Process: React.FC = () => {
       }, 150);
     };
 
-    window.addEventListener('scroll', onScroll, { passive: true });
+    // TEMP (test/no-animations): scroll-linked snake disabled
+    // window.addEventListener('scroll', onScroll, { passive: true });
     window.addEventListener('resize', onResize, { passive: true });
 
     // Initial calculation after short render tick
