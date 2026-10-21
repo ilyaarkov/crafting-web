@@ -1,5 +1,6 @@
 import React from 'react';
 import { useLanguage } from '../context/LanguageContext';
+import { CanvasErrorBoundary } from './CanvasErrorBoundary';
 import {
   ArrowRight,
   ChevronDown,
@@ -70,9 +71,11 @@ export const Hero: React.FC = () => {
         }
       `}</style>
 
-      <React.Suspense fallback={null}>
-        <GalaxyHero />
-      </React.Suspense>
+      <CanvasErrorBoundary>
+        <React.Suspense fallback={null}>
+          <GalaxyHero />
+        </React.Suspense>
+      </CanvasErrorBoundary>
 
       {/* ========================================================= */}
       {/* МОБИЛЬНАЯ ВЕРСИЯ */}
