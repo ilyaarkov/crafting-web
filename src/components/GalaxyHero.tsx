@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useRef } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { Canvas, useFrame, useThree } from "@react-three/fiber";
 import * as THREE from "three";
 import "../styles/GalaxyHero.css";
@@ -247,10 +247,26 @@ function GalaxyField() {
 }
 
 export default function GalaxyHero() {
+  const rootRef = useRef<HTMLDivElement>(null);
+  const [frameloop, setFrameloop] = useState<"always" | "never">("always");
+
+  useEffect(() => {
+    const element = rootRef.current;
+    if (!element) return;
+
+    const observer = new IntersectionObserver(
+      ([entry]) => setFrameloop(entry.isIntersecting ? "always" : "never"),
+      { rootMargin: "200px 0px" }
+    );
+    observer.observe(element);
+    return () => observer.disconnect();
+  }, []);
+
   return (
-    <div className="galaxy-hero galaxy-hero--cosmic" aria-hidden="true">
+    <div ref={rootRef} className="galaxy-hero galaxy-hero--cosmic" aria-hidden="true">
       <div className="galaxy-hero__canvas-wrap">
         <Canvas
+          frameloop={frameloop}
           dpr={[1, 1.35]}
           camera={{ position: [0, 0, 10], fov: 42, near: 0.1, far: 40 }}
           gl={{ antialias: false, alpha: true, powerPreference: "high-performance" }}
