@@ -1,21 +1,25 @@
 import React from 'react';
+import { FittedImage } from './FittedImage';
 
 interface MacBrowserFrameProps {
-  imageSrc: string;
-  imageAlt: string;
+  imageSrc?: string;
+  imageAlt?: string;
   className?: string;
   imageClassName?: string;
   overlayText?: string;
   loading?: 'eager' | 'lazy';
+  // Собственное содержимое окна (например, галерея) вместо одиночного изображения
+  children?: React.ReactNode;
 }
 
 export const MacBrowserFrame: React.FC<MacBrowserFrameProps> = ({
-  imageSrc,
-  imageAlt,
+  imageSrc = '',
+  imageAlt = '',
   className = '',
   imageClassName = '',
   overlayText,
   loading = 'eager',
+  children,
 }) => {
   return (
     <div
@@ -32,13 +36,14 @@ export const MacBrowserFrame: React.FC<MacBrowserFrameProps> = ({
 
       {/* Browser Viewport */}
       <div className="relative aspect-[16/10] sm:aspect-[16/9.5] bg-[#070b14] overflow-hidden">
-        <img
-          src={imageSrc}
-          alt={imageAlt}
-          loading={loading}
-          decoding="auto"
-          className={`w-full h-full object-cover object-top transition-transform duration-500 ease-out group-hover:scale-[1.02] ${imageClassName}`}
-        />
+        {children ?? (
+          <FittedImage
+            src={imageSrc}
+            alt={imageAlt}
+            loading={loading}
+            imageClassName={`transition-transform duration-500 ease-out group-hover:scale-[1.02] ${imageClassName}`}
+          />
+        )}
         <div className="absolute inset-0 bg-gradient-to-t from-[#060a12]/30 via-transparent to-transparent pointer-events-none" />
 
         {overlayText && (

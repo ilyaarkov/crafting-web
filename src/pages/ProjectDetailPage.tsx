@@ -10,7 +10,9 @@ import {
   Layers,
   Sparkles,
 } from 'lucide-react';
-import { MacBrowserFrame } from '../components/MacBrowserFrame';
+import { ProjectGallery } from '../components/ProjectGallery';
+import { FittedImage } from '../components/FittedImage';
+import { glueShortWords } from '../utils/typography';
 import { PROJECTS_DATA } from '../data/projectsData';
 
 interface ProjectDetailPageProps {
@@ -159,7 +161,8 @@ export const ProjectDetailPage: React.FC<ProjectDetailPageProps> = ({
 
         <div className="max-w-6xl mx-auto px-4 sm:px-6 py-12 sm:py-16 lg:py-20 relative z-10">
           {/* Шапка проекта */}
-          <div className="max-w-4xl mb-10 sm:mb-12">
+          {/* w-fit: ширина блока задаётся заголовком, описание под него подстраивается */}
+          <div className="w-fit max-w-full mb-10 sm:mb-12">
             {project.tag && (
               <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full border border-cyan-500/30 bg-cyan-950/30 text-xs uppercase tracking-widest text-cyan-400 font-semibold mb-4">
                 <Layers className="w-3.5 h-3.5" />
@@ -169,17 +172,20 @@ export const ProjectDetailPage: React.FC<ProjectDetailPageProps> = ({
             <h1 className="text-3xl sm:text-5xl font-extrabold text-white tracking-tight leading-tight mb-4">
               {project.title}
             </h1>
-            <p className="text-slate-300 text-base sm:text-lg leading-relaxed max-w-3xl">
-              {project.description}
+            {/* До lg описание не шире заголовка и делится на ровные строки; на широких экранах — в одну строку, если помещается */}
+            <p className="w-0 min-w-full lg:w-auto lg:min-w-0 text-slate-300 text-base sm:text-lg leading-relaxed [text-wrap:balance]">
+              {glueShortWords(project.description)}
             </p>
           </div>
 
-          {/* Окно браузера Mac с текущим экраном без лишних внешних обёрток */}
+          {/* Окно браузера Mac с галереей: стрелки на ПК, свайп и полноэкранный режим на сенсорных экранах */}
           <div className="mb-6 rounded-2xl overflow-hidden shadow-2xl">
-            <MacBrowserFrame
-              imageSrc={screens[activeScreenIndex]}
-              imageAlt={`${project.title} screen ${activeScreenIndex + 1}`}
-              imageClassName="object-contain sm:object-cover"
+            <ProjectGallery
+              screens={screens}
+              title={project.title}
+              activeIndex={activeScreenIndex}
+              onChange={setActiveScreenIndex}
+              lang={lang}
             />
           </div>
 
@@ -203,18 +209,16 @@ export const ProjectDetailPage: React.FC<ProjectDetailPageProps> = ({
                     <button
                       key={sIdx}
                       onClick={() => setActiveScreenIndex(sIdx)}
+                      aria-label={`${lang === 'ru' ? 'Показать фото' : 'Show photo'} ${sIdx + 1}`}
+                      aria-current={isCurrent}
                       className={`relative rounded-xl overflow-hidden aspect-[16/10] border transition-all cursor-pointer ${
                         isCurrent
                           ? 'border-cyan-400 ring-2 ring-cyan-400/40 shadow-[0_0_20px_rgba(34,211,238,0.4)] scale-105'
                           : 'border-white/10 hover:border-white/30 opacity-70 hover:opacity-100'
                       }`}
                     >
-                      <img
-                        src={screen}
-                        alt={`Thumbnail ${sIdx + 1}`}
-                        className="w-full h-full object-cover object-top"
-                      />
-                      <span className="absolute bottom-1 right-1.5 px-1.5 py-0.5 rounded text-[10px] font-mono bg-black/70 text-slate-200">
+                      <FittedImage src={screen} alt={`Thumbnail ${sIdx + 1}`} loading="lazy" backdropBlur="blur-md" />
+                      <span className="absolute z-10 bottom-1 right-1.5 px-1.5 py-0.5 rounded text-[10px] font-mono bg-black/70 text-slate-200">
                         {sIdx + 1}
                       </span>
                     </button>

@@ -15,7 +15,6 @@ export const PROJECTS_DATA: Record<string, ProjectMeta> = {
       '/projects/portfolio-2.webp',
       '/projects/portfolio-3.webp',
       '/projects/portfolio-4.webp',
-      '/projects/portfolio-mobile.webp',
     ],
     mockupDomain: 'portfolio.expert.ru',
   },

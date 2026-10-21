@@ -158,3 +158,82 @@
     font-size: 16px !important;
   }
 }
+
+/* Галерея проекта: волна от нажатия на стрелку */
+.gallery-arrow-pulse {
+  animation: galleryArrowPulse 0.55s ease-out forwards;
+}
+
+@keyframes galleryArrowPulse {
+  from {
+    opacity: 0.9;
+    transform: scale(1);
+    box-shadow: 0 0 14px rgba(34, 211, 238, 0.6);
+  }
+  to {
+    opacity: 0;
+    transform: scale(1.9);
+    box-shadow: 0 0 0 rgba(34, 211, 238, 0);
+  }
+}
+
+/* Полноэкранная галерея: однократная подсказка о смахивании */
+.gallery-lightbox {
+  animation: galleryLightboxIn 0.25s ease-out;
+}
+
+@keyframes galleryLightboxIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.gallery-swipe-hint {
+  animation: gallerySwipeHint 1.6s cubic-bezier(0.45, 0, 0.25, 1) 0.45s both;
+}
+
+@keyframes gallerySwipeHint {
+  0%,
+  100% {
+    transform: translateX(0);
+  }
+  45% {
+    transform: translateX(calc(var(--hint-dir, 1) * -16%));
+  }
+}
+
+.gallery-hand-hint {
+  animation: galleryHandHint 1.6s cubic-bezier(0.45, 0, 0.25, 1) 0.45s both;
+}
+
+@keyframes galleryHandHint {
+  0% {
+    opacity: 0;
+    transform: translateX(calc(var(--hint-dir, 1) * 70px)) scale(0.9);
+  }
+  15% {
+    opacity: 1;
+    transform: translateX(calc(var(--hint-dir, 1) * 70px)) scale(1);
+  }
+  60% {
+    opacity: 1;
+    transform: translateX(calc(var(--hint-dir, 1) * -70px)) scale(1);
+  }
+  100% {
+    opacity: 0;
+    transform: translateX(calc(var(--hint-dir, 1) * -70px)) scale(0.9);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .gallery-swipe-hint {
+    animation: none;
+  }
+  .gallery-hand-hint {
+    animation-duration: 2.2s;
+    transform: none;
+  }
+}

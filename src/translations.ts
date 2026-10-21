@@ -671,7 +671,6 @@ export const translations: Record<Language, Translations> = {
             '/projects/portfolio-4.jpg',
             '/projects/portfolio-5.jpg',
             '/projects/portfolio-6.jpg',
-            '/projects/portfolio-mobile.jpg',
           ],
         },
         {
@@ -1387,7 +1386,6 @@ export const translations: Record<Language, Translations> = {
             '/projects/portfolio-4.jpg',
             '/projects/portfolio-5.jpg',
             '/projects/portfolio-6.jpg',
-            '/projects/portfolio-mobile.jpg',
           ],
         },
         {
