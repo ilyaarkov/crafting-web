@@ -1,5 +1,5 @@
+import { reactRouter } from '@react-router/dev/vite';
 import tailwindcss from '@tailwindcss/vite';
-import react from '@vitejs/plugin-react';
 import path from 'path';
 import { defineConfig, loadEnv, Plugin } from 'vite';
 
@@ -90,7 +90,7 @@ export default defineConfig(({ mode }) => {
       'import.meta.env.CMS_PASSWORD': JSON.stringify(cmsPassword),
       'import.meta.env.VITE_CMS_PASSWORD': JSON.stringify(cmsPassword),
     },
-    plugins: [react(), tailwindcss(), devApiPlugin()],
+    plugins: [reactRouter(), tailwindcss(), devApiPlugin()],
     resolve: {
       alias: {
         '@': path.resolve('.'),

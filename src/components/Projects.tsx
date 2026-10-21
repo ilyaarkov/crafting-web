@@ -3,16 +3,12 @@ import { useLanguage } from '../context/LanguageContext';
 import { ArrowRight } from 'lucide-react';
 import { MacBrowserFrame } from './MacBrowserFrame';
 import { PROJECTS_DATA } from '../data/projectsData';
+import { useNavigate } from 'react-router';
 
 export const Projects: React.FC = () => {
   const { t, lang } = useLanguage();
   const sectionRef = useRef<HTMLElement>(null);
-  const [isVisible, setIsVisible] = useState(() => {
-    if (typeof window !== 'undefined' && window.innerWidth <= 768) {
-      return true;
-    }
-    return false;
-  });
+  const [isVisible, setIsVisible] = useState(false);
 
   useEffect(() => {
     if (typeof window !== 'undefined' && window.innerWidth <= 768) {
@@ -39,11 +35,8 @@ export const Projects: React.FC = () => {
 
   const projects = (t.projects.items || []).slice(0, 4);
 
-  const navigateTo = (url: string) => {
-    window.history.pushState({}, '', url);
-    window.dispatchEvent(new PopStateEvent('popstate'));
-    window.scrollTo({ top: 0, behavior: 'instant' });
-  };
+  const navigate = useNavigate();
+  const navigateTo = (url: string) => navigate(url);
 
   return (
     <section

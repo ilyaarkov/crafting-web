@@ -1,15 +1,15 @@
 import React from 'react';
 import { useLanguage } from '../context/LanguageContext';
 import { Send, Mail, Shield, Code2 } from 'lucide-react';
+import { useNavigate } from 'react-router';
 
 export const Footer: React.FC = () => {
   const { t } = useLanguage();
+  const navigate = useNavigate();
 
   const handleTechStackClick = (e: React.MouseEvent<HTMLAnchorElement>) => {
     e.preventDefault();
-    window.history.pushState({}, '', '/techstack');
-    window.dispatchEvent(new PopStateEvent('popstate'));
-    window.scrollTo({ top: 0, behavior: 'instant' });
+    navigate('/techstack');
   };
 
   return (

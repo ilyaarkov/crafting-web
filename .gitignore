@@ -25,3 +25,7 @@ ilyaarkov-earth-hero.zip
 *.njsproj
 *.sln
 *.sw?
+
+# React Router build output and typegen
+/build
+/.react-router
