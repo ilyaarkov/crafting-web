@@ -109,9 +109,6 @@ export const Specialization: React.FC = () => {
       <div className="max-w-6xl mx-auto px-4 sm:px-6 relative z-10">
         {/* Заголовок секции: только чистый текст без звездочек, фона и рамок */}
         <div className="max-w-3xl mb-12 sm:mb-16 lg:mb-20">
-          <div className="text-xs uppercase tracking-widest text-cyan-400 font-semibold mb-3">
-            <span>{t.specialization.badge}</span>
-          </div>
           <h2 className="text-3xl sm:text-4xl lg:text-5xl font-black text-white tracking-tight leading-tight mb-4 text-balance">
             {t.specialization.title}
           </h2>

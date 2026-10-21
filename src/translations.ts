@@ -626,7 +626,7 @@ export const translations: Record<Language, Translations> = {
       note: 'Примечание: раздел публикуется после добавления настоящих отзывов. До этого его лучше полностью скрыть.',
     },
     projects: {
-      preTitle: 'Примеры работы',
+      preTitle: 'Кейсы',
       title: 'Мои проекты',
       description: '',
       allProjectsBtn: 'Все проекты',
@@ -779,7 +779,7 @@ export const translations: Record<Language, Translations> = {
       ],
     },
     pricing: {
-      preTitle: 'Разработка и развитие',
+      preTitle: 'Разработка и сопровождение',
       title: 'Выберите тариф',
       intro: 'Помогаю экспертам и небольшим компаниям понятно представить свои услуги, подготовить сайт к продвижению в поиске и упростить путь клиента до обращения.',
       followUp: 'Сам разбираюсь в задаче, разрабатываю сайт и остаюсь на связи после запуска – для обновлений, новых страниц и дальнейшего развития.',
@@ -1341,7 +1341,7 @@ export const translations: Record<Language, Translations> = {
       note: 'Note: this section is revealed once authentic client feedback is published.',
     },
     projects: {
-      preTitle: 'Work Examples',
+      preTitle: 'Cases',
       title: 'My projects',
       description: '',
       allProjectsBtn: 'All Projects',
@@ -1494,7 +1494,7 @@ export const translations: Record<Language, Translations> = {
       ],
     },
     pricing: {
-      preTitle: 'Development and growth',
+      preTitle: 'Development and support',
       title: 'Choose a plan',
       intro: 'I help experts and small businesses present their services clearly, prepare their website for search promotion, and make it easier for customers to get in touch.',
       followUp: 'I learn about your goals, build the website, and stay in touch after launch – for updates, new pages, and continued growth.',

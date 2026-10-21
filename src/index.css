@@ -128,10 +128,10 @@
   }
 }
 
-/* На сенсорных экранах действие постоянно видно без ожидания hover или анимации. */
-@media (hover: none) and (pointer: coarse) {
+/* На сенсорных экранах без hover надпись не показываем */
+@media (hover: none) {
   .project-preview-overlay {
-    opacity: 1;
+    display: none;
   }
 }
 

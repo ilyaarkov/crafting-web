@@ -8,7 +8,6 @@ import {
   Send,
   Mail,
   Layers,
-  Sparkles,
 } from 'lucide-react';
 import { ProjectGallery } from '../components/ProjectGallery';
 import { FittedImage } from '../components/FittedImage';
@@ -192,11 +191,7 @@ export const ProjectDetailPage: React.FC<ProjectDetailPageProps> = ({
           {/* Галерея экранов / миниатюры (если экранов больше одного) */}
           {screens.length > 1 && (
             <div className="mb-14 sm:mb-18">
-              <div className="flex items-center justify-between mb-3 text-xs text-slate-400">
-                <span className="font-mono text-cyan-300 flex items-center gap-1.5">
-                  <Sparkles className="w-3.5 h-3.5" />
-                  {lang === 'ru' ? 'Все экраны проекта' : 'All Project Screens'} ({screens.length})
-                </span>
+              <div className="flex items-center justify-end mb-3 text-xs text-slate-400">
                 <span>
                   {lang === 'ru' ? 'Нажмите на экран для просмотра' : 'Click screen to inspect'}
                 </span>
