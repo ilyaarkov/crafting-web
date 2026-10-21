@@ -8,9 +8,6 @@ export default function GalaxyHero() {
     const video = videoRef.current;
     if (!video) return;
 
-    const isMobile = window.matchMedia("(max-width: 767px)");
-    video.poster = isMobile.matches ? "/galaxy/poster-mobile.webp" : "/galaxy/poster-desktop.webp";
-
     if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
 
     const observer = new IntersectionObserver(([entry]) => {
@@ -35,8 +32,8 @@ export default function GalaxyHero() {
           playsInline
           preload="auto"
         >
-          <source src="/galaxy/galaxy-mobile.mp4" type="video/mp4" media="(max-width: 767px)" />
-          <source src="/galaxy/galaxy-desktop.mp4" type="video/mp4" />
+          <source src="/videos/galaxy_mobile.mp4" type='video/mp4; codecs="avc1.640028"' media="(max-width: 767px)" />
+          <source src="/videos/galaxy_desktop.mp4" type='video/mp4; codecs="avc1.640028"' />
         </video>
       </div>
       <div className="galaxy-hero__vignette" />
