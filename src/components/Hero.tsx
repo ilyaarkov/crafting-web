@@ -1,6 +1,7 @@
 import React from 'react';
 import { useLanguage } from '../context/LanguageContext';
 import { CanvasErrorBoundary } from './CanvasErrorBoundary';
+import '../styles/GalaxyHero.css';
 import {
   ArrowRight,
   ChevronDown,
