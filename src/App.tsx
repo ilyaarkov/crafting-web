@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useLayoutEffect } from 'react';
+import React, { useState, useEffect, useLayoutEffect, lazy, Suspense } from 'react';
 import { LanguageProvider, useLanguage } from './context/LanguageContext';
 import { Header } from './components/Header';
 import { Hero } from './components/Hero';
@@ -11,12 +11,13 @@ import { Guarantees } from './components/Guarantees';
 import { ContactForm } from './components/ContactForm';
 import { Footer } from './components/Footer';
 import { ScrollToTop } from './components/ScrollToTop';
-import { TechStackPage } from './pages/TechStackPage';
-import { PortfolioPage } from './pages/PortfolioPage';
-import { ProjectDetailPage } from './pages/ProjectDetailPage';
-import { ServiceDetailPage } from './pages/ServiceDetailPage';
-import { PrivacyPolicyPage } from './pages/PrivacyPolicyPage';
 import { SERVICES_DATA } from './data/servicesData';
+
+const TechStackPage = lazy(() => import('./pages/TechStackPage').then((m) => ({ default: m.TechStackPage })));
+const PortfolioPage = lazy(() => import('./pages/PortfolioPage').then((m) => ({ default: m.PortfolioPage })));
+const ProjectDetailPage = lazy(() => import('./pages/ProjectDetailPage').then((m) => ({ default: m.ProjectDetailPage })));
+const ServiceDetailPage = lazy(() => import('./pages/ServiceDetailPage').then((m) => ({ default: m.ServiceDetailPage })));
+const PrivacyPolicyPage = lazy(() => import('./pages/PrivacyPolicyPage').then((m) => ({ default: m.PrivacyPolicyPage })));
 import { PROJECTS_DATA } from './data/projectsData';
 
 type RouteState =
@@ -248,45 +249,47 @@ export default function App() {
   return (
     <LanguageProvider>
       <PageMetadata route={route} />
-      {route.type === 'techstack' ? (
-        <TechStackPage onNavigateHome={navigateHome} />
-      ) : route.type === 'portfolio' ? (
-        <PortfolioPage
-          onNavigateHome={navigateHome}
-          onNavigateProject={navigateProject}
-        />
-      ) : route.type === 'service' ? (
-        <ServiceDetailPage
-          serviceId={route.serviceId}
-          onNavigateHome={navigateHome}
-        />
-      ) : route.type === 'project' ? (
-        <ProjectDetailPage
-          projectId={route.projectId}
-          onNavigatePortfolio={navigatePortfolio}
-          onNavigateHome={navigateHome}
-        />
-      ) : route.type === 'policy' ? (
-        <PrivacyPolicyPage onNavigateHome={navigateHome} />
-      ) : route.type === 'notFound' ? (
-        <NotFoundPage />
-      ) : (
-        <div className="min-h-screen bg-site text-slate-100 flex flex-col font-sans selection:bg-cyan-500/20 selection:text-cyan-200">
-          <Header />
-          <main className="flex-1">
-            <Hero />
-            <About />
-            <Specialization />
-            <Process />
-            <Projects />
-            <Pricing />
-            <Guarantees />
-            <ContactForm />
-          </main>
-          <Footer />
-          <ScrollToTop />
-        </div>
-      )}
+      <Suspense fallback={null}>
+        {route.type === 'techstack' ? (
+          <TechStackPage onNavigateHome={navigateHome} />
+        ) : route.type === 'portfolio' ? (
+          <PortfolioPage
+            onNavigateHome={navigateHome}
+            onNavigateProject={navigateProject}
+          />
+        ) : route.type === 'service' ? (
+          <ServiceDetailPage
+            serviceId={route.serviceId}
+            onNavigateHome={navigateHome}
+          />
+        ) : route.type === 'project' ? (
+          <ProjectDetailPage
+            projectId={route.projectId}
+            onNavigatePortfolio={navigatePortfolio}
+            onNavigateHome={navigateHome}
+          />
+        ) : route.type === 'policy' ? (
+          <PrivacyPolicyPage onNavigateHome={navigateHome} />
+        ) : route.type === 'notFound' ? (
+          <NotFoundPage />
+        ) : (
+          <div className="min-h-screen bg-site text-slate-100 flex flex-col font-sans selection:bg-cyan-500/20 selection:text-cyan-200">
+            <Header />
+            <main className="flex-1">
+              <Hero />
+              <About />
+              <Specialization />
+              <Process />
+              <Projects />
+              <Pricing />
+              <Guarantees />
+              <ContactForm />
+            </main>
+            <Footer />
+            <ScrollToTop />
+          </div>
+        )}
+      </Suspense>
       <ScrollRevealObserver routeKey={revealRouteKey} />
     </LanguageProvider>
   );
