@@ -15,7 +15,6 @@ import { TechStackPage } from './pages/TechStackPage';
 import { PortfolioPage } from './pages/PortfolioPage';
 import { ProjectDetailPage } from './pages/ProjectDetailPage';
 import { ServiceDetailPage } from './pages/ServiceDetailPage';
-import { MobileLoader } from './components/MobileLoader';
 import { PrivacyPolicyPage } from './pages/PrivacyPolicyPage';
 import { SERVICES_DATA } from './data/servicesData';
 import { PROJECTS_DATA } from './data/projectsData';
@@ -248,7 +247,6 @@ export default function App() {
 
   return (
     <LanguageProvider>
-      <MobileLoader />
       <PageMetadata route={route} />
       {route.type === 'techstack' ? (
         <TechStackPage onNavigateHome={navigateHome} />

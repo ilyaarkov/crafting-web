@@ -100,6 +100,7 @@ export const Projects: React.FC = () => {
                     imageSrc={imageSrc}
                     imageAlt={project.title}
                     overlayText={lang === 'ru' ? 'ПОСМОТРЕТЬ' : 'VIEW'}
+                    loading={idx === 0 ? 'eager' : 'lazy'}
                   />
                 </a>
 

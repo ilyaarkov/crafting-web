@@ -17,7 +17,7 @@ export const MacBrowserFrame: React.FC<MacBrowserFrameProps> = ({
   className = '',
   imageClassName = '',
   overlayText,
-  loading = 'eager',
+  loading = 'lazy',
   children,
 }) => {
   return (
