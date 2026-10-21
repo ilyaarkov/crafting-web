@@ -10,5 +10,6 @@ export default [
   route('services/:service', 'routes/service.tsx'),
   route('service/:service', 'routes/service.tsx', { id: 'service-alias' }),
   route('policy', 'routes/policy.tsx'),
+  route('galaxy', 'routes/galaxy.tsx'), // TEMP (test/galaxy-page)
   route('*', 'routes/not-found.tsx'),
 ] satisfies RouteConfig;
