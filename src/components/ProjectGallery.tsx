@@ -119,7 +119,7 @@ const useSwipeTrack = ({ count, index, onChange, onTap, onInteract }: SwipeOptio
   };
 };
 
-// Космическая стрелка: стеклянный круг, орбита с «спутником» при наведении и вспышка-волна при нажатии
+// Космическая стрелка: стеклянный круг, пунктирная орбита при наведении и вспышка-волна при нажатии
 const GalleryArrow: React.FC<{ direction: 'prev' | 'next'; label: string; onClick: () => void }> = ({
   direction,
   label,
@@ -143,14 +143,6 @@ const GalleryArrow: React.FC<{ direction: 'prev' | 'next'; label: string; onClic
     >
       {/* Пунктирная орбита */}
       <span className="absolute -inset-[6px] rounded-full border border-dashed border-cyan-300/0 transition-colors duration-300 group-hover/arrow:border-cyan-300/30 pointer-events-none" />
-      {/* Спутник, облетающий кнопку */}
-      <span
-        className={`absolute -inset-[6px] rounded-full opacity-0 transition-opacity duration-300 group-hover/arrow:opacity-100 animate-[spin_2.6s_linear_infinite] pointer-events-none ${
-          isPrev ? '[animation-direction:reverse]' : ''
-        }`}
-      >
-        <span className="absolute -top-[3px] left-1/2 -translate-x-1/2 w-1.5 h-1.5 rounded-full bg-cyan-100 shadow-[0_0_8px_2px_rgba(165,243,252,0.85)]" />
-      </span>
       {/* Волна при нажатии: новый key перезапускает анимацию */}
       {pulse > 0 && (
         <span

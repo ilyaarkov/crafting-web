@@ -644,7 +644,7 @@ export const translations: Record<Language, Translations> = {
         {
           id: 'specialist-portfolio',
           title: 'Сайт-портфолио для специалиста',
-          description: 'Персональное портфолио Елизаветы объединяет её опыт, услуги и проекты на одной площадке.',
+          description: 'Персональное портфолио СММ-специалиста объединяет её опыт, услуги и проекты на одной площадке.',
           p2: '',
           paragraphs: [
             'До появления сайта информация о работе Елизаветы находилась на разных площадках. Потенциальному работодателю или клиенту приходилось самостоятельно собирать представление о её опыте, услугах и проектах. Я объединил всё это в одном месте и разработал персональное портфолио, которое помогает познакомиться со специалистом и оценить её подход к работе.',
@@ -1359,7 +1359,7 @@ export const translations: Record<Language, Translations> = {
         {
           id: 'specialist-portfolio',
           title: 'Specialist Portfolio Website',
-          description: 'Elizabeth’s personal portfolio brings her experience, services, and projects together in one place.',
+          description: 'The SMM specialist’s personal portfolio brings her experience, services, and projects together in one place.',
           p2: '',
           paragraphs: [
             'Before the site was created, information about Elizabeth’s work was spread across different platforms. A prospective employer or client had to piece together an understanding of her experience, services, and projects. I brought it all together in a personal portfolio that helps visitors get to know her and assess her approach to work.',

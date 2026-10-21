@@ -1,5 +1,4 @@
 import React from 'react';
-import { FittedImage } from './FittedImage';
 
 interface MacBrowserFrameProps {
   imageSrc?: string;
@@ -37,11 +36,13 @@ export const MacBrowserFrame: React.FC<MacBrowserFrameProps> = ({
       {/* Browser Viewport */}
       <div className="relative aspect-[16/10] sm:aspect-[16/9.5] bg-[#070b14] overflow-hidden">
         {children ?? (
-          <FittedImage
+          // Превью проекта заполняет окно целиком
+          <img
             src={imageSrc}
             alt={imageAlt}
             loading={loading}
-            imageClassName={`transition-transform duration-500 ease-out group-hover:scale-[1.02] ${imageClassName}`}
+            decoding="auto"
+            className={`w-full h-full object-cover object-top transition-transform duration-500 ease-out group-hover:scale-[1.02] ${imageClassName}`}
           />
         )}
         <div className="absolute inset-0 bg-gradient-to-t from-[#060a12]/30 via-transparent to-transparent pointer-events-none" />
