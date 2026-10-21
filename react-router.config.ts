@@ -18,6 +18,7 @@ const prerenderPaths = [
 export default {
   appDirectory: 'src/app',
   ssr: true,
+  routeDiscovery: { mode: 'initial' },
   prerender: [...prerenderPaths, '/404'],
   buildEnd: async ({ reactRouterConfig }) => {
     const client = path.join(reactRouterConfig.buildDirectory, 'client');
