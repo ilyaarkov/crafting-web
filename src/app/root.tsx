@@ -70,13 +70,31 @@ function ScrollRevealObserver({ routeKey }: { routeKey: string }) {
       const variant = element.tagName === 'SECTION' || element.tagName === 'FOOTER'
         ? 'section'
         : ['rise', 'soft', 'scale'][(siblingIndex + index) % 3];
+      const rect = element.getBoundingClientRect();
+      const inViewAtMount = rect.top < window.innerHeight && rect.bottom > 0;
       element.dataset.scrollReveal = variant;
-      element.dataset.scrollRevealState = 'pending';
+      element.dataset.scrollRevealState = inViewAtMount ? 'visible' : 'pending';
       element.style.setProperty('--scroll-reveal-delay', `${Math.min(siblingIndex, 4) * 80}ms`);
-      observer.observe(element);
+      if (!inViewAtMount) observer.observe(element);
     });
 
-    return () => observer.disconnect();
+    const settleInView = () => {
+      candidates.forEach((element) => {
+        if (element.dataset.scrollRevealState !== 'pending') return;
+        const rect = element.getBoundingClientRect();
+        if (rect.top < window.innerHeight && rect.bottom > 0) {
+          element.dataset.scrollRevealState = 'visible';
+          observer.unobserve(element);
+        }
+      });
+    };
+    window.addEventListener('load', settleInView, { once: true });
+    if (document.readyState === 'complete') settleInView();
+
+    return () => {
+      window.removeEventListener('load', settleInView);
+      observer.disconnect();
+    };
   }, [routeKey]);
 
   return null;

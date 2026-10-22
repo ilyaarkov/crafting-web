@@ -60,7 +60,7 @@
 
 [data-scroll-reveal="section"],
 [data-scroll-reveal="rise"] {
-  transform: translate3d(0, 26px, 0) scale(.992);
+  transform: translate3d(0, 26px, 0);
 }
 
 [data-scroll-reveal="soft"] {
@@ -68,7 +68,7 @@
 }
 
 [data-scroll-reveal="scale"] {
-  transform: translate3d(0, 18px, 0) scale(.975);
+  transform: translate3d(0, 18px, 0);
 }
 
 [data-scroll-reveal-state="visible"] {
