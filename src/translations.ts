@@ -1424,11 +1424,11 @@ export const translations: Record<Language, Translations> = {
         },
         {
           id: 'wine-coop',
-          title: 'Intuitsiya Wine Cooperative Website',
+          title: '"Intuitivo" Wine Cooperative Website',
           description: 'The site brings together a wine catalog, orders, a loyalty program, events, and management tools.',
           p2: '',
           paragraphs: [
-            'For the Intuitsiya wine cooperative, I built a site that presents its products and supports order and customer management. The goal was to create more than a wine catalog: it needed to account for the cooperative’s needs and several partner brands.',
+            'For the "Intuitivo" wine cooperative, I built a site that presents its products and supports order and customer management. The goal was to create more than a wine catalog: it needed to account for the cooperative’s needs and several partner brands.',
             'I planned the catalog, product pages, cart, and checkout. Returning customers can use an account with order history and the Wine Club loyalty program, which accounts for customer status and applies personal discounts. Tastings and other events have their own calendar and online registration.',
             'Alongside the public site, I built an admin panel for managing the wine catalog, posts, events, and other materials. New orders and event registrations trigger Telegram notifications so the manager can respond promptly.',
             'The project uses a custom architecture and database designed to connect the catalog, orders, customer base, and administrative tools. This brings product presentation, customer interactions, and the team’s day-to-day work into one system.',
@@ -1457,7 +1457,7 @@ export const translations: Record<Language, Translations> = {
         },
         {
           id: 'driving-center',
-          title: 'Driftet Defensive Driving School Website',
+          title: '"Driftet" Defensive Driving School Website',
           description: 'The site presents Driftet’s training programs and combines lesson booking with schedule management.',
           p2: '',
           paragraphs: [
