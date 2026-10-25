@@ -36,7 +36,7 @@ See the [Oxlint rules documentation](https://oxc.rs/docs/guide/usage/linter/rule
 
 The contact form uses Cloudflare Turnstile. Create a widget for `ilyaarkov.com` and `www.ilyaarkov.com`, then configure:
 
-- `VITE_TURNSTILE_SITE_KEY` as a build environment variable.
+- `TURNSTILE_SITE_KEY` as a build environment variable. Vite explicitly exposes this public site key to the client bundle; it does not need the `VITE_` prefix.
 - `TURNSTILE_SECRET_KEY` as a server-side environment variable. Do not expose this value to the browser.
 
 Set both variables in Vercel and redeploy. The lead API rejects submissions if Turnstile is not configured or its verification fails. `.env.example` lists the variable names for local development.

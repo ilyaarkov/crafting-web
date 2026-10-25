@@ -89,6 +89,9 @@ export default defineConfig(({ mode }) => {
     define: {
       'import.meta.env.CMS_PASSWORD': JSON.stringify(cmsPassword),
       'import.meta.env.VITE_CMS_PASSWORD': JSON.stringify(cmsPassword),
+      'import.meta.env.TURNSTILE_SITE_KEY': JSON.stringify(
+        env.TURNSTILE_SITE_KEY || process.env.TURNSTILE_SITE_KEY || '',
+      ),
     },
     plugins: [reactRouter(), tailwindcss(), devApiPlugin()],
     resolve: {

@@ -24,7 +24,7 @@ declare global {
 
 export const ContactForm: React.FC = () => {
   const { t, lang } = useLanguage();
-  const turnstileSiteKey = import.meta.env.VITE_TURNSTILE_SITE_KEY;
+  const turnstileSiteKey = import.meta.env.TURNSTILE_SITE_KEY;
 
   const [name, setName] = useState('');
   const [contact, setContact] = useState('');
