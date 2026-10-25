@@ -1,9 +1,30 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useLanguage } from '../context/LanguageContext';
 import { Send, CheckCircle2, AlertCircle } from 'lucide-react';
 
+interface TurnstileApi {
+  render: (
+    container: HTMLElement,
+    options: {
+      sitekey: string;
+      callback: (token: string) => void;
+      'expired-callback': () => void;
+      'error-callback': () => void;
+    },
+  ) => string;
+  remove: (widgetId: string) => void;
+  reset: (widgetId: string) => void;
+}
+
+declare global {
+  interface Window {
+    turnstile?: TurnstileApi;
+  }
+}
+
 export const ContactForm: React.FC = () => {
   const { t, lang } = useLanguage();
+  const turnstileSiteKey = import.meta.env.VITE_TURNSTILE_SITE_KEY;
 
   const [name, setName] = useState('');
   const [contact, setContact] = useState('');
@@ -15,6 +36,10 @@ export const ContactForm: React.FC = () => {
   const [submitted, setSubmitted] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [validationAttempted, setValidationAttempted] = useState(false);
+  const [turnstileToken, setTurnstileToken] = useState<string | null>(null);
+  const [turnstileError, setTurnstileError] = useState(false);
+  const [turnstileContainer, setTurnstileContainer] = React.useState<HTMLDivElement | null>(null);
+  const turnstileWidgetId = useRef<string | null>(null);
 
   useEffect(() => {
     const handleSelectPlan = (e: CustomEvent<string>) => {
@@ -26,12 +51,71 @@ export const ContactForm: React.FC = () => {
     return () => window.removeEventListener('select-plan', handleSelectPlan as EventListener);
   }, []);
 
+  useEffect(() => {
+    if (!turnstileSiteKey || !turnstileContainer) return;
+
+    let disposed = false;
+    const renderWidget = () => {
+      if (disposed || !window.turnstile || turnstileWidgetId.current) return;
+      turnstileWidgetId.current = window.turnstile.render(turnstileContainer, {
+        sitekey: turnstileSiteKey,
+        callback: (token) => {
+          setTurnstileToken(token);
+          setTurnstileError(false);
+          setError(null);
+        },
+        'expired-callback': () => setTurnstileToken(null),
+        'error-callback': () => {
+          setTurnstileToken(null);
+          setTurnstileError(true);
+        },
+      });
+    };
+    const handleLoadError = () => setTurnstileError(true);
+    const scriptSelector = 'script[src^="https://challenges.cloudflare.com/turnstile/"]';
+    let script = document.querySelector<HTMLScriptElement>(scriptSelector);
+    let appendScript = false;
+
+    if (window.turnstile) {
+      renderWidget();
+    } else {
+      if (!script) {
+        script = document.createElement('script');
+        script.src = 'https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit';
+        script.async = true;
+        script.defer = true;
+        appendScript = true;
+      }
+      script.addEventListener('load', renderWidget);
+      script.addEventListener('error', handleLoadError);
+      if (appendScript) document.head.appendChild(script);
+    }
+
+    return () => {
+      disposed = true;
+      script?.removeEventListener('load', renderWidget);
+      script?.removeEventListener('error', handleLoadError);
+      if (turnstileWidgetId.current) {
+        window.turnstile?.remove(turnstileWidgetId.current);
+        turnstileWidgetId.current = null;
+      }
+    };
+  }, [turnstileContainer, turnstileSiteKey]);
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setValidationAttempted(true);
     if (!name.trim() || !contact.trim()) {
       setError(t.contact.form.validationError);
       document.getElementById(!name.trim() ? 'contact-name' : 'contact-target')?.focus();
+      return;
+    }
+    if (!turnstileSiteKey || !turnstileToken) {
+      setError(
+        lang === 'ru'
+          ? 'Подтвердите, что вы не робот, чтобы отправить заявку.'
+          : 'Complete the verification before submitting the form.',
+      );
       return;
     }
 
@@ -64,6 +148,7 @@ export const ContactForm: React.FC = () => {
           projectUrl: normalizedUrl,
           message: message.trim(),
           lang,
+          turnstileToken,
         }),
       });
 
@@ -78,8 +163,12 @@ export const ContactForm: React.FC = () => {
       setProjectUrl('');
       setMessage('');
       setTariff('');
+      setTurnstileToken(null);
+      if (turnstileWidgetId.current) window.turnstile?.reset(turnstileWidgetId.current);
     } catch {
       setError(t.contact.form.errorMessage);
+      setTurnstileToken(null);
+      if (turnstileWidgetId.current) window.turnstile?.reset(turnstileWidgetId.current);
     } finally {
       window.clearTimeout(requestTimeout);
       setLoading(false);
@@ -282,6 +371,27 @@ export const ContactForm: React.FC = () => {
                   placeholder={t.contact.form.messagePlaceholder}
                   className="w-full px-4 py-3 rounded-xl bg-white/[0.04] border border-white/10 focus:border-cyan-400 focus:outline-none text-white text-base sm:text-sm placeholder:text-slate-500 transition-colors resize-y"
                 />
+              </div>
+
+              <div>
+                {!turnstileSiteKey ? (
+                  <p role="alert" className="text-sm text-amber-300">
+                    {lang === 'ru'
+                      ? 'Отправка формы временно недоступна: Turnstile не настроен.'
+                      : 'Form submission is unavailable until Turnstile is configured.'}
+                  </p>
+                ) : (
+                  <>
+                    <div ref={setTurnstileContainer} />
+                    {turnstileError && (
+                      <p role="alert" className="mt-2 text-sm text-rose-300">
+                        {lang === 'ru'
+                          ? 'Не удалось загрузить проверку. Обновите страницу и попробуйте снова.'
+                          : 'Verification could not load. Refresh the page and try again.'}
+                      </p>
+                    )}
+                  </>
+                )}
               </div>
 
               <button

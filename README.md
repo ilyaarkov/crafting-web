@@ -31,3 +31,16 @@ If you are developing a production application, we recommend enabling type-aware
 
 See the [Oxlint rules documentation](https://oxc.rs/docs/guide/usage/linter/rules) for the full list of rules and categories.
 # crafting-web
+
+## Security configuration
+
+The contact form uses Cloudflare Turnstile. Create a widget for `ilyaarkov.com` and `www.ilyaarkov.com`, then configure:
+
+- `VITE_TURNSTILE_SITE_KEY` as a build environment variable.
+- `TURNSTILE_SECRET_KEY` as a server-side environment variable. Do not expose this value to the browser.
+
+Set both variables in Vercel and redeploy. The lead API rejects submissions if Turnstile is not configured or its verification fails. `.env.example` lists the variable names for local development.
+
+The vulnerability disclosure contact is published at `/.well-known/security.txt`. Keep its contact address monitored and update its `Expires` date before it passes.
+
+Cloudflare DNS and account recommendations are managed separately from this repository. Confirm the Vercel DNS requirements before proxying the apex and `www` records. Configure DMARC only after identifying all legitimate email senders for the domain; enabling AI Labyrinth is optional.

@@ -12,6 +12,10 @@ interface VercelResponse extends ServerResponse {
   status: (statusCode: number) => VercelResponse;
 }
 
+interface TurnstileVerificationResponse {
+  success: boolean;
+}
+
 export default async function handler(req: VercelRequest, res: VercelResponse) {
   // CORS Headers
   res.setHeader('Access-Control-Allow-Credentials', 'true');
@@ -33,6 +37,38 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
 
   try {
     const data = typeof req.body === 'string' ? JSON.parse(req.body) : req.body || {};
+    const turnstileSecret = process.env.TURNSTILE_SECRET_KEY;
+    const turnstileToken = typeof data.turnstileToken === 'string' ? data.turnstileToken : '';
+
+    if (!turnstileSecret) {
+      return res.status(503).json({ error: 'Lead verification is not configured' });
+    }
+    if (!turnstileToken) {
+      return res.status(400).json({ error: 'Verification required' });
+    }
+
+    let verificationResponse: Response;
+    try {
+      verificationResponse = await fetch('https://challenges.cloudflare.com/turnstile/v0/siteverify', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+        body: new URLSearchParams({
+          secret: turnstileSecret,
+          response: turnstileToken,
+        }),
+      });
+    } catch {
+      return res.status(503).json({ error: 'Verification service unavailable' });
+    }
+
+    if (!verificationResponse.ok) {
+      return res.status(503).json({ error: 'Verification service unavailable' });
+    }
+
+    const verification = await verificationResponse.json() as TurnstileVerificationResponse;
+    if (!verification.success) {
+      return res.status(400).json({ error: 'Verification failed' });
+    }
 
     const token = process.env.TELEGRAM_BOT_TOKEN;
     const chatId = process.env.TELEGRAM_CHAT_ID;

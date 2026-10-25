@@ -1,0 +1,4 @@
+Contact: mailto:hello@ilyaarkov.com
+Expires: 2027-10-25T00:00:00.000Z
+Preferred-Languages: en, ru
+Canonical: https://ilyaarkov.com/.well-known/security.txt
