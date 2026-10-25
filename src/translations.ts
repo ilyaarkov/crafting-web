@@ -49,7 +49,6 @@ export interface Translations {
     }[];
   };
   about: {
-    badge: string;
     title: string;
     subtitle: string;
     bioParagraph1: string;
@@ -107,7 +106,6 @@ export interface Translations {
     signature: string;
   };
   process: {
-    badge: string;
     title: string;
     intro: string;
     stagePrefix: string;
@@ -155,7 +153,6 @@ export interface Translations {
     }[];
   };
   pricing: {
-    preTitle: string;
     title: string;
     intro: string;
     followUp: string;
@@ -164,7 +161,6 @@ export interface Translations {
     includedTitle: string;
     plans: {
       id: string;
-      name: string;
       subtitle: string;
       audience: string;
       result: string;
@@ -196,7 +192,6 @@ export interface Translations {
     };
   };
   guarantees: {
-    badge: string;
     title: string;
     description: string;
     items: {
@@ -220,7 +215,6 @@ export interface Translations {
     title: string;
     description1: string;
     description2?: string;
-    btnSubmitProject: string;
     disclaimer: string;
     form: {
       nameLabel: string;
@@ -374,7 +368,6 @@ export const translations: Record<Language, Translations> = {
       ],
     },
     about: {
-      badge: 'Обо мне',
       title: 'Создаю сайты как ремесленник – с\u00A0вниманием к\u00A0каждой детали',
       subtitle: 'Кто я, мой подход к\u00A0делу и\u00A0почему со\u00A0мной комфортно работать',
       locationRole: 'Веб-разработчик · Создаю современные цифровые решения для\u00A0людей и\u00A0бизнеса',
@@ -576,7 +569,6 @@ export const translations: Record<Language, Translations> = {
       signature: 'Вы получите исходный код, доступы и работающий сайт на своём домене.',
     },
     process: {
-      badge: 'Маршрут от и до',
       title: 'От первой переписки до готового сайта',
       intro: 'Каждый этап прозрачен: от первого сообщения до передачи доступов и запуска сайта.',
       stagePrefix: '',
@@ -779,7 +771,6 @@ export const translations: Record<Language, Translations> = {
       ],
     },
     pricing: {
-      preTitle: 'Разработка и сопровождение',
       title: 'Выберите тариф',
       intro: 'Помогаю экспертам и небольшим компаниям понятно представить свои услуги, подготовить сайт к продвижению в поиске и упростить путь клиента до обращения.',
       followUp: 'Сам разбираюсь в задаче, разрабатываю сайт и остаюсь на связи после запуска – для обновлений, новых страниц и дальнейшего развития.',
@@ -789,7 +780,6 @@ export const translations: Record<Language, Translations> = {
       plans: [
         {
           id: 'start',
-          name: 'Присутствие',
           subtitle: 'Сайт-визитка',
           audience: 'Специалиста или компании, которым нужно понятно представить себя в интернете.',
           result: 'Готовый сайт, на который можно отправлять потенциальных клиентов.',
@@ -806,7 +796,6 @@ export const translations: Record<Language, Translations> = {
         },
         {
           id: 'optimal',
-          name: 'Поиск и заявки',
           subtitle: 'Сайт для эксперта или бизнеса',
           audience: 'Бизнеса с несколькими услугами, которому важно подробнее раскрыть предложение и подготовить сайт к привлечению посетителей из поиска.',
           result: 'Сайт с понятной структурой, отдельными страницами услуг и удобным способом связаться с компанией.',
@@ -823,7 +812,6 @@ export const translations: Record<Language, Translations> = {
         },
         {
           id: 'business',
-          name: 'Каталог и управление',
           subtitle: 'Сайт с базой данных и админ-панелью',
           audience: 'Бизнеса, которому нужно не только рассказать об услугах, но и управлять каталогом, информацией или заявками через сайт.',
           result: 'Сайт, контент которого можно обновлять самостоятельно, с сохранением обращений клиентов.',
@@ -886,7 +874,6 @@ export const translations: Record<Language, Translations> = {
       },
     },
     guarantees: {
-      badge: 'Гарантии сотрудничества',
       title: 'Всё для спокойного и надёжного запуска',
       description: 'Прозрачные условия без агентской наценки, срывов сроков и передачи проекта третьим лицам.',
       items: [
@@ -904,7 +891,7 @@ export const translations: Record<Language, Translations> = {
         },
         {
           title: 'Поддержка после запуска',
-          description: 'Поддержка и сопровождение после запуска: 30 дней для первых двух пакетов и 60 дней для пакета «Каталог и управление». Новые страницы, контент и функции в этот период не входят.',
+          description: 'Поддержка и сопровождение после запуска: 30 дней для первых двух пакетов и 60 дней для последнего. Новые страницы, контент и функции в этот период не входят.',
         },
       ],
     },
@@ -937,7 +924,6 @@ export const translations: Record<Language, Translations> = {
       title: 'Расскажите, какой сайт вам нужен',
       description1: 'Для предварительной оценки пришлите ссылку на ваши социальные сети или существующий сайт и коротко опишите задачу.',
       description2: '',
-      btnSubmitProject: 'Отправить описание проекта',
       disclaimer: 'Предварительное обсуждение бесплатно и ни к чему вас не обязывает.',
       form: {
         nameLabel: 'Ваше имя',
@@ -958,9 +944,9 @@ export const translations: Record<Language, Translations> = {
         validationError: 'Пожалуйста, укажите ваше имя и контакт',
         sendAnother: 'Отправить ещё одну заявку',
         tariffs: {
-          start: 'Присутствие – сайт-визитка (от 39 000 ₽)',
-          optimal: 'Поиск и заявки – сайт для эксперта или бизнеса (от 69 000 ₽)',
-          business: 'Каталог и управление – сайт с базой данных и админ-панелью (от 99 000 ₽)',
+          start: 'Сайт-визитка (от 39 000 ₽)',
+          optimal: 'Сайт для эксперта или бизнеса (от 69 000 ₽)',
+          business: 'Сайт с базой данных и админ-панелью (от 99 000 ₽)',
           redesign: 'Переделка существующего сайта (от 49 000 ₽)',
           custom: 'Другая задача / индивидуальный проект',
           defaultEstimate: 'Индивидуальный расчет',
@@ -1089,7 +1075,6 @@ export const translations: Record<Language, Translations> = {
       ],
     },
     about: {
-      badge: 'About Me',
       title: 'Crafting websites as a digital craftsman – with\u00A0attention to\u00A0every detail',
       subtitle: 'Who I am, my philosophy, and\u00A0why clients enjoy collaborating with\u00A0me',
       locationRole: 'Web Developer · Crafting modern digital solutions for\u00A0creators and\u00A0businesses',
@@ -1291,7 +1276,6 @@ export const translations: Record<Language, Translations> = {
       signature: 'You receive full source code ownership, credentials, and a working site on your own domain.',
     },
     process: {
-      badge: 'Project Roadmap',
       title: 'From initial message to a launched website',
       intro: 'Clear milestones from the very first greeting to custom domain launch and keys handoff.',
       stagePrefix: '',
@@ -1494,7 +1478,6 @@ export const translations: Record<Language, Translations> = {
       ],
     },
     pricing: {
-      preTitle: 'Development and support',
       title: 'Choose a plan',
       intro: 'I help experts and small businesses present their services clearly, prepare their website for search promotion, and make it easier for customers to get in touch.',
       followUp: 'I learn about your goals, build the website, and stay in touch after launch – for updates, new pages, and continued growth.',
@@ -1504,7 +1487,6 @@ export const translations: Record<Language, Translations> = {
       plans: [
         {
           id: 'start',
-          name: 'Presence',
           subtitle: 'Business card website',
           audience: 'Specialists or companies that need to present themselves clearly online.',
           result: 'A complete website you can share with potential clients.',
@@ -1521,7 +1503,6 @@ export const translations: Record<Language, Translations> = {
         },
         {
           id: 'optimal',
-          name: 'Search and inquiries',
           subtitle: 'Website for an expert or business',
           audience: 'Businesses with several services that need to explain their offer in more detail and prepare the site to attract visitors from search.',
           result: 'A clearly structured site with dedicated service pages and an easy way to contact the business.',
@@ -1538,7 +1519,6 @@ export const translations: Record<Language, Translations> = {
         },
         {
           id: 'business',
-          name: 'Catalog and management',
           subtitle: 'Website with a database and admin panel',
           audience: 'Businesses that need to present their services and manage a catalog, information, or inquiries through the website.',
           result: 'A website with content you can update yourself and a way to save customer inquiries.',
@@ -1601,7 +1581,6 @@ export const translations: Record<Language, Translations> = {
       },
     },
     guarantees: {
-      badge: 'Collaboration Guarantees',
       title: 'Everything for a smooth & reliable launch',
       description: 'Transparent terms, no agency markup, missed deadlines, or handoff of your project to third parties.',
       items: [
@@ -1619,7 +1598,7 @@ export const translations: Record<Language, Translations> = {
         },
         {
           title: 'Post-Launch Support',
-          description: 'Post-launch support and maintenance: 30 days for the first two packages and 60 days for Catalog and Management. New pages, content, and features are not included in this period.',
+          description: 'Post-launch support and maintenance: 30 days for the first two packages and 60 days for the last package. New pages, content, and features are not included in this period.',
         },
       ],
     },
@@ -1652,7 +1631,6 @@ export const translations: Record<Language, Translations> = {
       title: 'Tell me what website you need',
       description1: 'For an initial assessment, send a link to your current social media or existing site and briefly describe your vision.',
       description2: '',
-      btnSubmitProject: 'Submit Project Details',
       disclaimer: 'The preliminary consultation is free and carries no obligation.',
       form: {
         nameLabel: 'Your name',
@@ -1673,9 +1651,9 @@ export const translations: Record<Language, Translations> = {
         validationError: 'Please provide your name and contact',
         sendAnother: 'Send another message',
         tariffs: {
-          start: 'Presence – business card website (from $420)',
-          optimal: 'Search and inquiries – website for an expert or business (from $740)',
-          business: 'Catalog and management – website with database and admin panel (from $1,060)',
+          start: 'Business card website (from $420)',
+          optimal: 'Website for an expert or business (from $740)',
+          business: 'Website with database and admin panel (from $1,060)',
           redesign: 'Redesign of Existing Site from $525',
           custom: 'Custom task / individual inquiry',
           defaultEstimate: 'Custom Estimate',

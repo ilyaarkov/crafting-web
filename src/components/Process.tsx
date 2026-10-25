@@ -177,9 +177,6 @@ export const Process: React.FC = () => {
       <div className="max-w-5xl mx-auto px-4 sm:px-6 relative z-10">
         {/* Заголовок блока: компактный и выразительный */}
         <div className="max-w-3xl mb-10 sm:mb-14">
-          <div className="text-xs uppercase tracking-widest text-cyan-400 font-semibold mb-2.5">
-            <span>{t.process.badge}</span>
-          </div>
           <h2 className="text-2xl sm:text-4xl font-extrabold text-white tracking-tight leading-tight mb-3">
             {t.process.title}
           </h2>

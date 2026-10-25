@@ -42,9 +42,6 @@ export const Pricing: React.FC = () => {
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 relative z-10">
         <div className="text-center max-w-4xl mx-auto mb-10 sm:mb-16">
-          <div className="text-xs uppercase tracking-widest text-cyan-400 font-semibold mb-2.5">
-            <span>{t.pricing.preTitle}</span>
-          </div>
           <h2 className="text-2xl sm:text-4xl lg:text-5xl font-extrabold text-white tracking-tight leading-tight">
             {t.pricing.title}
           </h2>
@@ -63,13 +60,8 @@ export const Pricing: React.FC = () => {
               className="group relative rounded-2xl sm:rounded-3xl p-5 sm:p-8 flex flex-col justify-between transition-all duration-300 glass-panel glass-panel-hover"
             >
               <div>
-                <div className="mb-3 sm:mb-4">
-                  <div className="text-xs sm:text-sm font-semibold tracking-wider uppercase text-cyan-400 mb-0.5 sm:mb-1">
-                    {plan.name}
-                  </div>
-                  <div className="text-lg sm:text-xl font-bold text-white">
-                    {plan.subtitle}
-                  </div>
+                <div className="mb-3 sm:mb-4 text-lg sm:text-xl font-bold text-white">
+                  {plan.subtitle}
                 </div>
 
                 <div className="my-4 sm:my-6 pb-4 sm:pb-6 border-b border-white/10">

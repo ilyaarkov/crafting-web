@@ -28,9 +28,6 @@ export const Guarantees: React.FC = () => {
 
       <div className="max-w-6xl mx-auto px-4 sm:px-6 relative z-10">
         <div className="max-w-3xl mb-12 sm:mb-14">
-          <div className="text-xs uppercase tracking-widest text-cyan-400 font-semibold mb-3">
-            <span>{t.guarantees.badge}</span>
-          </div>
           <h2 className="text-2xl sm:text-4xl font-extrabold text-white tracking-tight leading-tight mb-3">
             {t.guarantees.title}
           </h2>

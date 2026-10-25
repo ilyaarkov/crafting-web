@@ -100,9 +100,6 @@ export const About: React.FC = () => {
       <div className="max-w-5xl mx-auto px-4 sm:px-6">
         {/* Заголовок секции */}
         <div className="max-w-2xl mb-12 sm:mb-16">
-          <div className="text-xs uppercase tracking-widest text-cyan-400 font-semibold mb-3">
-            <span>{t.about.badge}</span>
-          </div>
           <h2 className="text-2xl sm:text-4xl font-extrabold text-white tracking-tight leading-tight text-balance">
             {t.about.title}
           </h2>

@@ -214,11 +214,6 @@ export const ContactForm: React.FC = () => {
         </div>
 
         <div className="glass-panel rounded-3xl p-6 sm:p-10 border border-white/10 max-w-3xl mx-auto shadow-2xl relative">
-          <div className="text-xs font-semibold uppercase tracking-wider text-cyan-400 mb-6 flex items-center gap-2">
-            <span className="w-2 h-2 rounded-full bg-cyan-400" />
-            <span>{t.contact.btnSubmitProject}</span>
-          </div>
-
           {submitted ? (
             <div
               className="py-12 text-center animate-in fade-in duration-300"
