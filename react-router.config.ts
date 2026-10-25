@@ -2,7 +2,6 @@ import { copyFile, writeFile } from 'node:fs/promises';
 import path from 'node:path';
 import type { Config } from '@react-router/dev/config';
 import { PROJECTS_DATA } from './src/data/projectsData';
-import { SERVICES_DATA } from './src/data/servicesData';
 
 const SITE_URL = 'https://ilyaarkov.com';
 
@@ -12,7 +11,6 @@ const prerenderPaths = [
   '/portfolio',
   '/policy',
   ...Object.keys(PROJECTS_DATA).map((id) => `/portfolio/${id}`),
-  ...Object.keys(SERVICES_DATA).map((id) => `/services/${id}`),
 ];
 
 export default {

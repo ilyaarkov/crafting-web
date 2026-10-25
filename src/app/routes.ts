@@ -7,8 +7,6 @@ export default [
   route('portfolio', 'routes/portfolio.tsx'),
   route('portfolio/:project', 'routes/project.tsx'),
   route('project/:project', 'routes/project.tsx', { id: 'project-alias' }),
-  route('services/:service', 'routes/service.tsx'),
-  route('service/:service', 'routes/service.tsx', { id: 'service-alias' }),
   route('policy', 'routes/policy.tsx'),
   route('*', 'routes/not-found.tsx'),
 ] satisfies RouteConfig;
