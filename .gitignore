@@ -29,3 +29,8 @@ ilyaarkov-earth-hero.zip
 # React Router build output and typegen
 /build
 /.react-router
+
+# Environment variables
+.env
+.env.*
+!.env.example
