@@ -191,15 +191,6 @@ export interface Translations {
       }[];
     };
   };
-  guarantees: {
-    title: string;
-    description: string;
-    items: {
-      badge?: string;
-      title: string;
-      description: string;
-    }[];
-  };
   whyCheaper: {
     preTitle: string;
     title: string;
@@ -872,28 +863,6 @@ export const translations: Record<Language, Translations> = {
           },
         ],
       },
-    },
-    guarantees: {
-      title: 'Всё для спокойного и надёжного запуска',
-      description: 'Прозрачные условия без агентской наценки, срывов сроков и передачи проекта третьим лицам.',
-      items: [
-        {
-          title: 'Гарантия возврата средств',
-          description: 'Поэтапная работа с прозрачными контрольными точками. Если на начальных этапах разработки вас не устроит концепт или подход – возвращаю предоплату за невыполненную часть. Вы ничем не рискуете на старте.',
-        },
-        {
-          title: 'Официальный договор',
-          description: 'Работаем официально: фиксируем условия, сроки, этапы и ответственность сторон. По запросу бесплатно вышлю типовой договор для ознакомления перед началом сотрудничества.',
-        },
-        {
-          title: 'Фиксированная стоимость',
-          description: 'Состав работ и стоимость утверждаются до старта и не меняются в процессе. Никаких непредвиденных доплат, скрытых расходов или растущих смет.',
-        },
-        {
-          title: 'Поддержка после запуска',
-          description: 'Поддержка и сопровождение после запуска: 30 дней для первых двух пакетов и 60 дней для последнего. Новые страницы, контент и функции в этот период не входят.',
-        },
-      ],
     },
     whyCheaper: {
       preTitle: 'Честно о стоимости',
@@ -1579,28 +1548,6 @@ export const translations: Record<Language, Translations> = {
           },
         ],
       },
-    },
-    guarantees: {
-      title: 'Everything for a smooth & reliable launch',
-      description: 'Transparent terms, no agency markup, missed deadlines, or handoff of your project to third parties.',
-      items: [
-        {
-          title: 'Money-Back Guarantee',
-          description: 'Milestone-based workflow with clear checkpoints. If you are not satisfied with the concept at early stages, unworked prepayment is refunded. Zero financial risk at kickoff.',
-        },
-        {
-          title: 'Formal Contract',
-          description: 'Transparent legal agreement fixing deliverables, milestones, timelines, and commitments. A free draft copy is available on request before project kickoff.',
-        },
-        {
-          title: 'Fixed Price Guarantee',
-          description: 'The scope of work and quote are finalized prior to kickoff and stay unchanged. No surprise fees, hidden extras, or runaway estimates.',
-        },
-        {
-          title: 'Post-Launch Support',
-          description: 'Post-launch support and maintenance: 30 days for the first two packages and 60 days for the last package. New pages, content, and features are not included in this period.',
-        },
-      ],
     },
     whyCheaper: {
       preTitle: 'Honest About Pricing',

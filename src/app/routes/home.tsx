@@ -6,7 +6,6 @@ import { Specialization } from '../../components/Specialization';
 import { Process } from '../../components/Process';
 import { Projects } from '../../components/Projects';
 import { Pricing } from '../../components/Pricing';
-import { Guarantees } from '../../components/Guarantees';
 import { ContactForm } from '../../components/ContactForm';
 import { Footer } from '../../components/Footer';
 import { ScrollToTop } from '../../components/ScrollToTop';
@@ -27,7 +26,6 @@ export default function HomeRoute() {
         <Process />
         <Projects />
         <Pricing />
-        <Guarantees />
         <ContactForm />
       </main>
       <Footer />
