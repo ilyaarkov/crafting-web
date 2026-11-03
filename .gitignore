@@ -34,3 +34,6 @@ ilyaarkov-earth-hero.zip
 .env
 .env.*
 !.env.example
+
+# Local solution drafts (not for remote)
+/solutions/
