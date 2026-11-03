@@ -182,12 +182,12 @@ export const Hero: React.FC = () => {
       {/* ========================================================= */}
       {/* ДЕСКТОП ВЕРСИЯ */}
       {/* ========================================================= */}
-      <div className="hidden lg:flex relative z-20 flex-col justify-between pt-22 pb-4 max-w-6xl mx-auto px-6 w-full text-center h-full" style={{ isolation: 'isolate', zIndex: 10 }}>
+      <div className="hidden lg:flex relative z-20 flex-col justify-center pt-22 pb-4 max-w-6xl mx-auto px-6 w-full text-center h-full" style={{ isolation: 'isolate', zIndex: 10 }}>
         {/* Верхний спейсер */}
         <div className="shrink-0 h-1" />
 
         {/* Смысловой центр */}
-        <div className="my-auto py-2 flex flex-col items-center justify-center">
+        <div className="py-2 flex flex-col items-center justify-center">
           <h1 className="hero-enter text-5xl xl:text-6xl font-black tracking-tight leading-[1.10] mb-3 max-w-4xl mx-auto">
             <span className="block text-white mb-1">
               {t.hero.titlePrefix}
@@ -210,7 +210,7 @@ export const Hero: React.FC = () => {
         </div>
 
         {/* Низ экрана на ПК: Метрики + Кнопки + Галочка */}
-          <div className="relative z-30 mt-auto pb-2 flex flex-col items-center w-full shrink-0" style={{ zIndex: 20 }}>
+          <div className="relative z-30 mt-12 pb-2 flex flex-col items-center w-full shrink-0" style={{ zIndex: 20 }}>
           <div className="hero-enter hero-enter-delay-2 grid grid-cols-3 gap-4 max-w-4xl mx-auto text-center mb-5 w-full">
             <div className="hero-metric p-4 rounded-2xl backdrop-blur-sm border hover:border-cyan-300/40 transition-colors flex flex-col items-center justify-center text-center">
               <div className="text-white font-extrabold text-lg tracking-tight mb-0.5">
