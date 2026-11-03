@@ -3,6 +3,7 @@ import { useLanguage } from '../context/LanguageContext';
 import {
   ArrowLeft,
   ArrowRight,
+  ArrowUpRight,
   Globe,
   CheckCircle2,
   Send,
@@ -19,6 +20,10 @@ interface ProjectDetailPageProps {
   onNavigatePortfolio: () => void;
   onNavigateHome: () => void;
 }
+
+const PROJECT_LIVE_URLS: Record<string, string> = {
+  'specialist-portfolio': 'https://elizaveta-portfolio-beta.vercel.app/',
+};
 
 const cosmicStars = [
   { top: '8%', left: '15%', size: '2px', opacity: '0.6', delay: '0s' },
@@ -169,7 +174,19 @@ export const ProjectDetailPage: React.FC<ProjectDetailPageProps> = ({
               </div>
             )}
             <h1 className="text-3xl sm:text-5xl font-extrabold text-white tracking-tight leading-tight mb-4">
-              {project.title}
+              {PROJECT_LIVE_URLS[project.id] ? (
+                <a
+                  href={PROJECT_LIVE_URLS[project.id]}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="group inline-flex items-start gap-2 hover:text-cyan-300 transition-colors"
+                >
+                  <span>{project.title}</span>
+                  <ArrowUpRight className="w-6 h-6 sm:w-8 sm:h-8 mt-1 sm:mt-2 shrink-0 opacity-0 -translate-x-2 translate-y-2 group-hover:opacity-100 group-hover:translate-x-0 group-hover:translate-y-0 transition-all duration-300" />
+                </a>
+              ) : (
+                project.title
+              )}
             </h1>
             {/* До lg описание не шире заголовка и делится на ровные строки; на широких экранах — в одну строку, если помещается */}
             <p className="w-0 min-w-full lg:w-auto lg:min-w-0 text-slate-300 text-base sm:text-lg leading-relaxed [text-wrap:balance]">
