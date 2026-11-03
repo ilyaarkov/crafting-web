@@ -7,6 +7,7 @@ interface TurnstileApi {
     container: HTMLElement,
     options: {
       sitekey: string;
+      appearance: 'always' | 'execute' | 'interaction-only';
       callback: (token: string) => void;
       'expired-callback': () => void;
       'error-callback': () => void;
@@ -59,6 +60,7 @@ export const ContactForm: React.FC = () => {
       if (disposed || !window.turnstile || turnstileWidgetId.current) return;
       turnstileWidgetId.current = window.turnstile.render(turnstileContainer, {
         sitekey: turnstileSiteKey,
+        appearance: 'interaction-only',
         callback: (token) => {
           setTurnstileToken(token);
           setTurnstileError(false);
