@@ -71,9 +71,6 @@ export const Footer: React.FC = () => {
         {/* Bottom bar */}
         <div className="pt-8 border-t border-white/5 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-slate-500">
           <div>{t.footer.copyright}</div>
-          <div className="text-slate-600">
-            {t.footer.name} &bull; Web Development
-          </div>
         </div>
       </div>
     </footer>
