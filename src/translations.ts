@@ -117,12 +117,12 @@ export interface Translations {
     }[];
   };
   reviews: {
-    preTitle: string;
     title: string;
     items: {
       name: string;
       role: string;
       text: string;
+      projectId?: string;
     }[];
   };
   projects: {
@@ -601,7 +601,6 @@ export const translations: Record<Language, Translations> = {
       ],
     },
     reviews: {
-      preTitle: 'Опыт сотрудничества',
       title: 'Отзывы',
       items: [
         {
@@ -618,6 +617,30 @@ export const translations: Record<Language, Translations> = {
           name: 'Екатерина Левина',
           role: 'Преподаватель онлайн-курсов',
           text: 'Хотела сайт, который просто объясняет, чем я занимаюсь. Илья не навязывал пакеты, мы обсудили задачи и сделали то, что нужно. Тексты дописывала сама, он помог с оформлением. Сайт открывается быстро и хорошо смотрится на телефоне.',
+        },
+        {
+          name: 'Елизавета Самоховец',
+          role: 'SMM-специалист',
+          projectId: 'specialist-portfolio',
+          text: 'Илья, спасибо большое! Сайт получился именно таким, каким я его представляла: стильным и спокойным, без лишнего шума. Здорово, что вы расспрашивали про каждый кейс и не торопили с текстами. Теперь клиенты открывают портфолио и сразу понимают, чем я занимаюсь. Первые обращения с сайта уже есть.',
+        },
+        {
+          name: 'Татьяна Абалдова',
+          role: 'Директор АНО «ПОДДЕРЖКА»',
+          projectId: 'nonprofit-redesign',
+          text: 'Добрый день, Илья. Нам нужен был сайт, на котором люди быстро поймут, чем занимается организация и как помочь. Вы выслушали нашу историю, не перегружали терминами и предложили понятную структуру. Сайт сделали в срок, редакционные правки вносили спокойно. Теперь на нём есть всё, что нужно нашим волонтёрам и партнёрам.',
+        },
+        {
+          name: 'Андрей Надеин',
+          role: 'Председатель совета винного кооператива «Интуиция»',
+          projectId: 'wine-coop',
+          text: 'Илья, добрый день. Для кооператива было важно, чтобы сайт работал не как витрина, а как рабочий инструмент: с каталогом, заказами и несколькими брендами. Вы разобрались в этом быстрее, чем я ожидал. Некоторые детали приходилось согласовывать с партнёрами, но всё решали на созвонах. Результатом доволен, сайт используем каждый день.',
+        },
+        {
+          name: 'Кирилл Волков',
+          role: 'Основатель школы «Driftet»',
+          projectId: 'driving-center',
+          text: 'Нужен был сайт, который расскажет о программах школы и сразу даст записаться на занятие. Илья сделал его аккуратно, без лишних эффектов. Расписание удобно управляется, ученики записываются с телефона. Из замечаний: пару раз уточняли формулировки программ, но правки внесли в течение дня.',
         },
       ],
     },
@@ -1296,7 +1319,6 @@ export const translations: Record<Language, Translations> = {
       ],
     },
     reviews: {
-      preTitle: 'Client Experience',
       title: 'Reviews',
       items: [
         {
@@ -1313,6 +1335,30 @@ export const translations: Record<Language, Translations> = {
           name: 'Ekaterina Levina',
           role: 'Online course instructor',
           text: 'I wanted a site that simply explains what I do. Ilya did not push packages; we discussed the tasks and built what was needed. I wrote the texts myself and he helped with the layout. The site loads fast and looks good on a phone.',
+        },
+        {
+          name: 'Elizaveta Samokhovets',
+          role: 'SMM specialist',
+          projectId: 'specialist-portfolio',
+          text: 'Ilya, thank you so much! The website turned out exactly the way I pictured it: stylish and calm, without unnecessary noise. It helped a lot that you asked about every case and did not rush the texts. Now clients open the portfolio and immediately understand what I do. The first inquiries from the site have already come in.',
+        },
+        {
+          name: 'Tatiana Abaldova',
+          role: 'Director, SUPPORT nonprofit organization',
+          projectId: 'nonprofit-redesign',
+          text: 'Hello Ilya. We needed a website where people quickly understand what the organization does and how to help. You listened to our story, avoided heavy jargon, and suggested a clear structure. The site was delivered on time, and editorial changes went smoothly. Now it has everything our volunteers and partners need.',
+        },
+        {
+          name: 'Andrey Nadein',
+          role: 'Chairman of the board, Intuitivo wine cooperative',
+          projectId: 'wine-coop',
+          text: 'Hello Ilya. For the cooperative it mattered that the website works not as a showcase but as a working tool: with a catalog, orders, and several brands. You grasped this faster than I expected. Some details had to be agreed with partners, but we solved everything on calls. I am happy with the result, and we use the site every day.',
+        },
+        {
+          name: 'Kirill Volkov',
+          role: 'Founder, Driftet driving school',
+          projectId: 'driving-center',
+          text: 'We needed a website that tells about the school programs and lets people sign up for a lesson right away. Ilya made it neat, without unnecessary effects. The schedule is easy to manage, and students sign up from their phones. A few notes: we clarified the program descriptions a couple of times, but the changes were made within the same day.',
         },
       ],
     },
