@@ -611,7 +611,7 @@ export const translations: Record<Language, Translations> = {
         {
           name: 'Денис Орлов',
           role: 'Владелец мебельной мастерской',
-          text: 'Нужен был сайт с каталогом и формой заявки. На созвоне Илья быстро разобрался в задаче и предложил структуру, которую мы почти не меняли. Запуск прошёл без сюрпризов: домен и почта подключены. Из минусов – ответы иногда приходили не сразу, но в пределах дня.',
+          text: 'Нужен был сайт с каталогом и формой заявки. На созвоне Илья быстро разобрался в задаче и предложил структуру, которую мы почти не меняли. Запуск прошёл без сюрпризов: домен и почта подключены.',
         },
         {
           name: 'Екатерина Левина',
@@ -1329,7 +1329,7 @@ export const translations: Record<Language, Translations> = {
         {
           name: 'Denis Orlov',
           role: 'Owner of a furniture workshop',
-          text: 'I needed a site with a catalog and an inquiry form. On our call Ilya quickly understood the task and suggested a structure we barely changed. The launch went smoothly: domain and email are connected. One downside: replies sometimes took a while, but always within the same day.',
+          text: 'I needed a site with a catalog and an inquiry form. On our call Ilya quickly understood the task and suggested a structure we barely changed. The launch went smoothly: domain and email are connected.',
         },
         {
           name: 'Ekaterina Levina',
