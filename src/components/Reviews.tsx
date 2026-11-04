@@ -89,14 +89,14 @@ export const Reviews: React.FC = () => {
   };
 
   return (
-    <section id="reviews" className="h-[100vh] flex flex-col justify-center relative overflow-hidden bg-[#03050a] z-10">
+    <section id="reviews" className="min-h-[100vh] flex flex-col justify-center py-14 sm:py-16 relative overflow-hidden bg-[#03050a] z-10">
       <ParallaxStarfield seed={303} constellations={2} accent={<ReviewOrbits />} accentSpeed={0.4} />
 
       <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[640px] h-[420px] bg-violet-600/15 blur-[150px] rounded-full pointer-events-none" />
       <div className="absolute top-1/4 right-1/5 w-[380px] h-[300px] bg-cyan-500/10 blur-[130px] rounded-full pointer-events-none" />
 
       <div className="max-w-7xl w-full mx-auto px-4 sm:px-6 relative z-10">
-        <div className="text-center mb-10 sm:mb-14">
+        <div className="text-center mb-6 sm:mb-10">
           <h2 className="text-2xl sm:text-4xl lg:text-5xl font-extrabold text-white tracking-tight leading-tight">
             {t.reviews.title}
           </h2>
@@ -110,9 +110,6 @@ export const Reviews: React.FC = () => {
           onTouchEnd={handleTouchEnd}
         >
           {reviews.map((review, i) => {
-            const project = review.projectId
-              ? t.projects.items.find((p) => p.id === review.projectId)
-              : undefined;
             const { x, visible } = placement(i);
 
             return (
@@ -122,7 +119,7 @@ export const Reviews: React.FC = () => {
                   cardRefs.current[i] = el;
                 }}
                 aria-hidden={!visible}
-                className={`absolute top-0 left-0 rounded-3xl p-6 sm:p-8 flex flex-col border border-violet-300/15 bg-gradient-to-br from-white/[0.07] via-white/[0.02] to-violet-500/[0.08] backdrop-blur-md shadow-[0_0_70px_rgba(124,58,237,0.22)] transition-[transform,opacity] duration-700 ease-out ${
+                className={`absolute top-0 left-0 rounded-3xl p-5 sm:p-6 flex flex-col border border-violet-300/15 bg-gradient-to-br from-white/[0.07] via-white/[0.02] to-violet-500/[0.08] backdrop-blur-md shadow-[0_0_70px_rgba(124,58,237,0.22)] transition-[transform,opacity] duration-700 ease-out ${
                   visible ? '' : 'pointer-events-none'
                 }`}
                 style={{
@@ -131,36 +128,30 @@ export const Reviews: React.FC = () => {
                   opacity: visible ? 1 : 0,
                 }}
               >
-                <div className="flex items-start justify-between gap-4 mb-6">
-                  <div className="relative w-14 h-14 shrink-0">
+                <div className="flex items-center gap-3 mb-4">
+                  <div className="relative w-11 h-11 shrink-0">
                     <div className="absolute inset-0 rounded-full border border-dashed border-cyan-300/40 animate-[spin_18s_linear_infinite]" />
-                    <div className="absolute inset-1.5 rounded-full bg-gradient-to-br from-violet-500/40 to-cyan-400/30 border border-white/15 flex items-center justify-center text-sm font-bold text-white">
+                    <div className="absolute inset-1 rounded-full bg-gradient-to-br from-violet-500/40 to-cyan-400/30 border border-white/15 flex items-center justify-center text-xs font-bold text-white">
                       {review.name.split(' ').map((part) => part[0]).slice(0, 2).join('')}
                     </div>
                   </div>
-                  <Quote className="w-8 h-8 text-violet-300/60 shrink-0" />
+                  <div className="min-w-0 flex-1">
+                    <div className="text-sm font-semibold text-white truncate">{review.name}</div>
+                    <div className="text-xs text-slate-400 leading-snug">{review.role}</div>
+                  </div>
+                  <Quote className="w-6 h-6 text-violet-300/60 shrink-0" />
                 </div>
 
-                <p className="flex-1 text-sm sm:text-base text-slate-100 leading-relaxed">
+                <p className="text-sm text-slate-100 leading-relaxed">
                   {review.text}
                 </p>
-
-                <div className="mt-6 pt-5 border-t border-white/10">
-                  <div className="text-sm font-semibold text-white">{review.name}</div>
-                  <div className="text-xs text-slate-400">{review.role}</div>
-                  {project && (
-                    <span className="inline-block mt-3 text-xs text-cyan-200/90 border border-cyan-400/30 bg-cyan-400/5 rounded-full px-3 py-1.5">
-                      {project.title}
-                    </span>
-                  )}
-                </div>
               </div>
             );
           })}
         </div>
 
         {count > 1 && (
-          <div className="mt-8 flex items-center justify-center gap-6">
+          <div className="mt-6 sm:mt-8 flex items-center justify-center gap-6">
             <button
               type="button"
               onClick={() => goTo(index - 1)}
