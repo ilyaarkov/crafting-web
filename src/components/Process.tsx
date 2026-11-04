@@ -413,10 +413,6 @@ export const Process: React.FC = () => {
             })}
           </div>
         </div>
-
-        <p className="mt-12 sm:mt-16 max-w-2xl mx-auto text-center text-sm sm:text-base text-slate-300 leading-relaxed text-balance">
-          {t.process.note}
-        </p>
       </div>
     </section>
   );

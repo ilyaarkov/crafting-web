@@ -107,7 +107,6 @@ export interface Translations {
   };
   process: {
     title: string;
-    note: string;
     stagePrefix: string;
     steps: {
       number: string;
@@ -564,7 +563,6 @@ export const translations: Record<Language, Translations> = {
     process: {
       title: 'Как будем работать',
       stagePrefix: '',
-      note: 'Вы общаетесь со мной, а не со студией. Вы не связаны обязательствами, как с агентством: у вас есть время подумать, без дожимов и жёсткой тарификации правок и сроков.',
       steps: [
         {
           number: '01',
@@ -1281,7 +1279,6 @@ export const translations: Record<Language, Translations> = {
     process: {
       title: "How We'll Work",
       stagePrefix: '',
-      note: 'You work directly with me, not with a studio. There are no agency-style obligations: you have time to think it over, with no pressure and no rigid pricing for revisions or deadlines.',
       steps: [
         {
           number: '01',
