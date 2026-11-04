@@ -67,9 +67,9 @@ export const Reviews: React.FC = () => {
   // Позиция каждой карточки относительно активной; карточки по кругу, поэтому переход без скачка
   const placement = (i: number) => {
     const d = (i - index + count) % count;
-    if (d < perView) return { x: d * step, visible: true, active: d === 0 };
-    if (d === count - 1) return { x: -step, visible: false, active: false };
-    return { x: d * step, visible: false, active: false };
+    if (d < perView) return { x: d * step, visible: true };
+    if (d === count - 1) return { x: -step, visible: false };
+    return { x: d * step, visible: false };
   };
 
   const prevLabel = lang === 'ru' ? 'Предыдущий отзыв' : 'Previous review';
@@ -89,13 +89,13 @@ export const Reviews: React.FC = () => {
   };
 
   return (
-    <section id="reviews" className="py-16 sm:py-20 lg:py-24 relative overflow-hidden bg-[#03050a] z-10">
+    <section id="reviews" className="h-[100vh] flex flex-col justify-center relative overflow-hidden bg-[#03050a] z-10">
       <ParallaxStarfield seed={303} constellations={2} accent={<ReviewOrbits />} accentSpeed={0.4} />
 
       <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[640px] h-[420px] bg-violet-600/15 blur-[150px] rounded-full pointer-events-none" />
       <div className="absolute top-1/4 right-1/5 w-[380px] h-[300px] bg-cyan-500/10 blur-[130px] rounded-full pointer-events-none" />
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 relative z-10">
+      <div className="max-w-7xl w-full mx-auto px-4 sm:px-6 relative z-10">
         <div className="text-center mb-10 sm:mb-14">
           <h2 className="text-2xl sm:text-4xl lg:text-5xl font-extrabold text-white tracking-tight leading-tight">
             {t.reviews.title}
@@ -113,7 +113,7 @@ export const Reviews: React.FC = () => {
             const project = review.projectId
               ? t.projects.items.find((p) => p.id === review.projectId)
               : undefined;
-            const { x, visible, active } = placement(i);
+            const { x, visible } = placement(i);
 
             return (
               <div
@@ -128,7 +128,7 @@ export const Reviews: React.FC = () => {
                 style={{
                   width: cardWidth,
                   transform: `translate3d(${x}px, 0, 0)`,
-                  opacity: active ? 1 : visible ? 0.55 : 0,
+                  opacity: visible ? 1 : 0,
                 }}
               >
                 <div className="flex items-start justify-between gap-4 mb-6">
