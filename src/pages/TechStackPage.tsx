@@ -420,9 +420,6 @@ export const TechStackPage: React.FC<TechStackPageProps> = ({ onNavigateHome }) 
               <span className="text-base font-bold text-white tracking-tight">
                 {t.footer.name}
               </span>
-              <span className="text-xs text-slate-500 ml-2">
-                &bull; {lang === 'ru' ? 'Веб-разработка' : 'Web Development'}
-              </span>
             </div>
 
             <div className="flex items-center gap-5 text-sm text-slate-400">
