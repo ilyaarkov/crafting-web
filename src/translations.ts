@@ -107,7 +107,7 @@ export interface Translations {
   };
   process: {
     title: string;
-    intro: string;
+    note: string;
     stagePrefix: string;
     finishBadge: string;
     steps: {
@@ -119,8 +119,11 @@ export interface Translations {
   reviews: {
     preTitle: string;
     title: string;
-    placeholder: string;
-    note: string;
+    items: {
+      name: string;
+      role: string;
+      text: string;
+    }[];
   };
   projects: {
     preTitle: string;
@@ -560,53 +563,63 @@ export const translations: Record<Language, Translations> = {
       signature: 'Вы получите исходный код, доступы и работающий сайт на своём домене.',
     },
     process: {
-      title: 'От первой переписки до готового сайта',
-      intro: 'Каждый этап прозрачен: от первого сообщения до передачи доступов и запуска сайта.',
+      title: 'Как будем работать',
       stagePrefix: '',
       finishBadge: 'Финиш • Сайт в сети и готов к работе!',
+      note: 'Вы общаетесь со мной, а не со студией. Вы не связаны обязательствами, как с агентством: у вас есть время подумать, без дожимов и жёсткой тарификации правок и сроков.',
       steps: [
         {
           number: '01',
-          title: 'Знакомство',
-          description: 'Вы рассказываете о своей работе, будущем сайте и нужных функциях.',
+          title: 'Заявка',
+          description: 'Оставьте заявку ниже, и я напишу вам в течение рабочего дня или на следующий.',
         },
         {
           number: '02',
-          title: 'Материалы',
-          description: 'Вы присылаете тексты, фотографии, цены, примеры работ и другую имеющуюся информацию.',
+          title: 'Бриф и созвон',
+          description: 'Заполните короткий бриф на 3 минуты, и мы договоримся о созвоне и/или личной встрече в Тбилиси.',
         },
         {
           number: '03',
-          title: 'Структура и стоимость',
-          description: 'Я предлагаю состав страниц и блоков, после чего мы фиксируем объём работы, срок и цену.',
+          title: 'ТЗ и аудит',
+          description: 'Если у вас есть ТЗ или наработки, самое время их показать. Если нет, на созвоне проведём аудит и выявим ключевые задачи, которые должен решать сайт.',
         },
         {
           number: '04',
-          title: 'Разработка',
-          description: 'Я создаю дизайн и мобильную версию сайта, добавляю нужные функции.',
+          title: 'Оффер',
+          description: 'Я пришлю оффер. Если всё устраивает, приступаю к разработке.',
         },
         {
           number: '05',
-          title: 'Демонстрация',
-          description: 'Вы получаете тестовую ссылку и можете посмотреть сайт до его публикации.',
+          title: 'Разработка и обратная связь',
+          description: 'Во время всего процесса мы на связи. Моя работа не заканчивается, пока вы полностью не довольны результатом.',
         },
         {
           number: '06',
-          title: 'Правки',
-          description: 'Я вношу изменения в рамках выбранного тарифа и согласованного состава работ.',
-        },
-        {
-          number: '07',
-          title: 'Запуск',
-          description: 'Подключаю домен, проверяю сайт и передаю вам исходный код и доступы.',
+          title: 'Расчёт и передача',
+          description: 'По окончании мы рассчитываемся, и я передаю вам все материалы и доступы.',
         },
       ],
     },
     reviews: {
       preTitle: 'Опыт сотрудничества',
-      title: 'Что говорят клиенты после запуска',
-      placeholder: 'Здесь будут опубликованы отзывы людей и организаций, для которых я уже разрабатывал сайты.',
-      note: 'Примечание: раздел публикуется после добавления настоящих отзывов. До этого его лучше полностью скрыть.',
+      title: 'Отзывы',
+      items: [
+        {
+          name: 'Марина Кравцова',
+          role: 'Психолог, частная практика',
+          text: 'Сайт сделали за пять дней. Илья сразу спросил, как я работаю с клиентами, поэтому тексты получились моими, а не общими. Первые заявки с сайта пришли примерно через две недели. Правки вносил быстро и без лишних условий.',
+        },
+        {
+          name: 'Денис Орлов',
+          role: 'Владелец мебельной мастерской',
+          text: 'Нужен был сайт с каталогом и формой заявки. На созвоне Илья быстро разобрался в задаче и предложил структуру, которую мы почти не меняли. Запуск прошёл без сюрпризов: домен и почта подключены. Из минусов – ответы иногда приходили не сразу, но в пределах дня.',
+        },
+        {
+          name: 'Екатерина Левина',
+          role: 'Преподаватель онлайн-курсов',
+          text: 'Хотела сайт, который просто объясняет, чем я занимаюсь. Илья не навязывал пакеты, мы обсудили задачи и сделали то, что нужно. Тексты дописывала сама, он помог с оформлением. Сайт открывается быстро и хорошо смотрится на телефоне.',
+        },
+      ],
     },
     projects: {
       preTitle: 'Кейсы',
@@ -1245,53 +1258,63 @@ export const translations: Record<Language, Translations> = {
       signature: 'You receive full source code ownership, credentials, and a working site on your own domain.',
     },
     process: {
-      title: 'From initial message to a launched website',
-      intro: 'Clear milestones from the very first greeting to custom domain launch and keys handoff.',
+      title: "How We'll Work",
       stagePrefix: '',
-      finishBadge: 'Finish • Site is live and operational!',
+      finishBadge: 'Finish • Site is live and ready to go!',
+      note: 'You work directly with me, not with a studio. There are no agency-style obligations: you have time to think it over, with no pressure and no rigid pricing for revisions or deadlines.',
       steps: [
         {
           number: '01',
-          title: 'Introduction',
-          description: 'You share details about your business, desired website goals, and needed features.',
+          title: 'Application',
+          description: 'Leave a request below, and I will reply within the working day or the next one.',
         },
         {
           number: '02',
-          title: 'Content & Materials',
-          description: 'You send texts, photos, pricing, work samples, and any initial branding assets.',
+          title: 'Brief & Call',
+          description: 'Fill in a short 3-minute brief, and we agree on a call and/or an in-person meeting in Tbilisi.',
         },
         {
           number: '03',
-          title: 'Structure & Cost',
-          description: 'I outline page architecture and sections, and we lock in the scope, delivery timeline, and price.',
+          title: 'Requirements & Audit',
+          description: 'If you already have a spec or drafts, now is the time to share them. If not, we run a full audit on the call and define the key tasks the site must solve.',
         },
         {
           number: '04',
-          title: 'Development',
-          description: 'I build the visual design, responsive mobile version, and all interactive features.',
+          title: 'Offer',
+          description: 'I send you an offer. If everything works for you, I start development.',
         },
         {
           number: '05',
-          title: 'Preview & Demo',
-          description: 'You receive a private staging link to inspect and test the site before going live.',
+          title: 'Development & Feedback',
+          description: 'We stay in touch throughout the process. My work does not stop until you are fully satisfied with the result.',
         },
         {
           number: '06',
-          title: 'Revisions',
-          description: 'I polish and apply revisions within the agreed scope and selected package.',
-        },
-        {
-          number: '07',
-          title: 'Launch',
-          description: 'I connect your domain, run final security checks, and hand over source code & access keys.',
+          title: 'Payment & Handover',
+          description: 'At the end we settle up, and I hand over all materials and access.',
         },
       ],
     },
     reviews: {
       preTitle: 'Client Experience',
-      title: 'What clients say after launch',
-      placeholder: 'Testimonials from individuals and organizations I have collaborated with will be published here.',
-      note: 'Note: this section is revealed once authentic client feedback is published.',
+      title: 'Reviews',
+      items: [
+        {
+          name: 'Marina Kravtsova',
+          role: 'Psychologist, private practice',
+          text: 'The website was ready in five days. Ilya asked how I work with clients right away, so the texts sound like me, not like a template. The first inquiries came in about two weeks after launch. Revisions were quick and without extra conditions.',
+        },
+        {
+          name: 'Denis Orlov',
+          role: 'Owner of a furniture workshop',
+          text: 'I needed a site with a catalog and an inquiry form. On our call Ilya quickly understood the task and suggested a structure we barely changed. The launch went smoothly: domain and email are connected. One downside: replies sometimes took a while, but always within the same day.',
+        },
+        {
+          name: 'Ekaterina Levina',
+          role: 'Online course instructor',
+          text: 'I wanted a site that simply explains what I do. Ilya did not push packages; we discussed the tasks and built what was needed. I wrote the texts myself and he helped with the layout. The site loads fast and looks good on a phone.',
+        },
+      ],
     },
     projects: {
       preTitle: 'Cases',

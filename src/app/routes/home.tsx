@@ -5,6 +5,7 @@ import { About } from '../../components/About';
 import { Specialization } from '../../components/Specialization';
 import { Process } from '../../components/Process';
 import { Projects } from '../../components/Projects';
+import { Reviews } from '../../components/Reviews';
 import { Pricing } from '../../components/Pricing';
 import { ContactForm } from '../../components/ContactForm';
 import { Footer } from '../../components/Footer';
@@ -25,6 +26,7 @@ export default function HomeRoute() {
         <Specialization />
         <Process />
         <Projects />
+        <Reviews />
         <Pricing />
         <ContactForm />
       </main>

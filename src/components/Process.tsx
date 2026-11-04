@@ -12,15 +12,7 @@ export const Process: React.FC = () => {
   const [totalLength, setTotalLength] = useState<number>(0);
   const [snakeProgress, setSnakeProgress] = useState<number>(0);
   const [tipCoord, setTipCoord] = useState<{ x: number; y: number } | null>(null);
-  const [activeSteps, setActiveSteps] = useState<boolean[]>([
-    false,
-    false,
-    false,
-    false,
-    false,
-    false,
-    false,
-  ]);
+  const [activeSteps, setActiveSteps] = useState<boolean[]>(() => t.process.steps.map(() => false));
 
   const steps = t.process.steps || [];
 
@@ -180,9 +172,6 @@ export const Process: React.FC = () => {
           <h2 className="text-2xl sm:text-4xl font-extrabold text-white tracking-tight leading-tight mb-3">
             {t.process.title}
           </h2>
-          <p className="text-slate-300 text-sm sm:text-base leading-relaxed">
-            {t.process.intro}
-          </p>
         </div>
 
         {/* Интерактивная траектория маршрута */}
@@ -244,7 +233,7 @@ export const Process: React.FC = () => {
           <div className="space-y-8 sm:space-y-10 lg:space-y-12 relative z-10">
             {steps.map((step, idx) => {
               const isActive = activeSteps[idx];
-              const isFinish = idx === 6;
+              const isFinish = idx === steps.length - 1;
               const isLeftOnDesktop = idx % 2 === 0 && !isFinish;
 
               if (isFinish) {
@@ -437,6 +426,10 @@ export const Process: React.FC = () => {
             })}
           </div>
         </div>
+
+        <p className="mt-12 sm:mt-16 max-w-2xl mx-auto text-center text-sm sm:text-base text-slate-300 leading-relaxed text-balance">
+          {t.process.note}
+        </p>
       </div>
     </section>
   );
