@@ -276,19 +276,6 @@ export const Process: React.FC = () => {
                     >
                       {step.description}
                     </p>
-
-                    <div
-                      className={`mt-3.5 inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full transition-all duration-300 ${
-                        isActive
-                          ? 'bg-emerald-950/80 border border-emerald-400/50 text-emerald-300 shadow-[0_0_20px_rgba(52,211,153,0.3)]'
-                          : 'bg-white/5 border border-white/10 text-slate-500 opacity-60'
-                      }`}
-                    >
-                      <Rocket className="w-3.5 h-3.5 text-emerald-400" />
-                      <span className="text-xs font-semibold">
-                        {t.process.finishBadge}
-                      </span>
-                    </div>
                   </div>
                 );
               }

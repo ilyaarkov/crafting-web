@@ -109,7 +109,6 @@ export interface Translations {
     title: string;
     note: string;
     stagePrefix: string;
-    finishBadge: string;
     steps: {
       number: string;
       title: string;
@@ -565,7 +564,6 @@ export const translations: Record<Language, Translations> = {
     process: {
       title: 'Как будем работать',
       stagePrefix: '',
-      finishBadge: 'Финиш • Сайт в сети и готов к работе!',
       note: 'Вы общаетесь со мной, а не со студией. Вы не связаны обязательствами, как с агентством: у вас есть время подумать, без дожимов и жёсткой тарификации правок и сроков.',
       steps: [
         {
@@ -1283,7 +1281,6 @@ export const translations: Record<Language, Translations> = {
     process: {
       title: "How We'll Work",
       stagePrefix: '',
-      finishBadge: 'Finish • Site is live and ready to go!',
       note: 'You work directly with me, not with a studio. There are no agency-style obligations: you have time to think it over, with no pressure and no rigid pricing for revisions or deadlines.',
       steps: [
         {
