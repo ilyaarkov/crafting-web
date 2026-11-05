@@ -1,38 +1,22 @@
-import React, { useCallback, useEffect, useLayoutEffect, useRef, useState } from 'react';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { useLanguage } from '../context/LanguageContext';
-import { ChevronLeft, ChevronRight, Quote } from 'lucide-react';
+import { ChevronLeft, ChevronRight } from 'lucide-react';
 import { ParallaxStarfield } from './ParallaxStarfield';
 
 const AUTOPLAY_MS = 7000;
 const SWIPE_THRESHOLD_PX = 40;
 const GAP_PX = 24;
 
-// Наклонные орбиты с «планетами» в фиолетово-голубых тонах
-const ReviewOrbits: React.FC = () => (
-  <svg className="absolute inset-0 w-full h-full" viewBox="0 0 1000 1000" preserveAspectRatio="xMidYMid slice">
-    <g fill="none" stroke="rgba(167,139,250,0.10)" strokeWidth="1" vectorEffect="non-scaling-stroke">
-      <ellipse cx="500" cy="500" rx="560" ry="200" transform="rotate(-18 500 500)" />
-      <ellipse cx="500" cy="500" rx="400" ry="130" transform="rotate(-18 500 500)" strokeDasharray="2 8" />
-    </g>
-    <circle cx="905" cy="352" r="3" fill="rgba(196,181,253,0.7)" />
-    <circle cx="142" cy="640" r="2.2" fill="rgba(165,243,252,0.6)" />
-  </svg>
-);
-
 export const Reviews: React.FC = () => {
   const { t, lang } = useLanguage();
   const reviews = t.reviews.items;
   const count = reviews.length;
   const [index, setIndex] = useState(0);
-  const [viewportWidth, setViewportWidth] = useState(0);
-  const [cardHeight, setCardHeight] = useState<number | undefined>(undefined);
-  const viewportRef = useRef<HTMLDivElement>(null);
-  const cardRefs = useRef<(HTMLDivElement | null)[]>([]);
+  const [perView, setPerView] = useState(1);
+  const [failedPhotos, setFailedPhotos] = useState<Record<string, boolean>>({});
+  const [loadedPhotos, setLoadedPhotos] = useState<Record<string, boolean>>({});
   const touchStartX = useRef<number | null>(null);
 
-  const perView = viewportWidth >= 1100 ? 4 : viewportWidth >= 700 ? 3 : 1;
-  const cardWidth = viewportWidth > 0 ? (viewportWidth - GAP_PX * (perView - 1)) / perView : 0;
-  const step = cardWidth + GAP_PX;
 
   const goTo = useCallback(
     (next: number) => {
@@ -42,19 +26,15 @@ export const Reviews: React.FC = () => {
   );
 
   useEffect(() => {
-    const el = viewportRef.current;
-    if (!el) return;
-    const observer = new ResizeObserver(([entry]) => setViewportWidth(entry.contentRect.width));
-    observer.observe(el);
-    return () => observer.disconnect();
-  }, []);
+    const updatePerView = () => {
+      const width = window.innerWidth;
+      setPerView(width >= 1100 ? 4 : width >= 700 ? 3 : 1);
+    };
 
-  // Высота карточек одинаковая: берём самую высокую из измеренных
-  useLayoutEffect(() => {
-    if (cardWidth <= 0) return;
-    const heights = cardRefs.current.map((el) => el?.offsetHeight ?? 0);
-    setCardHeight(Math.max(...heights));
-  }, [cardWidth, lang, count]);
+    updatePerView();
+    window.addEventListener('resize', updatePerView);
+    return () => window.removeEventListener('resize', updatePerView);
+  }, []);
 
   // Таймер перезапускается при каждой смене индекса, поэтому ручное листание сбрасывает автолистание
   useEffect(() => {
@@ -67,9 +47,9 @@ export const Reviews: React.FC = () => {
   // Позиция каждой карточки относительно активной; карточки по кругу, поэтому переход без скачка
   const placement = (i: number) => {
     const d = (i - index + count) % count;
-    if (d < perView) return { x: d * step, visible: true };
-    if (d === count - 1) return { x: -step, visible: false };
-    return { x: d * step, visible: false };
+    if (d < perView) return { offset: d, visible: true };
+    if (d === count - 1) return { offset: -1, visible: false };
+    return { offset: d, visible: false };
   };
 
   const prevLabel = lang === 'ru' ? 'Предыдущий отзыв' : 'Previous review';
@@ -90,10 +70,7 @@ export const Reviews: React.FC = () => {
 
   return (
     <section id="reviews" className="min-h-[100vh] flex flex-col justify-center py-14 sm:py-16 relative overflow-hidden bg-site z-10">
-      <ParallaxStarfield seed={303} constellations={2} accent={<ReviewOrbits />} accentSpeed={0.4} />
-
-      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[640px] h-[420px] bg-violet-600/15 blur-[150px] rounded-full pointer-events-none" />
-      <div className="absolute top-1/4 right-1/5 w-[380px] h-[300px] bg-cyan-500/10 blur-[130px] rounded-full pointer-events-none" />
+      <ParallaxStarfield seed={303} constellations={2} />
 
       <div className="max-w-7xl w-full mx-auto px-4 sm:px-6 relative z-10">
         <div className="text-center mb-6 sm:mb-10">
@@ -103,62 +80,79 @@ export const Reviews: React.FC = () => {
         </div>
 
         <div
-          ref={viewportRef}
-          className="relative touch-pan-y select-none"
-          style={{ height: cardHeight }}
+          className="relative grid touch-pan-y"
+          style={{ gridTemplateColumns: '100%' }}
           onTouchStart={handleTouchStart}
           onTouchEnd={handleTouchEnd}
         >
           {reviews.map((review, i) => {
-            const { x, visible } = placement(i);
+            const { offset, visible } = placement(i);
+            const initials = review.name
+              .split(' ')
+              .map((part) => part[0])
+              .slice(0, 2)
+              .join('');
+            const showPhoto = Boolean(review.photo) && !failedPhotos[review.name];
+            const photoLoaded = Boolean(loadedPhotos[review.name]);
 
             return (
-              <div
+              <article
                 key={review.name}
-                ref={(el) => {
-                  cardRefs.current[i] = el;
-                }}
                 aria-hidden={!visible}
-                className={`absolute top-0 left-0 rounded-3xl p-5 sm:p-6 flex flex-col border border-violet-300/15 bg-gradient-to-br from-white/[0.07] via-white/[0.02] to-violet-500/[0.08] backdrop-blur-md shadow-[0_0_70px_rgba(124,58,237,0.22)] transition-[transform,opacity] duration-700 ease-out ${
+                className={`col-start-1 row-start-1 flex flex-col rounded-2xl border border-white/10 bg-white/[0.04] p-5 backdrop-blur-sm transition-[transform,opacity] duration-700 ease-out motion-reduce:transition-none sm:p-6 ${
                   visible ? '' : 'pointer-events-none'
                 }`}
                 style={{
-                  width: cardWidth,
-                  transform: `translate3d(${x}px, 0, 0)`,
+                  width: `calc((100% - ${GAP_PX * (perView - 1)}px) / ${perView})`,
+                  transform: `translateX(calc(${offset} * (100% + ${GAP_PX}px)))`,
                   opacity: visible ? 1 : 0,
                 }}
               >
-                <div className="flex items-center gap-3 mb-4">
-                  <div className="relative w-11 h-11 shrink-0">
-                    <div className="absolute inset-0 rounded-full border border-dashed border-cyan-300/40 animate-[spin_18s_linear_infinite]" />
-                    <div className="absolute inset-1 rounded-full bg-gradient-to-br from-violet-500/40 to-cyan-400/30 border border-white/15 flex items-center justify-center text-xs font-bold text-white">
-                      {review.name.split(' ').map((part) => part[0]).slice(0, 2).join('')}
+                <div className="mb-4 flex items-center gap-3">
+                  <div className="relative h-12 w-12 shrink-0" aria-hidden="true">
+                    <div className="absolute inset-0 flex items-center justify-center rounded-full border border-white/10 bg-white/10 text-xs font-bold text-white">
+                      {initials}
                     </div>
+                    {showPhoto && (
+                      <img
+                        src={review.photo}
+                        alt=""
+                        loading="lazy"
+                        width={48}
+                        height={48}
+                        onLoad={() =>
+                          setLoadedPhotos((prev) => ({ ...prev, [review.name]: true }))
+                        }
+                        onError={() =>
+                          setFailedPhotos((prev) => ({ ...prev, [review.name]: true }))
+                        }
+                        className={`absolute inset-0 h-full w-full rounded-full object-cover transition-opacity duration-300 ${
+                          photoLoaded ? 'opacity-100' : 'opacity-0'
+                        }`}
+                      />
+                    )}
                   </div>
                   <div className="min-w-0 flex-1">
-                    <div className="text-sm font-semibold text-white truncate">{review.name}</div>
-                    <div className="text-xs text-slate-400 leading-snug">{review.role}</div>
+                    <div className="truncate text-sm font-semibold text-white">{review.name}</div>
+                    <div className="text-xs leading-snug text-slate-400">{review.role}</div>
                   </div>
-                  <Quote className="w-6 h-6 text-violet-300/60 shrink-0" />
                 </div>
 
-                <p className="text-sm text-slate-100 leading-relaxed">
-                  {review.text}
-                </p>
-              </div>
+                <p className="text-sm leading-relaxed text-slate-100">{review.text}</p>
+              </article>
             );
           })}
         </div>
 
         {count > 1 && (
-          <div className="mt-6 sm:mt-8 flex items-center justify-center gap-6">
+          <div className="mt-6 flex items-center justify-center gap-6 sm:mt-8">
             <button
               type="button"
               onClick={() => goTo(index - 1)}
               aria-label={prevLabel}
-              className="w-11 h-11 rounded-full border border-white/10 bg-white/5 hover:bg-violet-500/20 hover:border-violet-300/40 hover:shadow-[0_0_20px_rgba(167,139,250,0.4)] text-slate-200 flex items-center justify-center transition-all cursor-pointer"
+              className="flex h-11 w-11 cursor-pointer items-center justify-center rounded-full border border-white/10 bg-white/5 text-slate-200 transition-colors hover:border-white/25 hover:bg-white/10 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-cyan-300"
             >
-              <ChevronLeft className="w-5 h-5" />
+              <ChevronLeft className="h-5 w-5" />
             </button>
 
             <div className="flex items-center gap-2.5">
@@ -169,10 +163,8 @@ export const Reviews: React.FC = () => {
                   onClick={() => goTo(n)}
                   aria-label={dotLabel(n)}
                   aria-current={n === index}
-                  className={`h-2 rounded-full transition-all duration-300 cursor-pointer ${
-                    n === index
-                      ? 'w-7 bg-cyan-300 shadow-[0_0_12px_rgba(103,232,249,0.8)]'
-                      : 'w-2 bg-white/25 hover:bg-white/50'
+                  className={`h-2 cursor-pointer rounded-full transition-all duration-300 ${
+                    n === index ? 'w-7 bg-white' : 'w-2 bg-white/25 hover:bg-white/50'
                   }`}
                 />
               ))}
@@ -182,9 +174,9 @@ export const Reviews: React.FC = () => {
               type="button"
               onClick={() => goTo(index + 1)}
               aria-label={nextLabel}
-              className="w-11 h-11 rounded-full border border-white/10 bg-white/5 hover:bg-violet-500/20 hover:border-violet-300/40 hover:shadow-[0_0_20px_rgba(167,139,250,0.4)] text-slate-200 flex items-center justify-center transition-all cursor-pointer"
+              className="flex h-11 w-11 cursor-pointer items-center justify-center rounded-full border border-white/10 bg-white/5 text-slate-200 transition-colors hover:border-white/25 hover:bg-white/10 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-cyan-300"
             >
-              <ChevronRight className="w-5 h-5" />
+              <ChevronRight className="h-5 w-5" />
             </button>
           </div>
         )}
