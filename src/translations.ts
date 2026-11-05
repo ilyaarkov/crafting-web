@@ -507,33 +507,18 @@ export const translations: Record<Language, Translations> = {
       steps: [
         {
           number: '01',
-          title: 'Заявка',
-          description: 'Оставьте заявку ниже, и я напишу вам в течение рабочего дня или на следующий.',
+          title: 'Заявка и бриф',
+          description: 'Оставьте заявку ниже, и я напишу вам в течение рабочего дня или на следующий. Затем заполните короткий бриф на 3 минуты, и мы договоримся о созвоне.',
         },
         {
           number: '02',
-          title: 'Бриф и созвон',
-          description: 'Заполните короткий бриф на 3 минуты, и мы договоримся о созвоне.',
+          title: 'ТЗ, аудит и оффер',
+          description: 'Если у вас есть ТЗ или наработки, самое время их показать. Если нет, на созвоне проведём аудит и выявим ключевые задачи сайта. После этого я пришлю оффер.',
         },
         {
           number: '03',
-          title: 'ТЗ и аудит',
-          description: 'Если у вас есть ТЗ или наработки, самое время их показать. Если нет, на созвоне проведём аудит и выявим ключевые задачи, которые должен решать сайт.',
-        },
-        {
-          number: '04',
-          title: 'Оффер',
-          description: 'Я пришлю оффер. Если вас всё устраивает, то я приступаю к разработке.',
-        },
-        {
-          number: '05',
-          title: 'Разработка и обратная связь',
-          description: 'Во время всего процесса мы на связи. Моя работа не заканчивается, пока вы полностью не будете довольны результатом.',
-        },
-        {
-          number: '06',
-          title: 'Расчёт и передача',
-          description: 'По окончании мы рассчитываемся, и я передаю вам все материалы и доступы.',
+          title: 'Разработка и передача',
+          description: 'Во время работы мы на связи, и я не остановлюсь, пока вы полностью не будете довольны результатом. По окончании мы рассчитываемся, и я передаю все материалы и доступы.',
         },
       ],
     },
@@ -1125,33 +1110,18 @@ export const translations: Record<Language, Translations> = {
       steps: [
         {
           number: '01',
-          title: 'Application',
-          description: 'Leave a request below, and I will reply within the working day or the next one.',
+          title: 'Request & Brief',
+          description: 'Leave a request below, and I will reply within the working day or the next one. Then fill in a short 3-minute brief, and we agree on a call.',
         },
         {
           number: '02',
-          title: 'Brief & Call',
-          description: 'Fill in a short 3-minute brief, and we agree on a call.',
+          title: 'Requirements, Audit & Offer',
+          description: 'If you already have a spec or drafts, now is the time to share them. If not, we run a full audit on the call and define the key tasks the site must solve. After that I send you an offer.',
         },
         {
           number: '03',
-          title: 'Requirements & Audit',
-          description: 'If you already have a spec or drafts, now is the time to share them. If not, we run a full audit on the call and define the key tasks the site must solve.',
-        },
-        {
-          number: '04',
-          title: 'Offer',
-          description: 'I send you an offer. If everything works for you, I start development.',
-        },
-        {
-          number: '05',
-          title: 'Development & Feedback',
-          description: 'We stay in touch throughout the process. My work does not stop until you are fully satisfied with the result.',
-        },
-        {
-          number: '06',
-          title: 'Payment & Handover',
-          description: 'At the end we settle up, and I hand over all materials and access.',
+          title: 'Development & Handover',
+          description: 'We stay in touch throughout the work, and I do not stop until you are fully satisfied with the result. At the end we settle up, and I hand over all materials and access.',
         },
       ],
     },
