@@ -162,6 +162,7 @@ export interface Translations {
     detailsText: string;
     examplesLabel: string;
     examples: {
+      id: string;
       price: string;
       title: string;
       description: string;
@@ -774,33 +775,37 @@ export const translations: Record<Language, Translations> = {
       title: 'Стоимость разработки',
       briefLabel: 'Коротко',
       briefRange: '$400–$1500',
-      briefNote: 'Ценовая вилка на разработку сайта в среднем — всё зависит от объёма работ.',
+      briefNote: 'Ценовая вилка на разработку сайта в среднем – всё зависит от объёма работ.',
       detailsLabel: 'Подробно',
-      detailsText: 'Можно сравнить разработку сайта с постройкой дома: его стоимость зависит от количества комнат и этажей, которые вы хотите, и может меняться от точности чертежа, который вы дадите рабочим. В разработке нет прямой зависимости цены от количества страниц, но есть зависимость от количества блоков с уникальным дизайном, логики работы и взаимодействия компонентов. Можно сделать 10 типовых страниц с одной целью — получить заявку клиента, а можно 3 страницы, где каждая — это отдельный продуманный продукт. Поэтому вместо того, чтобы долго объяснять, предлагаю наглядно посмотреть, что получил клиент за конкретную сумму:',
+      detailsText: 'Можно сравнить разработку сайта с постройкой дома: его стоимость зависит от количества комнат и этажей, которые вы хотите, и может меняться от точности чертежа, который вы дадите рабочим. В разработке нет прямой зависимости цены от количества страниц, но есть зависимость от количества блоков с уникальным дизайном, логики работы и взаимодействия компонентов. Можно сделать 10 типовых страниц с одной целью – получить заявку клиента, а можно 3 страницы, где каждая – это отдельный продуманный продукт. Поэтому вместо того, чтобы долго объяснять, предлагаю наглядно посмотреть, что получил клиент за конкретную сумму:',
       examplesLabel: 'Что получил клиент за конкретную сумму',
       examples: [
         {
+          id: 'specialist-portfolio',
           price: '$400',
-          title: 'Сайт школы «Driftet»',
-          description: 'Презентация программ школы, расписание занятий и запись с телефона. Управление расписанием в админ-панели.',
-        },
-        {
-          price: '$600',
           title: 'Сайт-портфолио для специалиста',
           description: 'Персональное портфолио SMM-специалиста: опыт, услуги, кейсы с отдельными страницами, русская и английская версии, форма обратной связи.',
         },
         {
-          price: '$800',
+          id: 'driving-center',
+          price: '$600',
+          title: 'Сайт школы контраварийного вождения «Driftet»',
+          description: 'Презентация программ школы, расписание занятий и запись с телефона. Управление расписанием в админ-панели.',
+        },
+        {
+          id: 'nonprofit-redesign',
+          price: '$750',
           title: 'Сайт АНО «ПОДДЕРЖКА»',
           description: 'Понятная презентация организации: миссия, программы, способы помочь. Структура, которую быстро читают и волонтёры, и партнёры.',
         },
         {
-          price: '$1 400',
-          title: 'Винный кооператив «Интуиция»',
+          id: 'wine-coop',
+          price: '$1 250',
+          title: 'Сайт винного кооператива «Интуиция»',
           description: 'Рабочий инструмент, а не витрина: каталог вин, приём заказов, несколько партнёрских брендов, база клиентов.',
         },
       ],
-      conclusion: 'Я помогаю экспертам и небольшим компаниям понятно представить свои услуги, подготовить сайт к продвижению в поиске и упростить путь клиента до обращения. Сам разбираюсь в задаче, разрабатываю сайт и остаюсь на связи после запуска — для обновлений, добавления новых страниц и дальнейшего развития.',
+      conclusion: 'Я помогаю экспертам и небольшим компаниям понятно представить свои услуги, подготовить сайт к продвижению в поиске и упростить путь клиента до обращения. Сам разбираюсь в задаче, разрабатываю сайт и остаюсь на связи после запуска – для обновлений, добавления новых страниц и дальнейшего развития.',
       cta: 'Оставить заявку',
     },
     whyCheaper: {
@@ -1420,33 +1425,37 @@ export const translations: Record<Language, Translations> = {
       title: 'Development Pricing',
       briefLabel: 'In short',
       briefRange: '$400–$1500',
-      briefNote: 'The typical price range for website development — it all depends on the scope of work.',
+      briefNote: 'The typical price range for website development – it all depends on the scope of work.',
       detailsLabel: 'In detail',
-      detailsText: 'You can compare building a website to building a house: its cost depends on how many rooms and floors you want, and it can change with how precise the blueprint you give the builders is. In web development, the price does not depend directly on the number of pages, but it does depend on the number of blocks with unique design, business logic, and how the components interact. You can build 10 standard pages with one goal — to get a client inquiry, or you can build 3 pages where each is a separate, well-thought-out product. So instead of explaining it over and over, I suggest looking at what a client actually got for a specific amount:',
+      detailsText: 'You can compare building a website to building a house: its cost depends on how many rooms and floors you want, and it can change with how precise the blueprint you give the builders is. In web development, the price does not depend directly on the number of pages, but it does depend on the number of blocks with unique design, business logic, and how the components interact. You can build 10 standard pages with one goal – to get a client inquiry, or you can build 3 pages where each is a separate, well-thought-out product. So instead of explaining it over and over, I suggest looking at what a client actually got for a specific amount:',
       examplesLabel: 'What a client got for a specific price',
       examples: [
         {
+          id: 'specialist-portfolio',
           price: '$400',
-          title: 'Driftet driving school website',
-          description: 'Presentation of school programs, lesson schedule, and sign-up from a phone. Schedule management in an admin panel.',
-        },
-        {
-          price: '$600',
-          title: 'Specialist portfolio website',
+          title: 'Specialist Portfolio Website',
           description: 'A personal portfolio for an SMM specialist: experience, services, cases with dedicated pages, Russian and English versions, and a contact form.',
         },
         {
-          price: '$800',
-          title: 'SUPPORT nonprofit organization website',
+          id: 'driving-center',
+          price: '$600',
+          title: '"Driftet" Defensive Driving School Website',
+          description: 'Presentation of school programs, lesson schedule, and sign-up from a phone. Schedule management in an admin panel.',
+        },
+        {
+          id: 'nonprofit-redesign',
+          price: '$750',
+          title: 'SUPPORT Nonprofit Organization Website',
           description: 'A clear presentation of the organization: mission, programs, and ways to help. A structure that both volunteers and partners read quickly.',
         },
         {
-          price: '$1,400',
-          title: 'Intuitivo wine cooperative website',
+          id: 'wine-coop',
+          price: '$1,250',
+          title: '"Intuitivo" Wine Cooperative Website',
           description: 'A working tool rather than a showcase: a wine catalog, order intake, several partner brands, and a customer database.',
         },
       ],
-      conclusion: 'I help experts and small businesses present their services clearly, prepare their website for search promotion, and make it easier for customers to get in touch. I learn about your goals, build the website, and stay in touch after launch — for updates, adding new pages, and continued growth.',
+      conclusion: 'I help experts and small businesses present their services clearly, prepare their website for search promotion, and make it easier for customers to get in touch. I learn about your goals, build the website, and stay in touch after launch – for updates, adding new pages, and continued growth.',
       cta: 'Leave a Request',
     },
     whyCheaper: {
