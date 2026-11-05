@@ -157,10 +157,13 @@ export const Specialization: React.FC = () => {
             <a
               href="#contact"
               onClick={(event) => handleScrollTo(event, 'contact')}
-              className="group inline-flex min-h-11 items-center justify-center gap-2 rounded-full border border-white/15 bg-white/5 px-6 py-3 text-sm font-semibold text-white transition-all duration-300 hover:border-cyan-300/50 hover:bg-cyan-300/10 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-cyan-300"
+              className="group relative inline-flex min-h-11 cursor-pointer items-center justify-center gap-2 overflow-hidden rounded-full border border-white/15 bg-white/5 px-6 py-3 text-sm font-semibold text-white transition-all duration-300 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-cyan-300"
             >
-              <span>{t.specialization.orderCta || contactLabel}</span>
-              <ArrowRight className="h-4 w-4 transition-transform duration-200 group-hover:translate-x-1" aria-hidden="true" />
+              <span className="absolute inset-0 rounded-full bg-white -translate-x-full transition-transform duration-300 ease-out group-hover:translate-x-0 pointer-events-none" />
+              <span className="relative z-10 flex items-center gap-2 transition-colors duration-300 group-hover:text-slate-950">
+                <span>{t.specialization.orderCta || contactLabel}</span>
+                <ArrowRight className="h-4 w-4 transition-transform duration-200 group-hover:translate-x-1" aria-hidden="true" />
+              </span>
             </a>
           </div>
         </div>
