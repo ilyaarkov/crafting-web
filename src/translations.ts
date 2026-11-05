@@ -34,18 +34,13 @@ export interface Translations {
     };
   };
   specialization: {
-    badge: string;
     title: string;
     subtitle: string;
     orderCta: string;
-    scrollAria: string;
-    categories: {
+    formats: {
+      id: string;
       title: string;
-      items: {
-        number?: string;
-        title: string;
-        description: string;
-      }[];
+      description: string;
     }[];
   };
   about: {
@@ -274,66 +269,34 @@ export const translations: Record<Language, Translations> = {
       },
     },
     specialization: {
-      badge: 'Направления работы',
       title: 'Моя специализация',
-      subtitle: 'Создаю веб-решения под\u00A0конкретные задачи вашего бизнеса: от\u00A0быстрого запуска до\u00A0автоматизации и\u00A0повышения продаж.',
+      subtitle: 'Пять форматов сайта для разных задач: от страницы одного предложения до каталога товаров.',
       orderCta: 'Заказать решение',
-      scrollAria: 'Перейти к\u00A0специализации',
-      categories: [
+      formats: [
         {
-          title: 'Веб-разработка',
-          items: [
-            {
-              number: '01',
-              title: 'Landing page',
-              description: 'Конверсионные одностраничные сайты для\u00A0презентации услуг, личного бренда или\u00A0ключевого продукта.',
-            },
-            {
-              number: '02',
-              title: 'Корпоративные сайты',
-              description: 'Многостраничные представительские сайты для\u00A0компаний и\u00A0экспертов с\u00A0детальным описанием услуг.',
-            },
-            {
-              number: '03',
-              title: 'Интернет-магазины и\u00A0каталоги',
-              description: 'Удобные витрины товаров с\u00A0фильтрацией, корзиной и\u00A0быстрым оформлением заказа.',
-            },
-            {
-              number: '04',
-              title: 'Доступные MVP-проекты',
-              description: 'Быстрый и\u00A0бюджетный запуск первой рабочей версии сайта для\u00A0проверки бизнес-идей и\u00A0первых заявок.',
-            },
-            {
-              number: '05',
-              title: 'Сайты для\u00A0экспертов и\u00A0мастеров',
-              description: 'Персональные сайты специалистов с\u00A0портфолио, прайс-листом, отзывами и\u00A0прямой связью.',
-            },
-          ],
+          id: 'business-card',
+          title: 'Сайт-визитка',
+          description: 'Когда нужно представить один продукт или услугу: показать его ценность и преимущества и помочь потенциальному клиенту оставить контакты.',
         },
         {
-          title: 'Автоматизация и\u00A0интеграции',
-          items: [
-            {
-              number: '06',
-              title: 'Приём заявок в\u00A0любые каналы',
-              description: 'Моментальная отправка данных из\u00A0форм в\u00A0любые мессенджеры, соцсети, CRM или\u00A0на\u00A0почту.',
-            },
-            {
-              number: '07',
-              title: 'Автоматизация бизнес-процессов',
-              description: 'Связка сайта с\u00A0таблицами, сервисами рассылок и\u00A0базами данных для\u00A0избавления от\u00A0рутины.',
-            },
-            {
-              number: '08',
-              title: 'Подключение онлайн-оплаты',
-              description: 'Интеграция платёжных систем, банковского эквайринга и\u00A0формирования электронных чеков.',
-            },
-            {
-              number: '09',
-              title: 'AI-чатботы и\u00A0ассистенты',
-              description: 'Умные ассистенты для\u00A0консультации клиентов, ответов на\u00A0частые вопросы и\u00A0сбора контактов.',
-            },
-          ],
+          id: 'service-website',
+          title: 'Сайт услуг',
+          description: 'Рассказывает, чем вы можете быть полезны, и помогает потенциальным клиентам или компаниям выбрать услугу и связаться с вами.',
+        },
+        {
+          id: 'corporate-website',
+          title: 'Корпоративный сайт',
+          description: 'Собирает информацию о компании, её направлениях, новостях и событиях для клиентов, сотрудников и деловых партнёров.',
+        },
+        {
+          id: 'landing-page',
+          title: 'Landing page',
+          description: 'Раскрывает главное о компании и её предложении на одной или нескольких страницах, чтобы заинтересовать клиентов и партнёров.',
+        },
+        {
+          id: 'online-store',
+          title: 'Интернет-магазины',
+          description: 'Представляет ассортимент и помогает покупателю пройти путь от выбора товара до оформления заказа.',
         },
       ],
     },
@@ -924,66 +887,34 @@ export const translations: Record<Language, Translations> = {
       },
     },
     specialization: {
-      badge: 'Services & Focus',
       title: 'My Specialization',
-      subtitle: 'Crafting tailored web solutions for\u00A0your business goals: from\u00A0rapid launches to\u00A0automation and increased sales.',
+      subtitle: 'Five website formats for different needs, from a single offer to a product catalog.',
       orderCta: 'Order Solution',
-      scrollAria: 'View specialization',
-      categories: [
+      formats: [
         {
-          title: 'Web Development',
-          items: [
-            {
-              number: '01',
-              title: 'Landing Pages',
-              description: 'High-converting single-page websites to\u00A0showcase services, events, or\u00A0flagship products.',
-            },
-            {
-              number: '02',
-              title: 'Corporate Websites',
-              description: 'Multi-page representation sites for\u00A0companies and\u00A0experts with\u00A0structured service offerings.',
-            },
-            {
-              number: '03',
-              title: 'E-Commerce & Catalogs',
-              description: 'Modern product storefronts with\u00A0filtering, carts, and\u00A0frictionless checkout.',
-            },
-            {
-              number: '04',
-              title: 'Affordable MVP Projects',
-              description: 'Fast and\u00A0cost-effective initial product launches to\u00A0test hypotheses and\u00A0win first clients.',
-            },
-            {
-              number: '05',
-              title: 'Websites for Experts & Craftsmen',
-              description: 'Personal specialist websites featuring portfolios, pricing, reviews, and\u00A0direct booking.',
-            },
-          ],
+          id: 'business-card',
+          title: 'Business card website',
+          description: 'For a single product or service: explain its value and benefits, then give potential customers a clear way to leave their contact details.',
         },
         {
-          title: 'Automation & Integrations',
-          items: [
-            {
-              number: '06',
-              title: 'Multi-Channel Inquiries',
-              description: 'Instant lead forwarding from\u00A0forms to\u00A0messengers, social channels, CRM, or\u00A0email.',
-            },
-            {
-              number: '07',
-              title: 'Business Process Automation',
-              description: 'Connecting websites with\u00A0spreadsheets, notifications, and\u00A0workflows to\u00A0eliminate manual tasks.',
-            },
-            {
-              number: '08',
-              title: 'Online Payment Integration',
-              description: 'Secure payment gateway connections, acquirers, and\u00A0automatic invoice generation.',
-            },
-            {
-              number: '09',
-              title: 'AI Chatbots & Assistants',
-              description: 'Intelligent bots to\u00A0consult clients, answer FAQs from\u00A0a knowledge base, and\u00A0qualify leads.',
-            },
-          ],
+          id: 'service-website',
+          title: 'Service website',
+          description: 'Explains how you can help and makes it easy for potential customers and businesses to understand your services and get in touch.',
+        },
+        {
+          id: 'corporate-website',
+          title: 'Corporate website',
+          description: 'Brings together company information, areas of work, news, and events for customers, employees, and business partners.',
+        },
+        {
+          id: 'landing-page',
+          title: 'Landing page',
+          description: 'Presents the essentials about a company and its offer across one or several pages to engage potential customers and partners.',
+        },
+        {
+          id: 'online-store',
+          title: 'Online stores',
+          description: 'Presents a product range and guides shoppers from browsing to placing an order.',
         },
       ],
     },

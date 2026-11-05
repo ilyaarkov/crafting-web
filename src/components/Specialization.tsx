@@ -1,203 +1,168 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { useLanguage } from '../context/LanguageContext';
-import { ArrowRight } from 'lucide-react';
+import {
+  ArrowRight,
+  Building2,
+  Contact,
+  FileText,
+  LayoutTemplate,
+  ShoppingBag,
+} from 'lucide-react';
+import { ParallaxStarfield } from './ParallaxStarfield';
+
+const formatIcons = [Contact, FileText, Building2, LayoutTemplate, ShoppingBag];
 
 export const Specialization: React.FC = () => {
   const { t, lang } = useLanguage();
-  const isEn = lang === 'en';
-  const [activeMobileTab, setActiveMobileTab] = useState<number>(0);
-  const itemRefs = useRef<Record<string, HTMLDivElement | null>>({});
-
-  const categories = t.specialization.categories;
-
-  const [visibleItems, setVisibleItems] = useState<Record<string, boolean>>(() => {
-    const all: Record<string, boolean> = {};
-    categories.forEach((cat, cIdx) => {
-      cat.items.forEach((_, iIdx) => {
-        all[`${cIdx}-${iIdx}`] = true;
-        all[`m-${cIdx}-${iIdx}`] = true;
-      });
-    });
-    return all;
-  });
+  const formats = t.specialization.formats;
+  const [activeFormat, setActiveFormat] = useState(0);
+  const formatRefs = useRef<(HTMLElement | null)[]>([]);
 
   useEffect(() => {
-    const observer = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting) {
-            const key = entry.target.getAttribute('data-item-key');
-            if (key) {
-              setVisibleItems((prev) => (prev[key] ? prev : { ...prev, [key]: true }));
-            }
-          }
-        });
-      },
-      {
-        threshold: 0.1,
-        rootMargin: '0px 0px -30px 0px',
-      }
-    );
+    if (!('IntersectionObserver' in window)) return;
 
-    Object.values(itemRefs.current).forEach((el) => {
-      if (el) observer.observe(el);
+    const updateActiveFormat = () => {
+      const centerLine = window.innerHeight * 0.46;
+      let closestIndex = -1;
+      let closestDistance = Infinity;
+
+      formatRefs.current.forEach((element, index) => {
+        if (!element) return;
+        const rect = element.getBoundingClientRect();
+        if (rect.bottom <= 0 || rect.top >= window.innerHeight) return;
+        const distance = Math.abs(rect.top + rect.height / 2 - centerLine);
+        if (distance < closestDistance) {
+          closestDistance = distance;
+          closestIndex = index;
+        }
+      });
+
+      if (closestIndex >= 0) setActiveFormat(closestIndex);
+    };
+
+    const observer = new IntersectionObserver(updateActiveFormat, {
+      rootMargin: '-12% 0px -28% 0px',
+      threshold: [0, 0.15, 0.35, 0.6],
     });
 
+    formatRefs.current.forEach((element) => element && observer.observe(element));
+    updateActiveFormat();
+
     return () => observer.disconnect();
-  }, [categories, activeMobileTab]);
+  }, [formats]);
 
-  const handleScrollTo = (e: React.MouseEvent<HTMLAnchorElement>, id: string) => {
-    e.preventDefault();
-    const elem = document.querySelector(id);
-    if (elem) {
-      const offsetTop = elem.getBoundingClientRect().top + window.scrollY - 80;
-      window.scrollTo({
-        top: offsetTop,
-        behavior: 'smooth',
-      });
-    }
+  const handleScrollTo = (event: React.MouseEvent<HTMLAnchorElement>, id: string) => {
+    event.preventDefault();
+    const element = document.getElementById(id);
+    if (!element) return;
+
+    const top = element.getBoundingClientRect().top + window.scrollY - 112;
+    window.scrollTo({
+      top,
+      behavior: window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth',
+    });
   };
 
-  const renderItemList = (categoryIndex: number, isMobileView = false) => {
-    const category = categories[categoryIndex];
-    if (!category) return null;
-    const isWebCol = categoryIndex === 0;
-
-    return (
-      <div className="divide-y divide-white/10">
-        {category.items.map((item, itemIdx) => {
-          const itemKey = `${isMobileView ? 'm-' : ''}${categoryIndex}-${itemIdx}`;
-          const isVisible = !!visibleItems[itemKey] || isMobileView;
-
-          return (
-            <div
-              key={itemIdx}
-              ref={(el) => {
-                itemRefs.current[itemKey] = el;
-              }}
-              data-item-key={itemKey}
-              style={{
-                transitionDelay: `${itemIdx * 50}ms`,
-              }}
-              className={`group py-4 sm:py-5 transition-all duration-500 ease-out ${
-                isVisible
-                  ? 'opacity-100 translate-y-0'
-                  : 'opacity-0 translate-y-4'
-              }`}
-            >
-              <div className="flex items-start justify-between gap-4">
-                <h4
-                  className={`text-base sm:text-lg font-bold text-white transition-colors duration-200 leading-snug ${
-                    isWebCol ? 'group-hover:text-cyan-300' : 'group-hover:text-sky-300'
-                  }`}
-                >
-                  {item.title}
-                </h4>
-              </div>
-              <p className="text-xs sm:text-sm text-slate-400 group-hover:text-slate-300 transition-colors duration-200 leading-relaxed mt-1 sm:mt-1.5">
-                {item.description}
-              </p>
-            </div>
-          );
-        })}
-      </div>
-    );
-  };
+  const contactLabel = lang === 'ru' ? 'Обсудить задачу' : 'Discuss your project';
+  const navLabel = lang === 'ru' ? 'Форматы сайтов' : 'Website formats';
 
   return (
-    <section id="specialization" className="py-20 lg:py-32 relative overflow-hidden bg-site">
-      <div className="max-w-6xl mx-auto px-4 sm:px-6 relative z-10">
-        {/* Заголовок секции: только чистый текст без звездочек, фона и рамок */}
-        <div className="max-w-3xl mb-12 sm:mb-16 lg:mb-20">
-          <h2 className="text-3xl sm:text-4xl lg:text-5xl font-black text-white tracking-tight leading-tight mb-4 text-balance">
+    <section id="specialization" className="relative isolate overflow-hidden bg-site py-20 sm:py-24 lg:py-32">
+      <ParallaxStarfield seed={61} constellations={1} fadeTop={8} fadeBottom={10} />
+
+      <div className="relative z-10 mx-auto grid max-w-7xl grid-cols-1 gap-10 px-4 sm:px-6 lg:grid-cols-[minmax(250px,0.8fr)_minmax(0,1.35fr)] lg:gap-16 xl:gap-24">
+        <aside className="lg:sticky lg:top-28 lg:self-start">
+          <h2 className="mb-4 text-3xl font-black leading-tight tracking-tight text-white text-balance sm:text-4xl lg:text-5xl">
             {t.specialization.title}
           </h2>
-          <p className="text-slate-300 text-sm sm:text-base lg:text-lg leading-relaxed text-balance">
+          <p className="max-w-xl text-sm leading-relaxed text-slate-300 text-balance sm:text-base">
             {t.specialization.subtitle}
           </p>
-        </div>
 
-        {/* ========================================================= */}
-        {/* МОБИЛЬНАЯ ВЕРСИЯ (< lg): Переключатель двух направлений вверху */}
-        {/* ========================================================= */}
-        <div className="block lg:hidden mb-8">
-          {/* Вкладки переключения между Веб-разработкой и Автоматизацией */}
-          <div className="flex border-b border-white/10 mb-6">
-            {categories.map((category, idx) => {
-              const isActive = activeMobileTab === idx;
+          <nav aria-label={navLabel} className="relative mt-9 hidden lg:block">
+            <div className="absolute bottom-4 left-[7px] top-4 w-px bg-white/10" aria-hidden="true" />
+            <div
+              className="absolute left-[4px] top-[18px] h-2 w-2 rounded-full bg-cyan-300 shadow-[0_0_12px_rgba(103,232,249,0.9)] transition-transform duration-500 ease-out motion-reduce:transition-none"
+              style={{ transform: `translateY(${activeFormat * 52}px)` }}
+              aria-hidden="true"
+            />
+            <ul className="space-y-1">
+              {formats.map((format, index) => (
+                <li key={format.id}>
+                  <a
+                    href={`#format-${format.id}`}
+                    onClick={(event) => handleScrollTo(event, `format-${format.id}`)}
+                    aria-current={activeFormat === index ? 'location' : undefined}
+                    className={`flex min-h-11 items-center pl-8 pr-2 text-sm transition-colors duration-300 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-cyan-300 ${
+                      activeFormat === index ? 'text-white' : 'text-slate-500 hover:text-slate-200'
+                    }`}
+                  >
+                    {format.title}
+                  </a>
+                </li>
+              ))}
+            </ul>
+          </nav>
+        </aside>
+
+        <div>
+          <div className="divide-y divide-white/10">
+            {formats.map((format, index) => {
+              const Icon = formatIcons[index] ?? FileText;
+              const isActive = activeFormat === index;
+
               return (
-                <button
-                  key={idx}
-                  onClick={() => setActiveMobileTab(idx)}
-                  className={`flex-1 py-3 px-2 text-center text-sm font-bold transition-all relative cursor-pointer ${
-                    isActive ? 'text-white' : 'text-slate-400 hover:text-slate-200'
-                  }`}
+                <article
+                  key={format.id}
+                  id={`format-${format.id}`}
+                  ref={(element) => {
+                    formatRefs.current[index] = element;
+                  }}
+                  className="group scroll-mt-28 py-7 sm:py-9 lg:flex lg:min-h-[220px] lg:items-center lg:py-10"
                 >
-                  <span>{category.title}</span>
-                  {isActive && (
-                    <div className="absolute bottom-0 left-0 right-0 h-0.5 bg-gradient-to-r from-cyan-400 to-sky-400 shadow-[0_0_12px_rgba(34,211,238,0.5)]" />
-                  )}
-                </button>
+                  <div className="flex items-start gap-5 sm:gap-7">
+                    <div
+                      className={`relative mt-1 flex h-12 w-12 shrink-0 items-center justify-center transition-all duration-500 ease-out motion-reduce:transition-none sm:h-14 sm:w-14 ${
+                        isActive ? 'scale-100 text-cyan-200' : 'scale-95 text-slate-500 group-hover:text-slate-300'
+                      }`}
+                    >
+                      <div
+                        className={`absolute inset-0 rounded-full border transition-all duration-500 motion-reduce:transition-none ${
+                          isActive ? 'rotate-45 border-cyan-300/40' : 'rotate-0 border-white/10'
+                        }`}
+                        aria-hidden="true"
+                      />
+                      <Icon className="relative h-5 w-5 sm:h-6 sm:w-6" strokeWidth={1.5} aria-hidden="true" />
+                    </div>
+
+                    <div className="max-w-2xl pt-0.5">
+                      <h3
+                        className={`text-xl font-bold leading-snug tracking-tight transition-colors duration-300 sm:text-2xl lg:text-3xl ${
+                          isActive ? 'text-white' : 'text-slate-300 group-hover:text-white'
+                        }`}
+                      >
+                        {format.title}
+                      </h3>
+                      <p className="mt-2 max-w-[62ch] text-sm leading-relaxed text-slate-400 transition-colors duration-300 group-hover:text-slate-300 sm:mt-3 sm:text-base">
+                        {format.description}
+                      </p>
+                    </div>
+                  </div>
+                </article>
               );
             })}
           </div>
 
-          {/* Список смысловых блоков активной категории с разделением линиями */}
-          {renderItemList(activeMobileTab, true)}
-        </div>
-
-        {/* ========================================================= */}
-        {/* ДЕСКТОП ВЕРСИЯ (lg+): Два параллельных столбца с разделительными линиями */}
-        {/* ========================================================= */}
-        <div className="hidden lg:grid lg:grid-cols-2 gap-12 lg:gap-14 xl:gap-16 items-start">
-          {categories.map((category, catIdx) => {
-            const isWebCol = catIdx === 0;
-
-            return (
-              <div key={catIdx} className="flex flex-col">
-                {/* Шапка колонки: чистый заголовок и деликатная разделительная линия */}
-                <div className="mb-6">
-                  <h3 className="text-2xl sm:text-3xl font-extrabold text-white tracking-tight">
-                    {category.title}
-                  </h3>
-
-                  <div
-                    className={`h-px w-full mt-4 ${
-                      isWebCol
-                        ? 'bg-gradient-to-r from-cyan-500/30 via-white/10 to-transparent'
-                        : 'bg-gradient-to-r from-sky-500/30 via-white/10 to-transparent'
-                    }`}
-                  />
-                </div>
-
-                {/* Чистый список блоков с разделением линиями без тяжелых коробок */}
-                {renderItemList(catIdx, false)}
-              </div>
-            );
-          })}
-        </div>
-
-        {/* Элегантная нижняя строка с приглашением обсудить задачу под ключ */}
-        <div className="mt-14 sm:mt-18 pt-8 border-t border-white/10 flex flex-col sm:flex-row items-center justify-between gap-4">
-          <div className="flex items-center gap-3 text-xs sm:text-sm text-slate-400 text-center sm:text-left">
-            <span>
-              {isEn
-                ? 'Need a tailored custom solution or a combination of multiple formats?'
-                : 'Нужно индивидуальное решение или комбинация нескольких направлений?'}
-            </span>
+          <div className="mt-7 border-t border-white/10 pt-7 sm:mt-9 sm:pt-9">
+            <a
+              href="#contact"
+              onClick={(event) => handleScrollTo(event, 'contact')}
+              className="group inline-flex min-h-11 items-center justify-center gap-2 rounded-full border border-white/15 bg-white/5 px-6 py-3 text-sm font-semibold text-white transition-all duration-300 hover:border-cyan-300/50 hover:bg-cyan-300/10 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-cyan-300"
+            >
+              <span>{t.specialization.orderCta || contactLabel}</span>
+              <ArrowRight className="h-4 w-4 transition-transform duration-200 group-hover:translate-x-1" aria-hidden="true" />
+            </a>
           </div>
-
-          <a
-            href="#contact"
-            onClick={(e) => handleScrollTo(e, '#contact')}
-            className="relative group/btn overflow-hidden inline-flex items-center justify-center gap-2 px-6 py-2.5 sm:px-7 sm:py-3 rounded-full text-xs sm:text-sm font-semibold cursor-pointer transition-all duration-300 bg-white/10 text-white border border-white/15 hover:border-cyan-400/60 hover:shadow-[0_0_22px_rgba(6,182,212,0.25)]"
-          >
-            <span className="absolute inset-0 bg-white rounded-full -translate-x-full group-hover/btn:translate-x-0 transition-transform duration-300 ease-out pointer-events-none" />
-            <span className="relative z-10 flex items-center gap-2 transition-colors duration-300 group-hover/btn:text-slate-950 font-semibold">
-              <span>{t.specialization.orderCta}</span>
-              <ArrowRight className="w-4 h-4 transition-transform duration-200 group-hover/btn:translate-x-1" />
-            </span>
-          </a>
         </div>
       </div>
     </section>
