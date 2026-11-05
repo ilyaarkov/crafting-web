@@ -246,10 +246,13 @@ export const ProjectDetailPage: React.FC<ProjectDetailPageProps> = ({
                 href={PROJECT_LIVE_URLS[project.id]}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="group inline-flex items-center gap-2 px-6 py-3 rounded-full border border-white/15 bg-white/5 text-sm font-semibold text-white transition-all duration-300 hover:border-cyan-300/50 hover:bg-cyan-300/10 cursor-pointer"
+                className="group relative inline-flex items-center gap-2 overflow-hidden rounded-full border border-white/15 bg-white/5 px-6 py-3 text-sm font-semibold text-white transition-all duration-300 cursor-pointer"
               >
-                <span>{lang === 'ru' ? 'Перейти на сайт' : 'Visit website'}</span>
-                <ArrowUpRight className="w-4 h-4 transition-transform duration-200 group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
+                <span className="absolute inset-0 rounded-full bg-white -translate-x-full transition-transform duration-300 ease-out group-hover:translate-x-0 pointer-events-none" />
+                <span className="relative z-10 flex items-center gap-2 transition-colors duration-300 group-hover:text-slate-950">
+                  <span>{lang === 'ru' ? 'Перейти на сайт' : 'Visit website'}</span>
+                  <ArrowUpRight className="w-4 h-4 transition-transform duration-200 group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
+                </span>
               </a>
             </div>
           )}
