@@ -517,8 +517,13 @@ export const translations: Record<Language, Translations> = {
         },
         {
           number: '03',
-          title: 'Разработка и передача',
-          description: 'Во время работы мы на связи, и я не остановлюсь, пока вы полностью не будете довольны результатом. По окончании мы рассчитываемся, и я передаю все материалы и доступы.',
+          title: 'Разработка и обратная связь',
+          description: 'Во время всего процесса мы на связи. Моя работа не заканчивается, пока вы полностью не будете довольны результатом.',
+        },
+        {
+          number: '04',
+          title: 'Расчёт и передача',
+          description: 'По окончании мы рассчитываемся, и я передаю вам все материалы и доступы.',
         },
       ],
     },
@@ -1120,8 +1125,13 @@ export const translations: Record<Language, Translations> = {
         },
         {
           number: '03',
-          title: 'Development & Handover',
-          description: 'We stay in touch throughout the work, and I do not stop until you are fully satisfied with the result. At the end we settle up, and I hand over all materials and access.',
+          title: 'Development & Feedback',
+          description: 'We stay in touch throughout the process. My work does not stop until you are fully satisfied with the result.',
+        },
+        {
+          number: '04',
+          title: 'Payment & Handover',
+          description: 'At the end we settle up, and I hand over all materials and access.',
         },
       ],
     },
