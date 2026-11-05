@@ -115,6 +115,7 @@ export interface Translations {
       name: string;
       role: string;
       text: string;
+      photo?: string;
       projectId?: string;
     }[];
   };
@@ -532,39 +533,46 @@ export const translations: Record<Language, Translations> = {
       items: [
         {
           name: 'Марина Кравцова',
+          photo: '/reviews/marina-kravtsova.jpg',
           role: 'Психолог, частная практика',
           text: 'Сайт сделали за пять дней. Илья сразу спросил, как я работаю с клиентами, поэтому тексты получились моими, а не общими. Первые заявки с сайта пришли примерно через две недели. Правки вносил быстро и без лишних условий.',
         },
         {
           name: 'Денис Орлов',
+          photo: '/reviews/denis-orlov.jpg',
           role: 'Владелец мебельной мастерской',
           text: 'Нужен был сайт с каталогом и формой заявки. На созвоне Илья быстро разобрался в задаче и предложил структуру, которую мы почти не меняли. Запуск прошёл без сюрпризов: домен и почта подключены.',
         },
         {
           name: 'Екатерина Левина',
+          photo: '/reviews/ekaterina-levina.jpg',
           role: 'Преподаватель онлайн-курсов',
           text: 'Хотела сайт, который просто объясняет, чем я занимаюсь. Илья не навязывал пакеты, мы обсудили задачи и сделали то, что нужно. Тексты дописывала сама, он помог с оформлением. Сайт открывается быстро и хорошо смотрится на телефоне.',
         },
         {
           name: 'Елизавета Самоховец',
+          photo: '/reviews/elizaveta-samokhovets.jpg',
           role: 'SMM-специалист',
           projectId: 'specialist-portfolio',
-          text: 'Илья, спасибо большое! Сайт получился именно таким, каким я его представляла: стильным и спокойным, без лишнего шума. Здорово, что вы расспрашивали про каждый кейс и не торопили с текстами. Теперь клиенты открывают портфолио и сразу понимают, чем я занимаюсь. Первые обращения с сайта уже есть.',
+          text: 'Спасибо большое! Сайт получился именно таким, каким я его представляла: стильным и спокойным, без лишнего шума. Здорово, что вы расспрашивали про каждый кейс и не торопили с текстами. Теперь клиенты открывают портфолио и сразу понимают, чем я занимаюсь. Первые обращения с сайта уже есть.',
         },
         {
           name: 'Татьяна Абалдова',
+          photo: '/reviews/tatyana-abaldova.jpg',
           role: 'Директор АНО «ПОДДЕРЖКА»',
           projectId: 'nonprofit-redesign',
-          text: 'Добрый день, Илья. Нам нужен был сайт, на котором люди быстро поймут, чем занимается организация и как помочь. Вы выслушали нашу историю, не перегружали терминами и предложили понятную структуру. Сайт сделали в срок, редакционные правки вносили спокойно. Теперь на нём есть всё, что нужно нашим волонтёрам и партнёрам.',
+          text: 'Нам нужен был сайт, на котором люди быстро поймут, чем занимается организация и как помочь. Вы выслушали нашу историю, не перегружали терминами и предложили понятную структуру. Сайт сделали в срок, редакционные правки вносили спокойно. Теперь на нём есть всё, что нужно нашим волонтёрам и партнёрам.',
         },
         {
           name: 'Андрей Надеин',
+          photo: '/reviews/andrey-nadein.jpg',
           role: 'Председатель совета винного кооператива «Интуиция»',
           projectId: 'wine-coop',
-          text: 'Илья, добрый день. Для кооператива было важно, чтобы сайт работал не как витрина, а как рабочий инструмент: с каталогом, заказами и несколькими брендами. Вы разобрались в этом быстрее, чем я ожидал. Некоторые детали приходилось согласовывать с партнёрами, но всё решали на созвонах. Результатом доволен, сайт используем каждый день.',
+          text: 'Для кооператива было важно, чтобы сайт работал не как витрина, а как рабочий инструмент: с каталогом, заказами и несколькими брендами. Вы разобрались в этом быстрее, чем я ожидал. Некоторые детали приходилось согласовывать с партнёрами, но всё решали на созвонах. Результатом доволен, сайт используем каждый день.',
         },
         {
           name: 'Кирилл Волков',
+          photo: '/reviews/kirill-volkov.jpg',
           role: 'Основатель школы «Driftet»',
           projectId: 'driving-center',
           text: 'Нужен был сайт, который расскажет о программах школы и сразу даст записаться на занятие. Илья сделал его аккуратно, без лишних эффектов. Расписание удобно управляется, ученики записываются с телефона.',
@@ -1140,39 +1148,46 @@ export const translations: Record<Language, Translations> = {
       items: [
         {
           name: 'Marina Kravtsova',
+          photo: '/reviews/marina-kravtsova.jpg',
           role: 'Psychologist, private practice',
           text: 'The website was ready in five days. Ilya asked how I work with clients right away, so the texts sound like me, not like a template. The first inquiries came in about two weeks after launch. Revisions were quick and without extra conditions.',
         },
         {
           name: 'Denis Orlov',
+          photo: '/reviews/denis-orlov.jpg',
           role: 'Owner of a furniture workshop',
           text: 'I needed a site with a catalog and an inquiry form. On our call Ilya quickly understood the task and suggested a structure we barely changed. The launch went smoothly: domain and email are connected.',
         },
         {
           name: 'Ekaterina Levina',
+          photo: '/reviews/ekaterina-levina.jpg',
           role: 'Online course instructor',
           text: 'I wanted a site that simply explains what I do. Ilya did not push packages; we discussed the tasks and built what was needed. I wrote the texts myself and he helped with the layout. The site loads fast and looks good on a phone.',
         },
         {
           name: 'Elizaveta Samokhovets',
+          photo: '/reviews/elizaveta-samokhovets.jpg',
           role: 'SMM specialist',
           projectId: 'specialist-portfolio',
-          text: 'Ilya, thank you so much! The website turned out exactly the way I pictured it: stylish and calm, without unnecessary noise. It helped a lot that you asked about every case and did not rush the texts. Now clients open the portfolio and immediately understand what I do. The first inquiries from the site have already come in.',
+          text: 'Thank you so much! The website turned out exactly the way I pictured it: stylish and calm, without unnecessary noise. It helped a lot that you asked about every case and did not rush the texts. Now clients open the portfolio and immediately understand what I do. The first inquiries from the site have already come in.',
         },
         {
           name: 'Tatiana Abaldova',
+          photo: '/reviews/tatyana-abaldova.jpg',
           role: 'Director, SUPPORT nonprofit organization',
           projectId: 'nonprofit-redesign',
-          text: 'Hello Ilya. We needed a website where people quickly understand what the organization does and how to help. You listened to our story, avoided heavy jargon, and suggested a clear structure. The site was delivered on time, and editorial changes went smoothly. Now it has everything our volunteers and partners need.',
+          text: 'We needed a website where people quickly understand what the organization does and how to help. You listened to our story, avoided heavy jargon, and suggested a clear structure. The site was delivered on time, and editorial changes went smoothly. Now it has everything our volunteers and partners need.',
         },
         {
           name: 'Andrey Nadein',
+          photo: '/reviews/andrey-nadein.jpg',
           role: 'Chairman of the board, Intuitivo wine cooperative',
           projectId: 'wine-coop',
-          text: 'Hello Ilya. For the cooperative it mattered that the website works not as a showcase but as a working tool: with a catalog, orders, and several brands. You grasped this faster than I expected. Some details had to be agreed with partners, but we solved everything on calls. I am happy with the result, and we use the site every day.',
+          text: 'For the cooperative it mattered that the website works not as a showcase but as a working tool: with a catalog, orders, and several brands. You grasped this faster than I expected. Some details had to be agreed with partners, but we solved everything on calls. I am happy with the result, and we use the site every day.',
         },
         {
           name: 'Kirill Volkov',
+          photo: '/reviews/kirill-volkov.jpg',
           role: 'Founder, Driftet driving school',
           projectId: 'driving-center',
           text: 'We needed a website that tells about the school programs and lets people sign up for a lesson right away. Ilya made it neat, without unnecessary effects. The schedule is easy to manage, and students sign up from their phones.',
