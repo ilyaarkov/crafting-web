@@ -89,7 +89,7 @@ export const Reviews: React.FC = () => {
   };
 
   return (
-    <section id="reviews" className="min-h-[100vh] flex flex-col justify-center py-14 sm:py-16 relative overflow-hidden bg-[#03050a] z-10">
+    <section id="reviews" className="min-h-[100vh] flex flex-col justify-center py-14 sm:py-16 relative overflow-hidden bg-site z-10">
       <ParallaxStarfield seed={303} constellations={2} accent={<ReviewOrbits />} accentSpeed={0.4} />
 
       <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[640px] h-[420px] bg-violet-600/15 blur-[150px] rounded-full pointer-events-none" />
