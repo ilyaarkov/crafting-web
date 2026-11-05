@@ -280,15 +280,15 @@ export const ProjectDetailPage: React.FC<ProjectDetailPageProps> = ({
           </div>
 
           {/* Финальный призыв к действию */}
-          <div className="mt-14 p-6 sm:p-8 rounded-3xl border border-cyan-500/25 bg-cyan-950/20 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-6">
+          <div className="mt-10 p-5 sm:p-6 rounded-3xl border border-cyan-500/25 bg-cyan-950/20 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-5">
             <div>
-              <h3 className="text-lg sm:text-xl font-bold text-white mb-1.5">
+              <h3 className="text-base sm:text-lg font-bold text-white mb-1">
                 {lang === 'ru' ? 'Понравился этот проект?' : 'Liked this project?'}
               </h3>
               <p className="text-xs sm:text-sm text-slate-300 leading-relaxed max-w-xl">
                 {lang === 'ru'
-                  ? 'Можем разработать похожий сайт под специфику вашего бизнеса – с чистым дизайном, быстрой загрузкой и прозрачной ценой.'
-                  : 'We can develop a tailored website for your unique brand – with clean design, high performance, and fixed pricing.'}
+                  ? 'Можем разработать похожий сайт под специфику вашего бизнеса.'
+                  : 'We can develop a tailored website for your unique brand.'}
               </p>
             </div>
 
@@ -303,6 +303,20 @@ export const ProjectDetailPage: React.FC<ProjectDetailPageProps> = ({
               <ArrowRight className="relative z-10 w-4 h-4 transition-all duration-300 group-hover:text-slate-950 group-hover:translate-x-0.5" />
             </button>
           </div>
+
+          {PROJECT_LIVE_URLS[project.id] && (
+            <div className="mt-6 flex justify-center">
+              <a
+                href={PROJECT_LIVE_URLS[project.id]}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="group inline-flex items-center gap-2 px-6 py-3 rounded-full border border-white/15 bg-white/5 text-sm font-semibold text-white transition-all duration-300 hover:border-cyan-300/50 hover:bg-cyan-300/10 cursor-pointer"
+              >
+                <span>{lang === 'ru' ? 'Перейти на сайт' : 'Visit website'}</span>
+                <ArrowUpRight className="w-4 h-4 transition-transform duration-200 group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
+              </a>
+            </div>
+          )}
         </div>
       </main>
 
