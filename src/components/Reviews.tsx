@@ -14,7 +14,6 @@ export const Reviews: React.FC = () => {
   const [index, setIndex] = useState(0);
   const [perView, setPerView] = useState(1);
   const [failedPhotos, setFailedPhotos] = useState<Record<string, boolean>>({});
-  const [loadedPhotos, setLoadedPhotos] = useState<Record<string, boolean>>({});
   const touchStartX = useRef<number | null>(null);
 
 
@@ -93,7 +92,6 @@ export const Reviews: React.FC = () => {
               .slice(0, 2)
               .join('');
             const showPhoto = Boolean(review.photo) && !failedPhotos[review.name];
-            const photoLoaded = Boolean(loadedPhotos[review.name]);
 
             return (
               <article
@@ -120,15 +118,10 @@ export const Reviews: React.FC = () => {
                         loading="lazy"
                         width={48}
                         height={48}
-                        onLoad={() =>
-                          setLoadedPhotos((prev) => ({ ...prev, [review.name]: true }))
-                        }
                         onError={() =>
                           setFailedPhotos((prev) => ({ ...prev, [review.name]: true }))
                         }
-                        className={`absolute inset-0 h-full w-full rounded-full object-cover transition-opacity duration-300 ${
-                          photoLoaded ? 'opacity-100' : 'opacity-0'
-                        }`}
+                        className="absolute inset-0 h-full w-full rounded-full object-cover"
                       />
                     )}
                   </div>
