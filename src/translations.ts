@@ -572,7 +572,7 @@ export const translations: Record<Language, Translations> = {
         {
           number: '02',
           title: 'Бриф и созвон',
-          description: 'Заполните короткий бриф на 3 минуты, и мы договоримся о созвоне и/или личной встрече в Тбилиси.',
+          description: 'Заполните короткий бриф на 3 минуты, и мы договоримся о созвоне.',
         },
         {
           number: '03',
@@ -582,12 +582,12 @@ export const translations: Record<Language, Translations> = {
         {
           number: '04',
           title: 'Оффер',
-          description: 'Я пришлю оффер. Если всё устраивает, приступаю к разработке.',
+          description: 'Я пришлю оффер. Если вас всё устраивает, то я приступаю к разработке.',
         },
         {
           number: '05',
           title: 'Разработка и обратная связь',
-          description: 'Во время всего процесса мы на связи. Моя работа не заканчивается, пока вы полностью не довольны результатом.',
+          description: 'Во время всего процесса мы на связи. Моя работа не заканчивается, пока вы полностью не будете довольны результатом.',
         },
         {
           number: '06',
@@ -1288,7 +1288,7 @@ export const translations: Record<Language, Translations> = {
         {
           number: '02',
           title: 'Brief & Call',
-          description: 'Fill in a short 3-minute brief, and we agree on a call and/or an in-person meeting in Tbilisi.',
+          description: 'Fill in a short 3-minute brief, and we agree on a call.',
         },
         {
           number: '03',
