@@ -240,6 +240,20 @@ export const ProjectDetailPage: React.FC<ProjectDetailPageProps> = ({
             </div>
           )}
 
+          {PROJECT_LIVE_URLS[project.id] && (
+            <div className="mb-10 flex justify-center">
+              <a
+                href={PROJECT_LIVE_URLS[project.id]}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="group inline-flex items-center gap-2 px-6 py-3 rounded-full border border-white/15 bg-white/5 text-sm font-semibold text-white transition-all duration-300 hover:border-cyan-300/50 hover:bg-cyan-300/10 cursor-pointer"
+              >
+                <span>{lang === 'ru' ? 'Перейти на сайт' : 'Visit website'}</span>
+                <ArrowUpRight className="w-4 h-4 transition-transform duration-200 group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
+              </a>
+            </div>
+          )}
+
           {/* Детальный обзор: две колонки (контекст + чек-лист выполненных работ) */}
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 mt-10">
             {/* Левая колонка: описание задачи и решения */}
@@ -303,20 +317,6 @@ export const ProjectDetailPage: React.FC<ProjectDetailPageProps> = ({
               <ArrowRight className="relative z-10 w-4 h-4 transition-all duration-300 group-hover:text-slate-950 group-hover:translate-x-0.5" />
             </button>
           </div>
-
-          {PROJECT_LIVE_URLS[project.id] && (
-            <div className="mt-6 flex justify-center">
-              <a
-                href={PROJECT_LIVE_URLS[project.id]}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="group inline-flex items-center gap-2 px-6 py-3 rounded-full border border-white/15 bg-white/5 text-sm font-semibold text-white transition-all duration-300 hover:border-cyan-300/50 hover:bg-cyan-300/10 cursor-pointer"
-              >
-                <span>{lang === 'ru' ? 'Перейти на сайт' : 'Visit website'}</span>
-                <ArrowUpRight className="w-4 h-4 transition-transform duration-200 group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
-              </a>
-            </div>
-          )}
         </div>
       </main>
 
