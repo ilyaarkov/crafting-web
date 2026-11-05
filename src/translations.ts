@@ -155,42 +155,19 @@ export interface Translations {
   };
   pricing: {
     title: string;
-    intro: string;
-    followUp: string;
-    audienceTitle: string;
-    resultTitle: string;
-    includedTitle: string;
-    plans: {
-      id: string;
-      subtitle: string;
-      audience: string;
-      result: string;
-      features: string[];
-      currentPrice: string;
-      duration: string;
-      disclaimer?: string;
-      btnText: string;
-    }[];
-    afterLaunch: {
-      title: string;
-      description: string;
-      followUp: string;
-      priceNote: string;
-      btnText: string;
-    };
-    extraService: {
-      title: string;
-      description: string;
+    briefLabel: string;
+    briefRange: string;
+    briefNote: string;
+    detailsLabel: string;
+    detailsText: string;
+    examplesLabel: string;
+    examples: {
       price: string;
-      btnText: string;
-    };
-    addOns: {
       title: string;
-      items: {
-        title: string;
-        description: string;
-      }[];
-    };
+      description: string;
+    }[];
+    conclusion: string;
+    cta: string;
   };
   whyCheaper: {
     preTitle: string;
@@ -794,107 +771,37 @@ export const translations: Record<Language, Translations> = {
       ],
     },
     pricing: {
-      title: 'Выберите тариф',
-      intro: 'Помогаю экспертам и небольшим компаниям понятно представить свои услуги, подготовить сайт к продвижению в поиске и упростить путь клиента до обращения.',
-      followUp: 'Сам разбираюсь в задаче, разрабатываю сайт и остаюсь на связи после запуска – для обновлений, новых страниц и дальнейшего развития.',
-      audienceTitle: 'Для кого',
-      resultTitle: 'Результат',
-      includedTitle: 'Включает',
-      plans: [
+      title: 'Стоимость разработки',
+      briefLabel: 'Коротко',
+      briefRange: '$400–$1500',
+      briefNote: 'Ценовая вилка на разработку сайта в среднем — всё зависит от объёма работ.',
+      detailsLabel: 'Подробно',
+      detailsText: 'Можно сравнить разработку сайта с постройкой дома: его стоимость зависит от количества комнат и этажей, которые вы хотите, и может меняться от точности чертежа, который вы дадите рабочим. В разработке нет прямой зависимости цены от количества страниц, но есть зависимость от количества блоков с уникальным дизайном, логики работы и взаимодействия компонентов. Можно сделать 10 типовых страниц с одной целью — получить заявку клиента, а можно 3 страницы, где каждая — это отдельный продуманный продукт. Поэтому вместо того, чтобы долго объяснять, предлагаю наглядно посмотреть, что получил клиент за конкретную сумму:',
+      examplesLabel: 'Что получил клиент за конкретную сумму',
+      examples: [
         {
-          id: 'start',
-          subtitle: 'Сайт-визитка',
-          audience: 'Специалиста или компании, которым нужно понятно представить себя в интернете.',
-          result: 'Готовый сайт, на который можно отправлять потенциальных клиентов.',
-          features: [
-            'Одна страница с услугами, основной информацией и контактами.',
-            'Структура, ориентированная на целевое действие.',
-            'Мобильная версия и базовая SEO-подготовка.',
-            'Подключение домена, SSL и аналитики.',
-            '30 дней поддержки и сопровождения после запуска.',
-          ],
-          currentPrice: 'от 39 000 ₽',
-          duration: 'от 5 дней',
-          btnText: 'Обсудить сайт-визитку',
+          price: '$400',
+          title: 'Сайт школы «Driftet»',
+          description: 'Презентация программ школы, расписание занятий и запись с телефона. Управление расписанием в админ-панели.',
         },
         {
-          id: 'optimal',
-          subtitle: 'Сайт для эксперта или бизнеса',
-          audience: 'Бизнеса с несколькими услугами, которому важно подробнее раскрыть предложение и подготовить сайт к привлечению посетителей из поиска.',
-          result: 'Сайт с понятной структурой, отдельными страницами услуг и удобным способом связаться с компанией.',
-          features: [
-            'Проработка структуры сайта с учётом услуг и запросов клиентов.',
-            'До 3 страниц с описанием услуг, преимуществами и примерами работ.',
-            'Форма обращения и понятный путь к заявке.',
-            'Базовая техническая SEO-настройка и аналитика.',
-            '30 дней поддержки и сопровождения после запуска.',
-          ],
-          currentPrice: 'от 69 000 ₽',
-          duration: 'от 8 дней',
-          btnText: 'Обсудить сайт',
+          price: '$600',
+          title: 'Сайт-портфолио для специалиста',
+          description: 'Персональное портфолио SMM-специалиста: опыт, услуги, кейсы с отдельными страницами, русская и английская версии, форма обратной связи.',
         },
         {
-          id: 'business',
-          subtitle: 'Сайт с базой данных и админ-панелью',
-          audience: 'Бизнеса, которому нужно не только рассказать об услугах, но и управлять каталогом, информацией или заявками через сайт.',
-          result: 'Сайт, контент которого можно обновлять самостоятельно, с сохранением обращений клиентов.',
-          features: [
-            'Индивидуальная структура и дизайн.',
-            'Каталог услуг, товаров или объектов.',
-            'База данных и административная панель.',
-            'Добавление и редактирование информации.',
-            'Формы и сохранение заявок.',
-            'Мобильная версия, базовая SEO-настройка и аналитика.',
-            '60 дней поддержки и сопровождения после запуска.',
-          ],
-          currentPrice: 'от 99 000 ₽',
-          duration: 'от 15 дней',
-          disclaimer: 'Оплаты, личные кабинеты и сложные интеграции рассчитываются отдельно.',
-          btnText: 'Обсудить проект',
+          price: '$800',
+          title: 'Сайт АНО «ПОДДЕРЖКА»',
+          description: 'Понятная презентация организации: миссия, программы, способы помочь. Структура, которую быстро читают и волонтёры, и партнёры.',
+        },
+        {
+          price: '$1 400',
+          title: 'Винный кооператив «Интуиция»',
+          description: 'Рабочий инструмент, а не витрина: каталог вин, приём заказов, несколько партнёрских брендов, база клиентов.',
         },
       ],
-      afterLaunch: {
-        title: 'Сайт запущен. Что дальше?',
-        description: 'Сайт можно постепенно развивать: обновлять информацию, создавать новые страницы, улучшать видимость в поиске и исправлять проблемы, которые обнаруживаются в работе.',
-        followUp: 'Я могу заниматься этим на постоянной основе. Каждый месяц мы согласуем конкретные задачи, а в конце месяца подводим итоги и определяем следующие шаги.',
-        priceNote: 'Объём работ и ежемесячная стоимость определяются отдельно.',
-        btnText: 'Обсудить сопровождение',
-      },
-      extraService: {
-        title: 'Переделка существующего сайта',
-        description: 'Обновлю структуру и подачу существующего сайта, чтобы он точнее отражал ваш бизнес и помогал клиентам разобраться в предложении.',
-        price: 'от 49 000 ₽',
-        btnText: 'Обсудить редизайн',
-      },
-      addOns: {
-        title: 'Функции, которые можно добавить к проекту',
-        items: [
-          {
-            title: 'Административная панель',
-            description: 'Самостоятельно меняйте тексты, фотографии, цены или позиции каталога.',
-          },
-          {
-            title: 'База данных',
-            description: 'Храните заявки, товары и другую необходимую информацию.',
-          },
-          {
-            title: 'Уведомления в мессенджер / на почту',
-            description: 'Получайте сообщение, когда посетитель заполняет форму на сайте.',
-          },
-          {
-            title: 'Онлайн-оплата',
-            description: 'Подключение платёжной системы рассчитывается отдельно.',
-          },
-          {
-            title: 'Дополнительные страницы',
-            description: 'Блог, подробные страницы услуг, каталог, команда, документы и другие разделы.',
-          },
-          {
-            title: 'Дополнительная поддержка',
-            description: 'Помощь с сайтом после завершения включённого периода поддержки.',
-          },
-        ],
-      },
+      conclusion: 'Я помогаю экспертам и небольшим компаниям понятно представить свои услуги, подготовить сайт к продвижению в поиске и упростить путь клиента до обращения. Сам разбираюсь в задаче, разрабатываю сайт и остаюсь на связи после запуска — для обновлений, добавления новых страниц и дальнейшего развития.',
+      cta: 'Оставить заявку',
     },
     whyCheaper: {
       preTitle: 'Честно о стоимости',
@@ -1510,107 +1417,37 @@ export const translations: Record<Language, Translations> = {
       ],
     },
     pricing: {
-      title: 'Choose a plan',
-      intro: 'I help experts and small businesses present their services clearly, prepare their website for search promotion, and make it easier for customers to get in touch.',
-      followUp: 'I learn about your goals, build the website, and stay in touch after launch – for updates, new pages, and continued growth.',
-      audienceTitle: 'Who it’s for',
-      resultTitle: 'Result',
-      includedTitle: 'Includes',
-      plans: [
+      title: 'Development Pricing',
+      briefLabel: 'In short',
+      briefRange: '$400–$1500',
+      briefNote: 'The typical price range for website development — it all depends on the scope of work.',
+      detailsLabel: 'In detail',
+      detailsText: 'You can compare building a website to building a house: its cost depends on how many rooms and floors you want, and it can change with how precise the blueprint you give the builders is. In web development, the price does not depend directly on the number of pages, but it does depend on the number of blocks with unique design, business logic, and how the components interact. You can build 10 standard pages with one goal — to get a client inquiry, or you can build 3 pages where each is a separate, well-thought-out product. So instead of explaining it over and over, I suggest looking at what a client actually got for a specific amount:',
+      examplesLabel: 'What a client got for a specific price',
+      examples: [
         {
-          id: 'start',
-          subtitle: 'Business card website',
-          audience: 'Specialists or companies that need to present themselves clearly online.',
-          result: 'A complete website you can share with potential clients.',
-          features: [
-            'One page with services, essential information, and contact details.',
-            'A structure focused on a clear next action.',
-            'Mobile-friendly version and foundational SEO setup.',
-            'Domain, SSL, and analytics setup.',
-            '30 days of post-launch support and maintenance.',
-          ],
-          currentPrice: 'from $420',
-          duration: 'from 5 days',
-          btnText: 'Discuss a business card site',
+          price: '$400',
+          title: 'Driftet driving school website',
+          description: 'Presentation of school programs, lesson schedule, and sign-up from a phone. Schedule management in an admin panel.',
         },
         {
-          id: 'optimal',
-          subtitle: 'Website for an expert or business',
-          audience: 'Businesses with several services that need to explain their offer in more detail and prepare the site to attract visitors from search.',
-          result: 'A clearly structured site with dedicated service pages and an easy way to contact the business.',
-          features: [
-            'Website structure planned around services and customer searches.',
-            'Up to 3 pages describing services, benefits, and examples of work.',
-            'Contact form and a clear path to submit an inquiry.',
-            'Foundational technical SEO and analytics setup.',
-            '30 days of post-launch support and maintenance.',
-          ],
-          currentPrice: 'from $740',
-          duration: 'from 8 days',
-          btnText: 'Discuss the website',
+          price: '$600',
+          title: 'Specialist portfolio website',
+          description: 'A personal portfolio for an SMM specialist: experience, services, cases with dedicated pages, Russian and English versions, and a contact form.',
         },
         {
-          id: 'business',
-          subtitle: 'Website with a database and admin panel',
-          audience: 'Businesses that need to present their services and manage a catalog, information, or inquiries through the website.',
-          result: 'A website with content you can update yourself and a way to save customer inquiries.',
-          features: [
-            'Custom structure and design.',
-            'Catalog of services, products, or listings.',
-            'Database and admin panel.',
-            'Add and edit information.',
-            'Forms and inquiry storage.',
-            'Mobile-friendly version, foundational SEO, and analytics.',
-            '60 days of post-launch support and maintenance.',
-          ],
-          currentPrice: 'from $1,060',
-          duration: 'from 15 days',
-          disclaimer: 'Online payments, customer accounts, and complex integrations are quoted separately.',
-          btnText: 'Discuss your project',
+          price: '$800',
+          title: 'SUPPORT nonprofit organization website',
+          description: 'A clear presentation of the organization: mission, programs, and ways to help. A structure that both volunteers and partners read quickly.',
+        },
+        {
+          price: '$1,400',
+          title: 'Intuitivo wine cooperative website',
+          description: 'A working tool rather than a showcase: a wine catalog, order intake, several partner brands, and a customer database.',
         },
       ],
-      afterLaunch: {
-        title: 'The site is live. What’s next?',
-        description: 'A website can grow over time: update information, create new pages, improve search visibility, and fix issues discovered while it is in use.',
-        followUp: 'I can work on this on an ongoing basis. Each month, we agree on specific tasks; at the end of the month, we review the results and decide on next steps.',
-        priceNote: 'The scope of work and monthly cost are agreed separately.',
-        btnText: 'Discuss ongoing support',
-      },
-      extraService: {
-        title: 'Redesign of Existing Website',
-        description: 'I will update the structure and presentation so your existing website reflects your business and helps customers understand your offer.',
-        price: 'from $525',
-        btnText: 'Discuss a redesign',
-      },
-      addOns: {
-        title: 'Capabilities you can add to your project',
-        items: [
-          {
-            title: 'Admin Management Panel',
-            description: 'Update text, imagery, rates, or catalog items yourself without touching code.',
-          },
-          {
-            title: 'Database Storage',
-            description: 'Securely store inbound leads, products, or member records in PostgreSQL.',
-          },
-          {
-            title: 'Telegram Bot Alerts',
-            description: 'Receive an instant notification the second a prospect submits an inquiry.',
-          },
-          {
-            title: 'Online Payments',
-            description: 'Payment gateway integration (Stripe, CloudPayments, Tinkoff, etc.) calculated on request.',
-          },
-          {
-            title: 'Additional Pages',
-            description: 'Blog, deep service breakdowns, catalog pages, team profiles, and legal documents.',
-          },
-          {
-            title: 'Extended Maintenance',
-            description: 'Ongoing technical care and updates beyond the included warranty period.',
-          },
-        ],
-      },
+      conclusion: 'I help experts and small businesses present their services clearly, prepare their website for search promotion, and make it easier for customers to get in touch. I learn about your goals, build the website, and stay in touch after launch — for updates, adding new pages, and continued growth.',
+      cta: 'Leave a Request',
     },
     whyCheaper: {
       preTitle: 'Honest About Pricing',
