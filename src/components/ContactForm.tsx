@@ -29,7 +29,7 @@ export const ContactForm: React.FC = () => {
 
   const [name, setName] = useState('');
   const [contact, setContact] = useState('');
-  const [tariff, setTariff] = useState('');
+  const [siteType, setSiteType] = useState('');
   const [projectUrl, setProjectUrl] = useState('');
   const [message, setMessage] = useState('');
 
@@ -41,16 +41,6 @@ export const ContactForm: React.FC = () => {
   const [turnstileError, setTurnstileError] = useState(false);
   const [turnstileContainer, setTurnstileContainer] = React.useState<HTMLDivElement | null>(null);
   const turnstileWidgetId = useRef<string | null>(null);
-
-  useEffect(() => {
-    const handleSelectPlan = (e: CustomEvent<string>) => {
-      if (e.detail) {
-        setTariff(e.detail);
-      }
-    };
-    window.addEventListener('select-plan', handleSelectPlan as EventListener);
-    return () => window.removeEventListener('select-plan', handleSelectPlan as EventListener);
-  }, []);
 
   useEffect(() => {
     if (!turnstileSiteKey || !turnstileContainer) return;
@@ -107,9 +97,14 @@ export const ContactForm: React.FC = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setValidationAttempted(true);
-    if (!name.trim() || !contact.trim()) {
+    if (!name.trim() || !contact.trim() || !siteType) {
       setError(t.contact.form.validationError);
-      document.getElementById(!name.trim() ? 'contact-name' : 'contact-target')?.focus();
+      const firstInvalidId = !name.trim()
+        ? 'contact-name'
+        : !contact.trim()
+          ? 'contact-target'
+          : 'site-type';
+      document.getElementById(firstInvalidId)?.focus();
       return;
     }
     if (!turnstileSiteKey || !turnstileToken) {
@@ -124,15 +119,8 @@ export const ContactForm: React.FC = () => {
     setLoading(true);
     setError(null);
 
-    const tariffLabels: Record<string, string> = {
-      start: t.contact.form.tariffs.start,
-      optimal: t.contact.form.tariffs.optimal,
-      business: t.contact.form.tariffs.business,
-      redesign: t.contact.form.tariffs.redesign,
-      custom: t.contact.form.tariffs.custom,
-    };
-
-    const friendlyTariff = tariffLabels[tariff] || tariff || t.contact.form.tariffs.defaultEstimate;
+    const siteTypeLabel =
+      t.contact.form.siteTypes.find((type) => type.id === siteType)?.label ?? siteType;
     const normalizedUrl = projectUrl.trim();
 
     const controller = new AbortController();
@@ -146,7 +134,7 @@ export const ContactForm: React.FC = () => {
         body: JSON.stringify({
           name: name.trim(),
           contact: contact.trim(),
-          tariff: friendlyTariff,
+          siteType: siteTypeLabel,
           projectUrl: normalizedUrl,
           message: message.trim(),
           lang,
@@ -164,7 +152,7 @@ export const ContactForm: React.FC = () => {
       setContact('');
       setProjectUrl('');
       setMessage('');
-      setTariff('');
+      setSiteType('');
       setTurnstileToken(null);
       if (turnstileWidgetId.current) window.turnstile?.reset(turnstileWidgetId.current);
     } catch {
@@ -302,31 +290,26 @@ export const ContactForm: React.FC = () => {
               </div>
 
               <div>
-                <label htmlFor="tariff-select" className="block text-xs font-semibold text-slate-300 uppercase tracking-wider mb-2">
-                  {t.contact.form.tariffLabel}
+                <label htmlFor="site-type" className="block text-xs font-semibold text-slate-300 uppercase tracking-wider mb-2">
+                  {t.contact.form.siteTypeLabel} <span className="text-cyan-400">*</span>
                 </label>
                 <select
-                  id="tariff-select"
-                  value={tariff}
-                  onChange={(e) => setTariff(e.target.value)}
+                  id="site-type"
+                  required
+                  value={siteType}
+                  onChange={(e) => {
+                    setSiteType(e.target.value);
+                    setError(null);
+                    setValidationAttempted(false);
+                  }}
                   className="w-full px-4 py-3 rounded-xl bg-site-raised border border-white/10 focus:border-cyan-400 focus:outline-none text-white text-base sm:text-sm transition-colors cursor-pointer"
                 >
-                  <option value="">{t.contact.form.tariffPlaceholder}</option>
-                  <option value="start">
-                    {t.contact.form.tariffs.start}
-                  </option>
-                  <option value="optimal">
-                    {t.contact.form.tariffs.optimal}
-                  </option>
-                  <option value="business">
-                    {t.contact.form.tariffs.business}
-                  </option>
-                  <option value="redesign">
-                    {t.contact.form.tariffs.redesign}
-                  </option>
-                  <option value="custom">
-                    {t.contact.form.tariffs.custom}
-                  </option>
+                  <option value="">{t.contact.form.siteTypePlaceholder}</option>
+                  {t.contact.form.siteTypes.map((type) => (
+                    <option key={type.id} value={type.id}>
+                      {type.label}
+                    </option>
+                  ))}
                 </select>
               </div>
 

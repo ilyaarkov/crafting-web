@@ -34,7 +34,7 @@ function devApiPlugin(): Plugin {
                 const message = `🚀 <b>Новая заявка с сайта!</b>\n\n` +
                   `👤 <b>Имя:</b> ${data.name || 'Не указано'}\n` +
                   `📱 <b>Контакт:</b> ${data.contact || 'Не указано'}\n` +
-                  `💼 <b>Тариф/Услуга:</b> ${data.tariff || data.service || 'Не выбран'}\n` +
+                  `💼 <b>Формат сайта:</b> ${data.siteType || 'Не выбран'}\n` +
                   `🔗 <b>Ссылка / Проект:</b> ${data.projectUrl || 'Нет'}\n` +
                   `📝 <b>Описание:</b>\n${data.message || 'Без описания'}\n\n` +
                   `🌐 <b>Язык сайта:</b> ${data.lang || 'ru'}\n` +

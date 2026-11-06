@@ -187,8 +187,8 @@ export interface Translations {
       namePlaceholder: string;
       contactLabel: string;
       contactPlaceholder: string;
-      tariffLabel: string;
-      tariffPlaceholder: string;
+      siteTypeLabel: string;
+      siteTypePlaceholder: string;
       projectUrlLabel: string;
       projectUrlPlaceholder: string;
       messageLabel: string;
@@ -200,14 +200,10 @@ export interface Translations {
       errorMessage: string;
       validationError: string;
       sendAnother: string;
-      tariffs: {
-        start: string;
-        optimal: string;
-        business: string;
-        redesign: string;
-        custom: string;
-        defaultEstimate: string;
-      };
+      siteTypes: {
+        id: string;
+        label: string;
+      }[];
     };
   };
   footer: {
@@ -802,29 +798,30 @@ export const translations: Record<Language, Translations> = {
       form: {
         nameLabel: 'Ваше имя',
         namePlaceholder: 'Иван Иванов',
-        contactLabel: 'Telegram, телефон или Email',
-        contactPlaceholder: '@username или +7 (999) 000-00-00',
-        tariffLabel: 'Интересующий тариф / задача',
-        tariffPlaceholder: 'Выберите тариф или формат',
-        projectUrlLabel: 'Ссылка на текущий сайт или соцсети (необязательно)',
-        projectUrlPlaceholder: 'https://instagram.com/... или https://mysite.ru',
-        messageLabel: 'Коротко опишите задачу',
+        contactLabel: 'Email, телефон или Telegram',
+        contactPlaceholder: 'Email или @username',
+        siteTypeLabel: 'Формат сайта',
+        siteTypePlaceholder: 'Выберите формат',
+        projectUrlLabel: 'Ссылка на существующий сайт или соцсети',
+        projectUrlPlaceholder: 'yoursite.com или instagram',
+        messageLabel: 'Коротко опишите задачу (необязательно)',
         messagePlaceholder: 'Чем занимается ваш бизнес, какие задачи должен решать сайт...',
         submitBtn: 'Отправить заявку',
         submittingBtn: 'Отправка...',
         successTitle: 'Заявка успешно отправлена!',
         successMessage: 'Спасибо за обращение. Я свяжусь с вами в ближайшее время для обсуждения деталей.',
         errorMessage: 'Произошла ошибка при отправке. Пожалуйста, напишите мне напрямую в Telegram или на почту.',
-        validationError: 'Пожалуйста, укажите ваше имя и контакт',
+        validationError: 'Пожалуйста, укажите имя, контакт и формат сайта',
         sendAnother: 'Отправить ещё одну заявку',
-        tariffs: {
-          start: 'Сайт-визитка (от 39 000 ₽)',
-          optimal: 'Сайт для эксперта или бизнеса (от 69 000 ₽)',
-          business: 'Сайт с базой данных и админ-панелью (от 99 000 ₽)',
-          redesign: 'Переделка существующего сайта (от 49 000 ₽)',
-          custom: 'Другая задача / индивидуальный проект',
-          defaultEstimate: 'Индивидуальный расчет',
-        },
+        siteTypes: [
+          { id: 'business-card', label: 'Сайт-визитка' },
+          { id: 'service-website', label: 'Сайт услуг' },
+          { id: 'corporate-website', label: 'Корпоративный сайт' },
+          { id: 'landing-page', label: 'Landing page' },
+          { id: 'online-store', label: 'Интернет-магазины' },
+          { id: 'custom', label: 'Свой вариант' },
+          { id: 'unknown', label: 'Ещё не знаю' },
+        ],
       },
     },
     footer: {
@@ -1417,29 +1414,30 @@ export const translations: Record<Language, Translations> = {
       form: {
         nameLabel: 'Your name',
         namePlaceholder: 'Alex Smith',
-        contactLabel: 'Telegram handle, phone, or email',
-        contactPlaceholder: '@username or alex@example.com',
-        tariffLabel: 'Preferred package / task',
-        tariffPlaceholder: 'Select a plan or describe goal',
-        projectUrlLabel: 'Link to current site or social media (optional)',
-        projectUrlPlaceholder: 'https://instagram.com/... or https://mysite.com',
-        messageLabel: 'Briefly describe your project',
+        contactLabel: 'Email, phone, or Telegram',
+        contactPlaceholder: 'Email or @username',
+        siteTypeLabel: 'Website format',
+        siteTypePlaceholder: 'Select a format',
+        projectUrlLabel: 'Link to an existing website or social media',
+        projectUrlPlaceholder: 'yoursite.com or instagram',
+        messageLabel: 'Briefly describe your task (optional)',
         messagePlaceholder: 'Tell me about your business, who your clients are, and what the website should achieve...',
         submitBtn: 'Send Inquiry',
         submittingBtn: 'Sending...',
         successTitle: 'Inquiry Sent Successfully!',
         successMessage: 'Thank you for reaching out. I will review your project and get back to you shortly.',
         errorMessage: 'An error occurred during sending. Please message me directly on Telegram or Email.',
-        validationError: 'Please provide your name and contact',
+        validationError: 'Please provide your name, contact, and website format',
         sendAnother: 'Send another message',
-        tariffs: {
-          start: 'Business card website (from $420)',
-          optimal: 'Website for an expert or business (from $740)',
-          business: 'Website with database and admin panel (from $1,060)',
-          redesign: 'Redesign of Existing Site from $525',
-          custom: 'Custom task / individual inquiry',
-          defaultEstimate: 'Custom Estimate',
-        },
+        siteTypes: [
+          { id: 'business-card', label: 'Business card website' },
+          { id: 'service-website', label: 'Service website' },
+          { id: 'corporate-website', label: 'Corporate website' },
+          { id: 'landing-page', label: 'Landing page' },
+          { id: 'online-store', label: 'Online stores' },
+          { id: 'custom', label: 'Something else' },
+          { id: 'unknown', label: 'Not sure yet' },
+        ],
       },
     },
     footer: {
