@@ -1,7 +1,7 @@
 import type { MetaDescriptor } from 'react-router';
 
 export const SITE_URL = 'https://ilyaarkov.com';
-const DEFAULT_IMAGE = '/images/og-preview.png';
+const DEFAULT_IMAGE = '/images/og-preview-usd.png';
 const DEFAULT_DESCRIPTION = 'Современные сайты для экспертов, малого бизнеса и организаций. Напрямую с разработчиком.';
 
 export const ROUTE_SEO: Record<string, { title: string; description: string; ogImage?: string }> = {
@@ -58,8 +58,8 @@ export function seoMeta(path: string): MetaDescriptor[] {
     { property: 'og:image:alt', content: seo.title },
     { property: 'og:image:type', content: seo.ogImage ? 'image/webp' : 'image/png' },
     ...(seo.ogImage ? [] : [
-      { property: 'og:image:width', content: '1249' },
-      { property: 'og:image:height', content: '768' },
+      { property: 'og:image:width', content: '1606' },
+      { property: 'og:image:height', content: '900' },
     ]),
     { name: 'twitter:title', content: seo.title },
     { name: 'twitter:description', content: seo.description },
