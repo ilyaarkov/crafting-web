@@ -2,9 +2,10 @@ import React from 'react';
 import { useLanguage } from '../context/LanguageContext';
 import { Send, Mail, Shield, Code2 } from 'lucide-react';
 import { useNavigate } from 'react-router';
+import { personalDataConsent } from '../data/personalDataConsent';
 
 export const Footer: React.FC = () => {
-  const { t } = useLanguage();
+  const { t, lang } = useLanguage();
   const navigate = useNavigate();
 
   const handleTechStackClick = (e: React.MouseEvent<HTMLAnchorElement>) => {
@@ -64,6 +65,9 @@ export const Footer: React.FC = () => {
             >
               <Shield className="w-4 h-4 text-slate-400" />
               <span>{t.footer.privacy}</span>
+            </a>
+            <a href="/consent" className="flex min-h-11 items-center hover:text-cyan-400 focus-visible:outline focus-visible:outline-2 focus-visible:outline-cyan-300">
+              {personalDataConsent[lang].title}
             </a>
           </div>
         </div>

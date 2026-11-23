@@ -8,5 +8,6 @@ export default [
   route('portfolio/:project', 'routes/project.tsx'),
   route('project/:project', 'routes/project.tsx', { id: 'project-alias' }),
   route('policy', 'routes/policy.tsx'),
+  route('consent', 'routes/consent.tsx'),
   route('*', 'routes/not-found.tsx'),
 ] satisfies RouteConfig;

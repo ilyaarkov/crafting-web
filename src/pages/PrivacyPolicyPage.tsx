@@ -1,13 +1,17 @@
 import React, { useEffect } from 'react';
 import { ArrowLeft, Globe } from 'lucide-react';
 import { useLanguage } from '../context/LanguageContext';
+import { CONSENT_VERSION, personalDataConsent } from '../data/personalDataConsent';
 
 interface PrivacyPolicyPageProps {
   onNavigateHome: () => void;
+  document?: 'policy' | 'consent';
 }
 
-export const PrivacyPolicyPage: React.FC<PrivacyPolicyPageProps> = ({ onNavigateHome }) => {
+export const PrivacyPolicyPage: React.FC<PrivacyPolicyPageProps> = ({ onNavigateHome, document = 'policy' }) => {
   const { t, lang, setLang } = useLanguage();
+  const consent = personalDataConsent[lang];
+  const isConsent = document === 'consent';
   const paragraphs = [
     t.privacyModal.p1,
     t.privacyModal.p2,
@@ -52,13 +56,28 @@ export const PrivacyPolicyPage: React.FC<PrivacyPolicyPageProps> = ({ onNavigate
       <main className="mx-auto w-full max-w-3xl px-5 py-12 sm:px-8 sm:py-20">
         <article>
           <h1 className="max-w-2xl text-3xl font-bold leading-tight tracking-tight text-white sm:text-5xl">
-            {t.privacyModal.title}
+            {isConsent ? consent.title : t.privacyModal.title}
           </h1>
-          <div className="mt-8 space-y-5 text-[15px] leading-7 text-slate-300 sm:mt-10 sm:text-base">
-            {paragraphs.map((paragraph, index) => (
-              <p key={index}>{paragraph}</p>
-            ))}
-          </div>
+          {isConsent ? (
+            <div className="mt-8 text-[15px] leading-7 text-slate-300 sm:mt-10 sm:text-base">
+              <p className="mb-6 text-sm text-slate-400">{consent.versionLabel}: {CONSENT_VERSION}</p>
+              <p>{consent.intro}</p>
+              {consent.sections.map((section) => (
+                <section key={section.title} className="mt-8">
+                  <h2 className="mb-3 text-xl font-semibold text-white">{section.title}</h2>
+                  <p>{section.text}</p>
+                </section>
+              ))}
+              <a href="/policy" className="mt-8 inline-flex min-h-11 items-center text-cyan-300 underline underline-offset-4 focus-visible:outline focus-visible:outline-2 focus-visible:outline-cyan-300">{consent.policy}</a>
+            </div>
+          ) : (
+            <div className="mt-8 space-y-5 text-[15px] leading-7 text-slate-300 sm:mt-10 sm:text-base">
+              {paragraphs.map((paragraph, index) => (
+                <p key={index}>{paragraph}</p>
+              ))}
+              <a href="/consent" className="inline-flex min-h-11 items-center text-cyan-300 underline underline-offset-4 focus-visible:outline focus-visible:outline-2 focus-visible:outline-cyan-300">{consent.title}</a>
+            </div>
+          )}
           <a
             href="/"
             onClick={(event) => {

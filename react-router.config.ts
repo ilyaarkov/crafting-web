@@ -10,6 +10,7 @@ const prerenderPaths = [
   '/techstack',
   '/portfolio',
   '/policy',
+  '/consent',
   ...Object.keys(PROJECTS_DATA).map((id) => `/portfolio/${id}`),
 ];
 

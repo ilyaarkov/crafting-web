@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useLanguage } from '../context/LanguageContext';
-import { Send, CheckCircle2, AlertCircle } from 'lucide-react';
+import { Send, Check, CheckCircle2, AlertCircle } from 'lucide-react';
+import { CONSENT_PATH, CONSENT_VERSION, personalDataConsent } from '../data/personalDataConsent';
 
 interface TurnstileApi {
   render: (
@@ -26,6 +27,8 @@ declare global {
 export const ContactForm: React.FC = () => {
   const { t, lang } = useLanguage();
   const turnstileSiteKey = import.meta.env.TURNSTILE_SITE_KEY;
+  const consentText = personalDataConsent[lang];
+  const [consentGiven, setConsentGiven] = useState(false);
 
   const [name, setName] = useState('');
   const [contact, setContact] = useState('');
@@ -54,7 +57,6 @@ export const ContactForm: React.FC = () => {
         callback: (token) => {
           setTurnstileToken(token);
           setTurnstileError(false);
-          setError(null);
         },
         'expired-callback': () => setTurnstileToken(null),
         'error-callback': () => {
@@ -107,6 +109,11 @@ export const ContactForm: React.FC = () => {
       document.getElementById(firstInvalidId)?.focus();
       return;
     }
+    if (!consentGiven) {
+      setError(consentText.required);
+      document.getElementById('contact-consent')?.focus();
+      return;
+    }
     if (!turnstileSiteKey || !turnstileToken) {
       setError(
         lang === 'ru'
@@ -139,6 +146,8 @@ export const ContactForm: React.FC = () => {
           message: message.trim(),
           lang,
           turnstileToken,
+          consent: true,
+          consentVersion: CONSENT_VERSION,
         }),
       });
 
@@ -147,6 +156,7 @@ export const ContactForm: React.FC = () => {
       }
 
       setSubmitted(true);
+      setConsentGiven(false);
       setValidationAttempted(false);
       setName('');
       setContact('');
@@ -371,6 +381,41 @@ export const ContactForm: React.FC = () => {
                       </p>
                     )}
                   </>
+                )}
+              </div>
+
+              <div className="text-sm leading-6 text-slate-300">
+                <label htmlFor="contact-consent" className="flex min-h-11 cursor-pointer items-start gap-3 py-2">
+                  <span className="relative mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center">
+                    <input
+                      id="contact-consent"
+                      name="consent"
+                      type="checkbox"
+                      required
+                      checked={consentGiven}
+                      disabled={loading}
+                      onChange={(event) => {
+                        setConsentGiven(event.target.checked);
+                        setError(null);
+                      }}
+                      aria-invalid={validationAttempted && !consentGiven}
+                      aria-describedby={validationAttempted && !consentGiven ? 'contact-consent-error' : undefined}
+                      className="peer h-5 w-5 appearance-none rounded border border-slate-400 bg-white/[0.04] checked:border-cyan-300 checked:bg-cyan-300/10 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-cyan-300 disabled:cursor-wait"
+                    />
+                    <Check aria-hidden="true" className="pointer-events-none absolute h-3.5 w-3.5 text-cyan-300 opacity-0 peer-checked:opacity-100" strokeWidth={2.5} />
+                  </span>
+                  <span>{consentText.label} <span aria-hidden="true" className="text-cyan-300">*</span></span>
+                </label>
+                <div className="ml-8 flex flex-wrap gap-x-4 gap-y-1">
+                  <a href={CONSENT_PATH} target="_blank" rel="noopener noreferrer" className="inline-flex min-h-11 items-center text-slate-300 underline decoration-slate-500 underline-offset-4 hover:text-cyan-300 focus-visible:outline focus-visible:outline-2 focus-visible:outline-cyan-300">
+                    {consentText.read}<span className="sr-only"> ({consentText.newTab})</span>
+                  </a>
+                  <a href="/policy" target="_blank" rel="noopener noreferrer" className="inline-flex min-h-11 items-center text-slate-300 underline decoration-slate-500 underline-offset-4 hover:text-cyan-300 focus-visible:outline focus-visible:outline-2 focus-visible:outline-cyan-300">
+                    {consentText.policy}<span className="sr-only"> ({consentText.newTab})</span>
+                  </a>
+                </div>
+                {validationAttempted && !consentGiven && (
+                  <p id="contact-consent-error" className="ml-8 mt-1 text-rose-300">{consentText.required}</p>
                 )}
               </div>
 

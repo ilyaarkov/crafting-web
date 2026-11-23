@@ -31,6 +31,10 @@
       "destination": "/portfolio/:project/index.html"
     },
     {
+      "source": "/consent",
+      "destination": "/consent/index.html"
+    },
+    {
       "source": "/policy",
       "destination": "/policy/index.html"
     }

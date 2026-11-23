@@ -2,79 +2,37 @@ import { reactRouter } from '@react-router/dev/vite';
 import tailwindcss from '@tailwindcss/vite';
 import path from 'path';
 import { defineConfig, loadEnv, Plugin } from 'vite';
+import leadHandler from './api/lead.ts';
 
 function devApiPlugin(): Plugin {
   return {
     name: 'dev-api-plugin',
     configureServer(server) {
       server.middlewares.use('/api/lead', (req, res) => {
-        if (req.method !== 'POST') {
-          res.statusCode = 405;
-          res.setHeader('Content-Type', 'application/json');
-          res.end(JSON.stringify({ error: 'Method not allowed' }));
-          return;
-        }
-
         let body = '';
         req.on('data', chunk => {
-          body += chunk.toString();
+          if (body.length <= 32768) body += chunk.toString();
         });
-
         req.on('end', async () => {
-          try {
-            const data = JSON.parse(body || '{}');
-            const token = process.env.TELEGRAM_BOT_TOKEN;
-            const chatId = process.env.TELEGRAM_CHAT_ID;
-
-            let sentToTelegram = false;
-            let telegramError = null;
-
-            if (token && chatId) {
-              try {
-                const message = `🚀 <b>Новая заявка с сайта!</b>\n\n` +
-                  `👤 <b>Имя:</b> ${data.name || 'Не указано'}\n` +
-                  `📱 <b>Контакт:</b> ${data.contact || 'Не указано'}\n` +
-                  `💼 <b>Формат сайта:</b> ${data.siteType || 'Не выбран'}\n` +
-                  `🔗 <b>Ссылка / Проект:</b> ${data.projectUrl || 'Нет'}\n` +
-                  `📝 <b>Описание:</b>\n${data.message || 'Без описания'}\n\n` +
-                  `🌐 <b>Язык сайта:</b> ${data.lang || 'ru'}\n` +
-                  `🕒 <b>Время:</b> ${new Date().toLocaleString('ru-RU')}`;
-
-                const tgRes = await fetch(`https://api.telegram.org/bot${token}/sendMessage`, {
-                  method: 'POST',
-                  headers: { 'Content-Type': 'application/json' },
-                  body: JSON.stringify({
-                    chat_id: chatId,
-                    text: message,
-                    parse_mode: 'HTML',
-                  }),
-                });
-
-                const tgData = await tgRes.json();
-                if (tgData.ok) {
-                  sentToTelegram = true;
-                } else {
-                  telegramError = tgData.description;
-                }
-              } catch (err: any) {
-                telegramError = err.message;
-              }
-            }
-
-            res.statusCode = 200;
-            res.setHeader('Content-Type', 'application/json');
-            res.end(JSON.stringify({
-              success: true,
-              sentToTelegram,
-              simulated: !token || !chatId,
-              telegramError,
-              leadId: 'lead_' + Date.now(),
-            }));
-          } catch {
-            res.statusCode = 400;
-            res.setHeader('Content-Type', 'application/json');
-            res.end(JSON.stringify({ error: 'Invalid JSON payload' }));
+          if (body.length > 32768) {
+            res.statusCode = 413;
+            res.end('Request too large');
+            return;
           }
+          // Use the production handler: dev must not bypass consent or verification.
+          const response = Object.assign(res, {
+            status(code: number) { res.statusCode = code; return response; },
+            json(data: unknown) {
+              res.setHeader('Content-Type', 'application/json');
+              res.end(JSON.stringify(data));
+              return response;
+            },
+            send(data: string) { res.end(data); return response; },
+          });
+          await leadHandler(
+            Object.assign(req, { body: body || '{}' }) as Parameters<typeof leadHandler>[0],
+            response,
+          );
         });
       });
     },

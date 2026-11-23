@@ -1,4 +1,5 @@
 import type { IncomingMessage, ServerResponse } from 'http';
+import { CONSENT_PATH, CONSENT_VERSION } from '../src/data/personalDataConsent.ts';
 
 interface VercelRequest extends IncomingMessage {
   body: any;
@@ -42,6 +43,32 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
 
   try {
     const data = typeof req.body === 'string' ? JSON.parse(req.body) : req.body || {};
+    if (!data || typeof data !== 'object' || Array.isArray(data)) {
+      return res.status(400).json({ error: 'Invalid request body' });
+    }
+    // Validate consent before contacting either external service. Do not accept
+    // truthy strings, missing consent or a stale document version.
+    if (data.consent !== true || data.consentVersion !== CONSENT_VERSION) {
+      return res.status(400).json({ error: 'Current personal data consent required' });
+    }
+    if (data.lang !== 'ru' && data.lang !== 'en') {
+      return res.status(400).json({ error: 'Invalid consent language' });
+    }
+    const limits = { name: 120, contact: 254, siteType: 200, projectUrl: 2048, message: 5000 };
+    for (const [field, maxLength] of Object.entries(limits)) {
+      const value = data[field];
+      const required = ['name', 'contact', 'siteType'].includes(field);
+      if ((required && (typeof value !== 'string' || !value.trim())) ||
+          (value !== undefined && (typeof value !== 'string' || value.length > maxLength))) {
+        return res.status(400).json({ error: 'Invalid form fields' });
+      }
+    }
+    const receivedAt = new Date().toISOString();
+    const token = process.env.TELEGRAM_BOT_TOKEN;
+    const chatId = process.env.TELEGRAM_CHAT_ID;
+    if (!token || !chatId) {
+      return res.status(503).json({ error: 'Lead delivery is not configured' });
+    }
     const turnstileSecret = process.env.TURNSTILE_SECRET_KEY;
     const turnstileToken = typeof data.turnstileToken === 'string' ? data.turnstileToken : '';
 
@@ -61,6 +88,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
           secret: turnstileSecret,
           response: turnstileToken,
         }),
+        signal: AbortSignal.timeout(5000),
       });
     } catch {
       return res.status(503).json({ error: 'Verification service unavailable' });
@@ -75,55 +103,49 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       return res.status(400).json({ error: 'Verification failed' });
     }
 
-    const token = process.env.TELEGRAM_BOT_TOKEN;
-    const chatId = process.env.TELEGRAM_CHAT_ID;
+    const leadId = 'lead_' + crypto.randomUUID();
+    // Server-generated receipt, bound to this request. Never use a client clock
+    // as evidence, and never interpret user input as Telegram HTML.
+    const message = `Новая заявка с сайта\n` +
+      `Согласие на обработку ПД: да (отдельный чекбокс)\n` +
+      `Редакция согласия: ${CONSENT_VERSION}\n` +
+      `Документ: https://ilyaarkov.com${CONSENT_PATH}\n` +
+      `Язык согласия: ${data.lang}\n` +
+      `Получено сервером (UTC): ${receivedAt}\n\n` +
+      `Имя: ${data.name}\n` +
+      `Контакт: ${data.contact}\n` +
+      `Формат сайта: ${data.siteType}\n` +
+      `Ссылка / Проект: ${data.projectUrl || 'Нет'}\n` +
+      `Описание:\n${data.message || 'Без описания'}`;
 
-    let sentToTelegram = false;
-    let telegramError = null;
-
-    if (token && chatId) {
-      try {
-        const message = `🚀 <b>Новая заявка с сайта!</b>\n\n` +
-          `👤 <b>Имя:</b> ${data.name || 'Не указано'}\n` +
-          `📱 <b>Контакт:</b> ${data.contact || 'Не указано'}\n` +
-          `💼 <b>Формат сайта:</b> ${data.siteType || 'Не выбран'}\n` +
-          `🔗 <b>Ссылка / Проект:</b> ${data.projectUrl || 'Нет'}\n` +
-          `📝 <b>Описание:</b>\n${data.message || 'Без описания'}\n\n` +
-          `🌐 <b>Язык сайта:</b> ${data.lang || 'ru'}\n` +
-          `🕒 <b>Время:</b> ${new Date().toLocaleString('ru-RU', { timeZone: 'Asia/Tbilisi' })}`;
-
+    // The form allows more text than Telegram's 4096-character message limit.
+    // Keep all content and correlate chunks without collecting extra personal data.
+    const characters = Array.from(message);
+    const chunkSize = 1800; // <=3600 UTF-16 units even for non-BMP characters
+    const total = Math.ceil(characters.length / chunkSize);
+    const deliverySignal = AbortSignal.timeout(12000);
+    try {
+      for (let offset = 0; offset < characters.length; offset += chunkSize) {
+        const text = `${leadId} (${offset / chunkSize + 1}/${total})\n\n` +
+          characters.slice(offset, offset + chunkSize).join('');
         const tgRes = await fetch(`https://api.telegram.org/bot${token}/sendMessage`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            chat_id: chatId,
-            text: message,
-            parse_mode: 'HTML',
-          }),
+          body: JSON.stringify({ chat_id: chatId, text }),
+          signal: deliverySignal,
         });
-
-        const tgData = await tgRes.json();
-        if (tgData.ok) {
-          sentToTelegram = true;
-        } else {
-          telegramError = tgData.description;
+        if (!tgRes.ok || !(await tgRes.json()).ok) {
+          return res.status(502).json({ error: 'Lead delivery failed' });
         }
-      } catch (err: any) {
-        telegramError = err.message;
       }
+    } catch {
+      return res.status(502).json({ error: 'Lead delivery failed' });
     }
 
-    return res.status(200).json({
-      success: true,
-      sentToTelegram,
-      simulated: !token || !chatId,
-      telegramError,
-      leadId: 'lead_' + Date.now(),
-    });
-  } catch (err: any) {
-    return res.status(500).json({
-      error: 'Internal Server Error',
-      message: err.message,
+    return res.status(200).json({ success: true, sentToTelegram: true, leadId });
+  } catch (err: unknown) {
+    return res.status(err instanceof SyntaxError ? 400 : 500).json({
+      error: err instanceof SyntaxError ? 'Invalid request body' : 'Internal Server Error',
     });
   }
 }
