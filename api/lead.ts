@@ -1,5 +1,5 @@
 import type { IncomingMessage, ServerResponse } from 'http';
-import { CONSENT_PATH, CONSENT_VERSION } from '../src/data/personalDataConsent.ts';
+import { CONSENT_PATH, CONSENT_VERSION } from '../src/data/consentVersion.js';
 
 interface VercelRequest extends IncomingMessage {
   body: any;

@@ -1,6 +1,6 @@
-// Bump this version whenever the consent text changes. Git retains previous versions.
-export const CONSENT_VERSION = '2026-11-23.2';
-export const CONSENT_PATH = '/consent';
+import { CONSENT_PATH, CONSENT_VERSION } from './consentVersion.js';
+
+export { CONSENT_PATH, CONSENT_VERSION };
 
 export const personalDataConsent = {
   ru: {

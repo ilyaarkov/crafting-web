@@ -1,7 +1,7 @@
 import assert from 'node:assert/strict';
 import { test } from 'node:test';
 import handler from '../api/lead.ts';
-import { CONSENT_VERSION } from '../src/data/personalDataConsent.ts';
+import { CONSENT_VERSION } from '../src/data/consentVersion.js';
 
 const valid = {
   name: 'Test <b>name</b>', contact: 'test@example.com', siteType: 'Landing page',
