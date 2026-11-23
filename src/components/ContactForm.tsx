@@ -384,9 +384,9 @@ export const ContactForm: React.FC = () => {
                 )}
               </div>
 
-              <div className="text-sm leading-6 text-slate-300">
+              <div className="text-xs leading-5 text-white/60">
                 <label htmlFor="contact-consent" className="flex min-h-11 cursor-pointer items-start gap-3 py-2">
-                  <span className="relative mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center">
+                  <span className="relative flex h-5 w-5 shrink-0 items-center justify-center">
                     <input
                       id="contact-consent"
                       name="consent"
@@ -404,16 +404,17 @@ export const ContactForm: React.FC = () => {
                     />
                     <Check aria-hidden="true" className="pointer-events-none absolute h-3.5 w-3.5 text-cyan-300 opacity-0 peer-checked:opacity-100" strokeWidth={2.5} />
                   </span>
-                  <span>{consentText.label} <span aria-hidden="true" className="text-cyan-300">*</span></span>
+                  <span>
+                    {consentText.labelPrefix}
+                    <a href={CONSENT_PATH} target="_blank" rel="noopener noreferrer" aria-label={`${consentText.consentLink} (${consentText.newTab})`} className="underline decoration-white/25 underline-offset-2 hover:text-white/80 focus-visible:outline focus-visible:outline-2 focus-visible:outline-cyan-300">
+                      {consentText.consentLink}
+                    </a>
+                    {consentText.labelConnector}
+                    <a href="/policy" target="_blank" rel="noopener noreferrer" aria-label={`${consentText.policyLink} (${consentText.newTab})`} className="underline decoration-white/25 underline-offset-2 hover:text-white/80 focus-visible:outline focus-visible:outline-2 focus-visible:outline-cyan-300">
+                      {consentText.policyLink}
+                    </a>
+                  </span>
                 </label>
-                <div className="ml-8 flex flex-wrap gap-x-4 gap-y-1">
-                  <a href={CONSENT_PATH} target="_blank" rel="noopener noreferrer" className="inline-flex min-h-11 items-center text-slate-300 underline decoration-slate-500 underline-offset-4 hover:text-cyan-300 focus-visible:outline focus-visible:outline-2 focus-visible:outline-cyan-300">
-                    {consentText.read}<span className="sr-only"> ({consentText.newTab})</span>
-                  </a>
-                  <a href="/policy" target="_blank" rel="noopener noreferrer" className="inline-flex min-h-11 items-center text-slate-300 underline decoration-slate-500 underline-offset-4 hover:text-cyan-300 focus-visible:outline focus-visible:outline-2 focus-visible:outline-cyan-300">
-                    {consentText.policy}<span className="sr-only"> ({consentText.newTab})</span>
-                  </a>
-                </div>
                 {validationAttempted && !consentGiven && (
                   <p id="contact-consent-error" className="ml-8 mt-1 text-rose-300">{consentText.required}</p>
                 )}

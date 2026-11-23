@@ -1,13 +1,15 @@
 // Bump this version whenever the consent text changes. Git retains previous versions.
-export const CONSENT_VERSION = '2026-11-23.1';
+export const CONSENT_VERSION = '2026-11-23.2';
 export const CONSENT_PATH = '/consent';
 
 export const personalDataConsent = {
   ru: {
     title: 'Согласие на обработку персональных данных',
     versionLabel: 'Редакция',
-    label: 'Даю согласие на обработку моих персональных данных',
-    read: 'Текст согласия',
+    labelPrefix: 'Я даю ',
+    consentLink: 'согласие на обработку персональных данных',
+    labelConnector: ' и принимаю ',
+    policyLink: 'политику конфиденциальности',
     policy: 'Политика обработки персональных данных',
     newTab: 'откроется в новой вкладке',
     required: 'Чтобы отправить заявку, прочитайте согласие и отметьте чекбокс.',
@@ -23,8 +25,10 @@ export const personalDataConsent = {
   en: {
     title: 'Consent to personal data processing',
     versionLabel: 'Version',
-    label: 'I consent to the processing of my personal data',
-    read: 'Read the consent',
+    labelPrefix: 'I give my ',
+    consentLink: 'consent to personal data processing',
+    labelConnector: ' and accept the ',
+    policyLink: 'privacy policy',
     policy: 'Personal data processing policy',
     newTab: 'opens in a new tab',
     required: 'To submit your request, read the consent and select the checkbox.',
